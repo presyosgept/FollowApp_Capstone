@@ -15,14 +15,11 @@ class Offerings(models.Model):
     class Meta:
         unique_together = (('offer_no', 'sem_id', 'academic_year'))
         verbose_name_plural = "Offerings"
-
     offer_no = models.CharField(max_length=225, primary_key=True)
-    days = ArrayField(models.CharField(max_length=220), default=list)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    sem_id = models.ForeignKey(
-        Semester, on_delete=models.CASCADE)
-    academic_year = models.CharField(max_length=225)
+    days = models.CharField(max_length=220, null=True, blank=True)
+    school_time = models.CharField(max_length=220, null=True, blank=True)
+    sem_id = models.CharField(max_length=220, null=True, blank=True)
+    academic_year = models.CharField(max_length=225, null=True, blank=True)
 
 
 class Subject(models.Model):
@@ -43,9 +40,14 @@ class School(models.Model):
 
 
 class Department(models.Model):
-    department_code = models.CharField(max_length=15, primary_key=True)
+    qs = School.objects.all()
+    qs_code = []
+    for obj in qs:
+        qs_code.append([obj.school_code, obj.school_name])
+    department_code = models.CharField(max_length=25, primary_key=True)
     department_name = models.CharField(max_length=220)
-    school_code = models.ForeignKey(School, on_delete=models.CASCADE)
+    school_code = models.ForeignKey(
+        School, on_delete=models.CASCADE, blank=True, null=True, max_length=10, choices=qs_code)
 
     class Meta:
         verbose_name_plural = "Department"
@@ -57,7 +59,8 @@ class Faculty(models.Model):
     firstname = models.CharField(max_length=220)
     email = models.EmailField(max_length=254)
     role = models.CharField(max_length=220)
-    department_code = models.ForeignKey(Department, on_delete=models.CASCADE)
+    department_code = models.ForeignKey(
+        Department, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Faculty"
@@ -81,13 +84,10 @@ class SubjectOfferings(models.Model):
         Offerings, on_delete=models.CASCADE, primary_key=True)
     subject_code = models.ForeignKey(
         Subject, on_delete=models.CASCADE)
-    school_days = ArrayField(models.CharField(
-        max_length=220), default=list)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    status = models.CharField(max_length=220)
-    sem_id = models.ForeignKey(
-        Semester, on_delete=models.CASCADE)
+    subject_title = models.CharField(max_length=220, null=True, blank=True)
+    school_days = models.CharField(max_length=220, null=True, blank=True)
+    school_time = models.CharField(max_length=220, null=True, blank=True)
+    sem_id = models.CharField(max_length=220, null=True, blank=True)
     academic_year = models.CharField(max_length=225)
     department_code = models.ForeignKey(
         Department, on_delete=models.CASCADE)
@@ -134,8 +134,7 @@ class Studentload(models.Model):
         Student, on_delete=models.CASCADE, primary_key=True)
     offer_code = models.ForeignKey(
         Offerings, on_delete=models.CASCADE)
-    sem_id = models.ForeignKey(
-        Semester, on_delete=models.CASCADE)
+    sem_id = models.CharField(max_length=220)
     academic_year = models.CharField(max_length=225)
 
 
@@ -178,15 +177,6 @@ class AccountCreated(models.Model):
 #         verbose_name_plural = "StudentAdditionalInformation"
 
 
-# class AccountCreated(models.Model):
-#     id_number = models.CharField(max_length=15, primary_key=True)
-#     email = models.EmailField()
-#     password = models.CharField(max_length=220)
-
-#     class Meta:
-#         verbose_name_plural = "AccountCreated"
-
-
 # class AccountsApi(models.Model):
 #     id_number = models.CharField(max_length=15, primary_key=True)
 #     email = models.CharField(max_length=220)
@@ -226,7 +216,7 @@ class AccountCreated(models.Model):
 #     subject_referred = models.CharField(max_length=220)
 #     reasons = models.CharField(max_length=10000)
 #     counselor = models.CharField(max_length=220)
-#     employeeid = models.CharField(max_length=220, blank=True, null=True)
+#     employeeid = models.CharField(max_length=220)
 #     start_time = models.TimeField(blank=True, null=True)
 #     end_time = models.TimeField(blank=True, null=True)
 #     date = models.DateField(blank=True, null=True)
@@ -236,9 +226,9 @@ class AccountCreated(models.Model):
 #                         ('TARDINESS', 'TARDINESS'), ('DISRESPECTFUL', 'DISRESPECTFUL'),
 #                         ('BAD ATTITUDE', 'BAD ATTITUDE'), ('OTHERS', 'OTHERS'))
 #     behavior_problem = MultiSelectField(
-#         max_length=220, choices=BEHAVIOR_PROBLEM, null=True, blank=True)
-#     feedback = models.CharField(max_length=10000, blank=True, null=True)
-#     choice = models.CharField(max_length=220, blank=True, null=True)
+#         max_length=220, choices=BEHAVIOR_PROBLEM)
+#     feedback = models.CharField(max_length=10000)
+#     choice = models.CharField(max_length=220)
 
 #     class Meta:
 #         verbose_name_plural = "TeachersReferral"
@@ -251,17 +241,17 @@ class AccountCreated(models.Model):
 #     degree_program = models.CharField(max_length=220)
 #     reasons = models.CharField(max_length=10000)
 #     counselor = models.CharField(max_length=220)
-#     start_time = models.TimeField(blank=True, null=True)
-#     end_time = models.TimeField(blank=True, null=True)
-#     date = models.DateField(blank=True, null=True)
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     date = models.DateField()
 
 #     class Meta:
 #         verbose_name_plural = "StudentSetSched"
 
 
 # class CounselorFeedback(models.Model):
-#     feedback = models.CharField(max_length=10000, null=True, blank=True)
-#     remarks = models.CharField(max_length=10000, null=True, blank=True)
+#     feedback = models.CharField(max_length=10000)
+#     remarks = models.CharField(max_length=10000)
 
 #     class Meta:
 #         verbose_name_plural = "CounselorFeedback"
@@ -278,17 +268,17 @@ class AccountCreated(models.Model):
 #         (APPOINTMENT, 'appointment')
 #     )
 
-#     to_user = models.CharField(max_length=220, null=True, blank=True)
+#     to_user = models.CharField(max_length=220)
 #     notification_type = models.CharField(max_length=100, choices=CHOICES)
 #     is_read_student = models.BooleanField(default=False)
 #     is_read_counselor = models.BooleanField(default=False)
-#     extra_id = models.IntegerField(null=True, blank=True)
+#     extra_id = models.IntegerField()
 
 #     created_at = models.DateTimeField(auto_now_add=True)
-#     created_by = models.CharField(max_length=220, null=True, blank=True)
-#     schedDay = models.DateTimeField(blank=True, null=True)
-#     schedStartTime = models.TimeField(blank=True, null=True)
-#     schedEndTime = models.TimeField(blank=True, null=True)
+#     created_by = models.CharField(max_length=220)
+#     schedDay = models.DateTimeField()
+#     schedStartTime = models.TimeField()
+#     schedEndTime = models.TimeField()
 
 #     class Meta:
 #         verbose_name_plural = "Notification"
@@ -303,13 +293,13 @@ class AccountCreated(models.Model):
 #         (FEEDBACK_STUDENT, 'feedback_student')
 #     )
 
-#     to_user = models.CharField(max_length=220, null=True, blank=True)
+#     to_user = models.CharField(max_length=220)
 #     notification_type = models.CharField(max_length=100, choices=CHOICES)
 #     is_read = models.BooleanField(default=False)
-#     extra_id = models.IntegerField(null=True, blank=True)
-#     referral_id = models.IntegerField(null=True, blank=True)
+#     extra_id = models.IntegerField()
+#     referral_id = models.IntegerField()
 #     created_at = models.DateTimeField(auto_now_add=True)
-#     created_by = models.CharField(max_length=220, null=True, blank=True)
+#     created_by = models.CharField(max_length=220)
 
 #     class Meta:
 #         verbose_name_plural = "NotificationFeedback"
@@ -323,19 +313,19 @@ class AccountCreated(models.Model):
 
 
 # class FilterDate(models.Model):
-#     pickedStartDate = models.DateField(null=True)
-#     pickedEndDate = models.DateField(null=True)
+#     pickedStartDate = models.DateField()
+#     pickedEndDate = models.DateField()
 
 #     class Meta:
 #         verbose_name_plural = "FilterDate"
 
 
 # class SetScheduleCounselor(models.Model):
-#     employee_id = models.CharField(max_length=220, null=True, blank=True)
-#     date = models.DateField(null=True, blank=True)
-#     start_time = models.TimeField(blank=True, null=True)
-#     end_time = models.TimeField(blank=True, null=True)
-#     choice = models.CharField(max_length=220, blank=True, null=True)
+#     employee_id = models.CharField(max_length=220)
+#     date = models.DateField()
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     choice = models.CharField(max_length=220)
 
 #     class Meta:
 #         verbose_name_plural = "SetScheduleCounselor"

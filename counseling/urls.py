@@ -41,6 +41,31 @@ from followapp.views import(
     upload_student,
     upload_student_load,
 
+    view_semester,
+    view_offerings,
+    view_subject,
+    view_school,
+    view_department,
+    view_faculty,
+    view_counselor,
+    view_subject_offerings,
+    view_degree_program,
+    view_student,
+    view_student_load,
+    edit_department,
+    edit_subject,
+
+    # director
+    director_home_view,
+
+    # counselor
+    counselor_home_view,
+
+    # teacher
+    teacher_home_view
+
+    # student
+
 )
 
 
@@ -68,7 +93,35 @@ urlpatterns = [
     path('admin/upload_student', upload_student, name="upload_student"),
     path('admin/upload_student_load',
          upload_student_load, name="upload_student_load"),
+    path('admin/view_semester', view_semester, name="view_semester"),
+    path('admin/view_offerings', view_offerings, name="view_offerings"),
+    path('admin/view_subject', view_subject, name="view_subject"),
+    path('admin/view_school', view_school, name="view_school"),
+    path('admin/view_department', view_department, name="view_department"),
+    path('admin/view_faculty', view_faculty, name="view_faculty"),
+    path('admin/view_counselor', view_counselor, name="view_counselor"),
+    path('admin/view_subject_offerings',
+         view_subject_offerings, name="view_subject_offerings"),
+    path('admin/view_degree_program',
+         view_degree_program, name="view_degree_program"),
+    path('admin/view_student', view_student, name="view_student"),
+    path('admin/view_student_load',
+         view_student_load, name="view_student_load"),
+    path('admin/edit_department/<str:code>',
+         edit_department, name="edit_department"),
+    path('admin/edit_subject/<str:code>',
+         edit_subject, name="edit_subject"),
 
+
+    # director
+    path('director/', director_home_view, name="director_home_view"),
+
+    # counselor
+    path('counselor/', counselor_home_view, name="counselor_home_view"),
+
+
+    # teacher
+    path('teacher/', teacher_home_view, name="teacher_home_view"),
 
     path('admin/', admin.site.urls),
 ]

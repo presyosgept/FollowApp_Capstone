@@ -39,7 +39,7 @@ from .models import Semester, Offerings, Subject, School, Department, Faculty, C
 from .models import AccountCreated
 from .resources import SemesterResource, OfferingsResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm
+from .forms import CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -96,10 +96,10 @@ def register(request):
             if exist == 0:
                 flag = 0
                 for user in qs_student:
-                    if username == user.studnumber:
+                    if username == user.student_number:
                         flag = 1
                 for user in qs_faculty:
-                    if username == user.employee_id:
+                    if username == user.faculty_id:
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
@@ -225,7 +225,7 @@ def loginPage(request):
                     qs = Student.objects.all()
                     for student in qs:
                         if student.student_number == username:
-                            if student.role == 'learner':
+                            if student.role == 'Learner':
                                 flag = 1
                     if flag == 1:
                         return redirect('student_home_view')
@@ -245,13 +245,13 @@ def loginPage(request):
                         qs = Faculty.objects.all()
                         for teacher in qs:
                             if teacher.faculty_id == username:
-                                if teacher.role == 'teacher':
+                                if teacher.role == 'Teacher':
                                     request.session['username'] = username
                                     flag = 2
-                                elif teacher.role == 'counselor':
+                                elif teacher.role == 'Counselor':
                                     request.session['username'] = username
                                     flag = 3
-                                elif teacher.role == 'director':
+                                elif teacher.role == 'Director':
                                     request.session['username'] = username
                                     flag = 4
                     if flag == 2:
@@ -284,6 +284,100 @@ def home(request, *args, **kwargs):
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
     return render(request, "admin/home.html", {})
+
+
+@login_required(login_url='login')
+def view_semester(request, *args, **kwargs):
+    semester = Semester.objects.all()
+    return render(request, "admin/view_semester.html", {"sem": semester})
+
+
+@login_required(login_url='login')
+def view_offerings(request, *args, **kwargs):
+    offerings = Offerings.objects.all()
+    return render(request, "admin/view_offerings.html", {"offerings": offerings})
+
+
+@login_required(login_url='login')
+def view_subject(request, *args, **kwargs):
+    subject = Subject.objects.all()
+    return render(request, "admin/view_subject.html", {"subject": subject})
+
+
+@login_required(login_url='login')
+def edit_subject(request, code):
+    subject = Subject.objects.get(subject_code=code)
+    edit_form = EditSubjectForm(instance=subject)
+    if request.method == "POST":
+        edit_form = EditSubjectForm(request.POST, instance=subject)
+        if edit_form.is_valid():
+            new_units = edit_form['units'].value()
+            t = Subject.objects.get(subject_code=code)
+            t.units = new_units
+            t.save()
+            edit_form.save()
+    return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form})
+
+
+@login_required(login_url='login')
+def view_school(request, *args, **kwargs):
+    school = School.objects.all()
+    return render(request, "admin/view_school.html", {"school": school})
+
+
+@login_required(login_url='login')
+def view_department(request, *args, **kwargs):
+    department = Department.objects.all()
+    return render(request, "admin/view_department.html", {'department': department})
+
+
+@login_required(login_url='login')
+def edit_department(request, code):
+    print('hakdog', code)
+    department = Department.objects.get(department_code=code)
+    edit_form = EditDepartmentForm(instance=department)
+    if request.method == "POST":
+        edit_form = EditDepartmentForm(request.POST, instance=department)
+        if edit_form.is_valid():
+            new_department_name = edit_form['department_name'].value()
+            new_school_code = edit_form['school_code'].value()
+            t = Department.objects.get(department_code=code)
+            t.department_name = new_department_name
+            t.save()
+            t.school_code = new_school_code
+            t.save()
+            edit_form.save()
+    return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form})
+
+
+@login_required(login_url='login')
+def view_faculty(request, *args, **kwargs):
+    return render(request, "admin/view_faculty.html", {})
+
+
+@login_required(login_url='login')
+def view_counselor(request, *args, **kwargs):
+    return render(request, "admin/view_counselor.html", {})
+
+
+@login_required(login_url='login')
+def view_subject_offerings(request, *args, **kwargs):
+    return render(request, "admin/view_subject_offerings.html", {})
+
+
+@login_required(login_url='login')
+def view_degree_program(request, *args, **kwargs):
+    return render(request, "admin/view_degree_program.html", {})
+
+
+@login_required(login_url='login')
+def view_student(request, *args, **kwargs):
+    return render(request, "admin/view_student.html", {})
+
+
+@login_required(login_url='login')
+def view_student_load(request, *args, **kwargs):
+    return render(request, "admin/view_student_load.html", {})
 
 
 @login_required(login_url='login')
@@ -507,16 +601,63 @@ def upload_subject_offerings(request):
         if request.method == 'POST':
             SubjectOfferingsResource()
             dataset = Dataset()
-            new_subject_offerings = request.FILES['myfile']
-            imported_data = dataset.load(
-                new_subject_offerings.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_subject_offerings)
+            new_sem = request.FILES['myfile']
+            imported_data = dataset.load(new_sem.read(), format='xlsx')
+            wb_obj = openpyxl.load_workbook(new_sem)
             sheet_obj = wb_obj.active
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 10):
+            if(col == 9):
                 for data in imported_data:
+                    check_depa = Department.objects.all()
+                    check_faculty = Faculty.objects.all()
+                    check_offerings = Offerings.objects.all()
+                    check_subject = Subject.objects.all()
+                    is_depa = bool(check_depa)
+                    is_faculty = bool(check_faculty)
+                    is_offerings = bool(check_offerings)
+                    is_subject = bool(check_subject)
+
+                    if is_depa:
+                        if data[7] not in check_depa:
+                            depa = Department(department_code=data[7])
+                            depa.save()
+                    else:
+                        depa = Department(department_code=data[7])
+                        depa.save()
+
+                    if is_faculty:
+                        if str(data[8]) not in check_faculty:
+                            faculty = Faculty(faculty_id=str(data[8]))
+                            faculty.save()
+                    else:
+                        faculty = Faculty(faculty_id=str(data[8]))
+                        faculty.save()
+
+                    flag = 0
+                    if is_offerings:
+                        for obj in check_offerings:
+                            if str(data[0]) == obj.offer_no and str(data[5]) == obj.sem_id:
+                                flag = 1
+                        if flag == 0:
+                            offerings = Offerings(offer_no=str(data[0]), days=str(data[3]), school_time=str(
+                                data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
+                            offerings.save()
+                    else:
+                        offerings = Offerings(
+                            offer_no=str(data[0]), days=str(data[3]), school_time=str(data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
+                        offerings.save()
+
+                    if is_subject:
+                        if data[1] not in check_subject:
+                            subject = Subject(
+                                subject_code=data[1], subject_title=data[2])
+                            subject.save()
+                    else:
+                        subject = Subject(
+                            subject_code=data[1], subject_title=data[2])
+                        subject.save()
                     value = SubjectOfferings(
                         data[0],
                         data[1],
@@ -526,8 +667,7 @@ def upload_subject_offerings(request):
                         data[5],
                         data[6],
                         data[7],
-                        data[8],
-                        data[9],
+                        data[8]
                     )
                     value.save()
                 messages.info(request, 'Successfully Added')
@@ -642,3 +782,30 @@ def upload_student_load(request):
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
 # admin
+
+
+# director
+@login_required(login_url='login')
+def director_home_view(request, *args, **kwargs):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    return render(request, "director/home.html", {"form": director_name})
+# director
+
+
+# counselor
+@login_required(login_url='login')
+def counselor_home_view(request, *args, **kwargs):
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    return render(request, "counselor/home.html", {"form": counselor_name})
+# counselor
+
+
+# teacher
+@login_required(login_url='login')
+def teacher_home_view(request, *args, **kwargs):
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    return render(request, "teacher/teacher_home.html",  {"form": teacher_name})
+# teacher

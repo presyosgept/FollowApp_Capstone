@@ -15,8 +15,8 @@ admin.site.register(Offerings)
 
 
 class OfferingsAdmin(ImportExportModelAdmin):
-    list_display = ('offer_no', 'days', 'start_time',
-                    'end_time', 'sem_id', 'academic_year')
+    list_display = ('id', 'offer_no', 'days', 'school_time',
+                    'sem_id', 'academic_year')
 
 
 admin.site.register(Subject)
@@ -59,9 +59,8 @@ admin.site.register(SubjectOfferings)
 
 
 class SubjectOfferingsAdmin(ImportExportModelAdmin):
-    list_display = ('offer_no', 'subject_code', 'school_days',
-                    'start_time', 'end_time', 'status', 'sem_id',
-                    'academic_year', 'department_code', 'faculty_id')
+    list_display = ('offer_no', 'subject_code', 'subject_title', 'school_days',
+                    'school_time', 'sem_id', 'academic_year', 'department_code', 'faculty_id')
 
 
 admin.site.register(DegreeProgram)

@@ -29,6 +29,30 @@ class AccountCreatedForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField()
 
+# Edit Data In admin
+
+
+class EditDepartmentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditDepartmentForm, self).__init__(*args, **kwargs)
+        self.fields['department_code'].disabled = True
+
+    class Meta:
+        model = Department
+        fields = ['department_code', 'department_name', 'school_code']
+
+
+class EditSubjectForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditSubjectForm, self).__init__(*args, **kwargs)
+        self.fields['subject_code'].disabled = True
+        self.fields['subject_title'].disabled = True
+
+    class Meta:
+        model = Subject
+        fields = ['subject_code', 'subject_title', 'units']
+# Edit Data In admin
+
 
 # class SearchForm(forms.Form):
 #     search = forms.CharField()
