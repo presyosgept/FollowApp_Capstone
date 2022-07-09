@@ -77,7 +77,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = 'c2bea526026f45859efe73f62f35b2cb'
+                auth_token = '6a4c0f4f25343f30f14f9adb73f858f7'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -103,7 +103,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = 'c2bea526026f45859efe73f62f35b2cb'
+                    auth_token = '6a4c0f4f25343f30f14f9adb73f858f7'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -352,7 +352,8 @@ def edit_department(request, code):
 
 @login_required(login_url='login')
 def view_faculty(request, *args, **kwargs):
-    return render(request, "admin/view_faculty.html", {})
+    faculty = Faculty.objects.all()
+    return render(request, "admin/view_faculty.html", {'faculty': faculty})
 
 
 @login_required(login_url='login')
@@ -545,17 +546,47 @@ def upload_faculty(request):
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 6):
+            if(col == 7):
                 for data in imported_data:
-                    value = Faculty(
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3],
-                        data[4],
-                        data[5],
-                    )
-                    value.save()
+                    check_faculty = Faculty.objects.all()
+                    flag_faculty = 0
+                    flag_depa = 0
+                    check_depa = Department.objects.all()
+                    for obj in check_depa:
+                        if obj.department_code == data[5]:
+                            flag_depa = 1
+                    if flag_depa == 0:
+                        depa = Department(department_code=data[6])
+                        depa.save()
+                    for obj in check_faculty:
+                        if obj.faculty_id == str(data[0]):
+                            flag_faculty = 1
+                            id = obj.faculty_id
+                    if flag_faculty == 0:
+                        depa = Department.objects.get(
+                            department_code=str(data[6]))
+                        value = Faculty(
+                            faculty_id=str(data[0]),
+                            lastname=data[1],
+                            firstname=data[2],
+                            middlename=data[3],
+                            email=data[4],
+                            role=data[5],
+                            department_code=depa
+                        )
+                        value.save()
+                    else:
+                        check = Faculty.objects.get(faculty_id=id)
+                        check.lastname = data[1]
+                        check.save()
+                        check.firstname = data[2]
+                        check.save()
+                        check.middlename = data[3]
+                        check.save()
+                        check.email = data[4]
+                        check.save()
+                        check.role = data[5]
+                        check.save()
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
@@ -618,6 +649,7 @@ def upload_subject_offerings(request):
                     is_faculty = bool(check_faculty)
                     is_offerings = bool(check_offerings)
                     is_subject = bool(check_subject)
+                    print(bool(check_faculty))
 
                     if is_depa:
                         if data[7] not in check_depa:
@@ -629,10 +661,16 @@ def upload_subject_offerings(request):
 
                     if is_faculty:
                         if str(data[8]) not in check_faculty:
-                            faculty = Faculty(faculty_id=str(data[8]))
+                            depa = Department.objects.get(
+                                department_code=data[7])
+                            faculty = Faculty(faculty_id=str(
+                                data[8]), department_code=depa)
                             faculty.save()
                     else:
-                        faculty = Faculty(faculty_id=str(data[8]))
+                        depa = Department.objects.get(
+                            department_code=data[7])
+                        faculty = Faculty(faculty_id=str(
+                            data[8]), department_code=depa)
                         faculty.save()
 
                     flag = 0

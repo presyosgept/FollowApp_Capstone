@@ -44,7 +44,7 @@ admin.site.register(Faculty)
 
 
 class FacultyAdmin(ImportExportModelAdmin):
-    list_display = ('faculty_id', 'lastname', 'firstname',
+    list_display = ('faculty_id', 'lastname', 'firstname', 'middlename',
                     'email', 'role', 'department_code')
 
 

@@ -40,14 +40,10 @@ class School(models.Model):
 
 
 class Department(models.Model):
-    qs = School.objects.all()
-    qs_code = []
-    for obj in qs:
-        qs_code.append([obj.school_code, obj.school_name])
     department_code = models.CharField(max_length=25, primary_key=True)
     department_name = models.CharField(max_length=220)
     school_code = models.ForeignKey(
-        School, on_delete=models.CASCADE, blank=True, null=True, max_length=10, choices=qs_code)
+        School, on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Department"
@@ -57,6 +53,7 @@ class Faculty(models.Model):
     faculty_id = models.CharField(max_length=15, primary_key=True)
     lastname = models.CharField(max_length=220)
     firstname = models.CharField(max_length=220)
+    middlename = models.CharField(max_length=220,null=True, blank=True)
     email = models.EmailField(max_length=254)
     role = models.CharField(max_length=220)
     department_code = models.ForeignKey(
