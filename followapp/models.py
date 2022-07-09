@@ -96,8 +96,8 @@ class DegreeProgram(models.Model):
     program_code = models.CharField(max_length=220, primary_key=True)
     program_name = models.CharField(max_length=220)
     school_code = models.ForeignKey(School, on_delete=models.CASCADE)
-    counselor_id = models.ForeignKey(
-        Counselor, on_delete=models.CASCADE)
+    faculty_id = models.ForeignKey(
+        Faculty, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "DegreeProgram"

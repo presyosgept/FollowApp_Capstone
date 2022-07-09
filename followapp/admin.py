@@ -68,7 +68,7 @@ admin.site.register(DegreeProgram)
 
 class DegreeProgramAdmin(ImportExportModelAdmin):
     list_display = ('program_code', 'program_name',
-                    'school_code', 'counselor_id')
+                    'school_code', 'faculty_id')
 
 
 admin.site.register(Student)

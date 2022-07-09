@@ -731,13 +731,12 @@ def upload_degree_program(request):
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 4):
+            if(col == 3):
                 for data in imported_data:
                     value = DegreeProgram(
                         data[0],
                         data[1],
-                        data[2],
-                        data[3]
+                        data[2]
                     )
                     value.save()
                 messages.info(request, 'Successfully Added')
