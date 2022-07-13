@@ -42,15 +42,27 @@ class EditDepartmentForm(forms.ModelForm):
         fields = ['department_code', 'department_name', 'school_code']
 
 
-class EditSubjectForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(EditSubjectForm, self).__init__(*args, **kwargs)
-        self.fields['subject_code'].disabled = True
-        self.fields['subject_title'].disabled = True
+# class EditSubjectForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(EditSubjectForm, self).__init__(*args, **kwargs)
+#         self.fields['subject_code'].disabled = True
+#         self.fields['subject_title'].disabled = True
 
-    class Meta:
-        model = Subject
-        fields = ['subject_code', 'subject_title', 'units']
+#     class Meta:
+#         model = Subject
+#         fields = ['subject_code', 'subject_title', 'units']
+
+
+UNITS_CHOICES = [
+    ('--', '--'),
+    ('3', '3'),
+    ('6', '6'),
+    ('9', '9'),
+]
+
+
+class EditSubjectForm(forms.Form):
+    units = forms.CharField(widget=forms.Select(choices=UNITS_CHOICES))
 # Edit Data In admin
 
 

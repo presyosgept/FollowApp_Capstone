@@ -301,15 +301,15 @@ def view_subject(request, *args, **kwargs):
 @login_required(login_url='login')
 def edit_subject(request, code):
     subject = Subject.objects.get(subject_code=code)
-    edit_form = EditSubjectForm(instance=subject)
+    edit_form = EditSubjectForm()
     if request.method == "POST":
-        edit_form = EditSubjectForm(request.POST, instance=subject)
+        edit_form = EditSubjectForm(request.POST)
         if edit_form.is_valid():
             new_units = edit_form['units'].value()
-            t = Subject.objects.get(subject_code=code)
-            t.units = new_units
-            t.save()
-            edit_form.save()
+            edit = Subject.objects.get(subject_code=code)
+            edit.units = new_units
+            edit.save()
+            subject = Subject.objects.get(subject_code=code)
     return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form})
 
 
@@ -327,7 +327,6 @@ def view_department(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def edit_department(request, code):
-    print('hakdog', code)
     department = Department.objects.get(department_code=code)
     edit_form = EditDepartmentForm(instance=department)
     if request.method == "POST":
@@ -335,12 +334,12 @@ def edit_department(request, code):
         if edit_form.is_valid():
             new_department_name = edit_form['department_name'].value()
             new_school_code = edit_form['school_code'].value()
-            t = Department.objects.get(department_code=code)
-            t.department_name = new_department_name
-            t.save()
-            t.school_code = new_school_code
-            t.save()
-            edit_form.save()
+            get_school_code = School.objects.get(school_code=new_school_code)
+            edit = Department.objects.get(department_code=code)
+            edit.department_name = new_department_name
+            edit.save()
+            edit.school_code = get_school_code
+            edit.save()
     return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form})
 
 
@@ -352,8 +351,8 @@ def view_faculty(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def view_counselor(request, *args, **kwargs):
-    counselor = Faculty.objects.filter(role = 'Counselor')
-    return render(request, "admin/view_counselor.html", {'counselor':counselor})
+    counselor = Faculty.objects.filter(role='Counselor')
+    return render(request, "admin/view_counselor.html", {'counselor': counselor})
 
 
 @login_required(login_url='login')
@@ -371,7 +370,7 @@ def view_degree_program(request, *args, **kwargs):
 @login_required(login_url='login')
 def view_student(request, *args, **kwargs):
     student = Student.objects.all()
-    return render(request, "admin/view_student.html", {'student':student})
+    return render(request, "admin/view_student.html", {'student': student})
 
 
 @login_required(login_url='login')
