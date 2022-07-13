@@ -39,7 +39,7 @@ from .models import Semester, Offerings, Subject, School, Department, Faculty, C
 from .models import AccountCreated
 from .resources import SemesterResource, OfferingsResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -752,6 +752,33 @@ def director_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
     return render(request, "director/home.html", {"form": director_name})
+
+
+@login_required(login_url='login')
+def list_degree_program(request, *args, **kwargs):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    degree_program = DegreeProgram.objects.all()
+    return render(request, "director/list_degree_program.html", {"form": director_name, 'degree_program': degree_program})
+
+
+@login_required(login_url='login')
+def assign_counselor(request, code):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    degree_program = DegreeProgram.objects.get(program_code=code)
+    edit_form = AssignCounselorForm()
+    if request.method == "POST":
+        edit_form = AssignCounselorForm(request.POST)
+        if edit_form.is_valid():
+            new_faculty = edit_form['faculty'].value()
+            get_counselor = Faculty.objects.get(faculty_id=new_faculty)
+            edit = DegreeProgram.objects.get(program_code=code)
+            edit.faculty_id = get_counselor
+            edit.save()
+            degree_program = DegreeProgram.objects.get(program_code=code)
+    return render(request, "director/assign_counselor.html", {"form": director_name, 'degree_program': degree_program, 'edit_form': edit_form})
+
 # director
 
 

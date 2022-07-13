@@ -53,6 +53,8 @@ from followapp.views import(
 
     # director
     director_home_view,
+    list_degree_program,
+    assign_counselor,
 
     # counselor
     counselor_home_view,
@@ -107,7 +109,10 @@ urlpatterns = [
 
     # director
     path('director/', director_home_view, name="director_home_view"),
-
+    path('director/list_degree_program',
+         list_degree_program, name="list_degree_program"),
+    path('director/assign_counselor/<str:code>',
+         assign_counselor, name="assign_counselor"),
     # counselor
     path('counselor/', counselor_home_view, name="counselor_home_view"),
 

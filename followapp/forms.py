@@ -66,6 +66,17 @@ class EditSubjectForm(forms.Form):
 # Edit Data In admin
 
 
+qs = Faculty.objects.all()
+qs_code = []
+for obj in qs:
+    if obj.role == 'Counselor':
+        name = obj.lastname + ',' + obj.firstname
+        qs_code.append([obj.faculty_id, name])
+
+
+class AssignCounselorForm(forms.Form):
+    faculty = forms.CharField(widget=forms.Select(choices=qs_code))
+
 # class SearchForm(forms.Form):
 #     search = forms.CharField()
 
