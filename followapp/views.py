@@ -287,12 +287,6 @@ def admin_home_view(request, *args, **kwargs):
 
 
 @login_required(login_url='login')
-def view_semester(request, *args, **kwargs):
-    semester = Semester.objects.all()
-    return render(request, "admin/view_semester.html", {"sem": semester})
-
-
-@login_required(login_url='login')
 def view_offerings(request, *args, **kwargs):
     offerings = Offerings.objects.all()
     return render(request, "admin/view_offerings.html", {"offerings": offerings})
@@ -358,56 +352,32 @@ def view_faculty(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def view_counselor(request, *args, **kwargs):
-    return render(request, "admin/view_counselor.html", {})
+    counselor = Faculty.objects.filter(role = 'Counselor')
+    return render(request, "admin/view_counselor.html", {'counselor':counselor})
 
 
 @login_required(login_url='login')
 def view_subject_offerings(request, *args, **kwargs):
-    return render(request, "admin/view_subject_offerings.html", {})
+    subject_offerings = SubjectOfferings.objects.all()
+    return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings})
 
 
 @login_required(login_url='login')
 def view_degree_program(request, *args, **kwargs):
-    return render(request, "admin/view_degree_program.html", {})
+    degree_program = DegreeProgram.objects.all()
+    return render(request, "admin/view_degree_program.html", {'degree_program': degree_program})
 
 
 @login_required(login_url='login')
 def view_student(request, *args, **kwargs):
-    return render(request, "admin/view_student.html", {})
+    student = Student.objects.all()
+    return render(request, "admin/view_student.html", {'student':student})
 
 
 @login_required(login_url='login')
 def view_student_load(request, *args, **kwargs):
-    return render(request, "admin/view_student_load.html", {})
-
-
-@login_required(login_url='login')
-def upload_semester(request):
-    try:
-        semester = Semester.objects.all()
-        if request.method == 'POST':
-            SemesterResource()
-            dataset = Dataset()
-            new_sem = request.FILES['myfile']
-            imported_data = dataset.load(new_sem.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_sem)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 2):
-                for data in imported_data:
-                    value = Semester(
-                        data[0],
-                        data[1],
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_semester.html", {"sem": semester})
+    student_load = Studentload.objects.all()
+    return render(request, "admin/view_student_load.html", {'student_load': student_load})
 
 
 @login_required(login_url='login')
@@ -444,36 +414,6 @@ def upload_offerings(request):
 
 
 @login_required(login_url='login')
-def upload_subject(request):
-    try:
-        subject = Subject.objects.all()
-        if request.method == 'POST':
-            SubjectResource()
-            dataset = Dataset()
-            new_subject = request.FILES['myfile']
-            imported_data = dataset.load(new_subject.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_subject)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 3):
-                for data in imported_data:
-                    value = Subject(
-                        data[0],
-                        data[1],
-                        data[2]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_subject.html", {"subject": subject})
-
-
-@login_required(login_url='login')
 def upload_school(request):
     try:
         school = School.objects.all()
@@ -500,36 +440,6 @@ def upload_school(request):
     except Exception:
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_school.html", {"school": school})
-
-
-@login_required(login_url='login')
-def upload_department(request):
-    try:
-        department = Department.objects.all()
-        if request.method == 'POST':
-            DepartmentResource()
-            dataset = Dataset()
-            new_department = request.FILES['myfile']
-            imported_data = dataset.load(new_department.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_department)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 3):
-                for data in imported_data:
-                    value = Department(
-                        data[0],
-                        data[1],
-                        data[2]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_department.html", {"department": department})
 
 
 @login_required(login_url='login')

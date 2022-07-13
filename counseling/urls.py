@@ -29,11 +29,8 @@ from followapp.views import(
 
     # admin
     admin_home_view,
-    upload_semester,
     upload_offerings,
-    upload_subject,
     upload_school,
-    upload_department,
     upload_faculty,
     upload_counselor,
     upload_subject_offerings,
@@ -41,7 +38,6 @@ from followapp.views import(
     upload_student,
     upload_student_load,
 
-    view_semester,
     view_offerings,
     view_subject,
     view_school,
@@ -79,11 +75,8 @@ urlpatterns = [
 
     # admin
     path('head/', admin_home_view, name="admin_home_view"),
-    path('admin/upload_semester', upload_semester, name="upload_semester"),
     path('admin/upload_offerings', upload_offerings, name="upload_offerings"),
-    path('admin/upload_subject', upload_subject, name="upload_subject"),
     path('admin/upload_school', upload_school, name="upload_school"),
-    path('admin/upload_department', upload_department, name="upload_department"),
     path('admin/upload_faculty', upload_faculty, name="upload_faculty"),
     path('admin/upload_counselor', upload_counselor, name="upload_counselor"),
     path('admin/upload_subject_offerings',
@@ -93,7 +86,6 @@ urlpatterns = [
     path('admin/upload_student', upload_student, name="upload_student"),
     path('admin/upload_student_load',
          upload_student_load, name="upload_student_load"),
-    path('admin/view_semester', view_semester, name="view_semester"),
     path('admin/view_offerings', view_offerings, name="view_offerings"),
     path('admin/view_subject', view_subject, name="view_subject"),
     path('admin/view_school', view_school, name="view_school"),
