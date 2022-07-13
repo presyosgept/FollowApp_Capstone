@@ -1,6 +1,8 @@
 from django.db import models
 from multiselectfield import MultiSelectField
 from django.contrib.postgres.fields import ArrayField
+from viewflow.fields import CompositeKey
+from compositefk.fields import CompositeForeignKey, LocalFieldValue
 
 
 class Semester(models.Model):
@@ -13,9 +15,12 @@ class Semester(models.Model):
 
 class Offerings(models.Model):
     class Meta:
-        unique_together = (('offer_no', 'sem_id', 'academic_year'))
         verbose_name_plural = "Offerings"
-    offer_no = models.CharField(max_length=225, primary_key=True)
+        constraints = [
+            models.UniqueConstraint(
+                fields=['offer_no', 'sem_id'], name='offer_no__and_sem_id_uniq_Offerings')
+        ]
+    offer_no = models.CharField(max_length=225)
     days = models.CharField(max_length=220, null=True, blank=True)
     school_time = models.CharField(max_length=220, null=True, blank=True)
     sem_id = models.CharField(max_length=220, null=True, blank=True)
@@ -53,7 +58,7 @@ class Faculty(models.Model):
     faculty_id = models.CharField(max_length=15, primary_key=True)
     lastname = models.CharField(max_length=220)
     firstname = models.CharField(max_length=220)
-    middlename = models.CharField(max_length=220,null=True, blank=True)
+    middlename = models.CharField(max_length=220, null=True, blank=True)
     email = models.EmailField(max_length=254)
     role = models.CharField(max_length=220)
     department_code = models.ForeignKey(
@@ -74,22 +79,24 @@ class Counselor(models.Model):
 
 class SubjectOfferings(models.Model):
     class Meta:
-        unique_together = (('offer_no', 'sem_id', 'academic_year'))
         verbose_name_plural = "SubjectOfferings"
-
+        constraints = [
+            models.UniqueConstraint(
+                fields=['offer_no', 'sem_id'], name='offer_no_and_sem_id_uniq_SubjectOfferings')
+        ]
     offer_no = models.ForeignKey(
-        Offerings, on_delete=models.CASCADE, primary_key=True)
+        Offerings, on_delete=models.CASCADE, null=True, blank=True)
     subject_code = models.ForeignKey(
         Subject, on_delete=models.CASCADE)
     subject_title = models.CharField(max_length=220, null=True, blank=True)
     school_days = models.CharField(max_length=220, null=True, blank=True)
     school_time = models.CharField(max_length=220, null=True, blank=True)
-    sem_id = models.CharField(max_length=220, null=True, blank=True)
-    academic_year = models.CharField(max_length=225)
+    sem_id = models.CharField(max_length=255, null=True, blank=True)
+    academic_year = models.CharField(max_length=225, null=True, blank=True)
     department_code = models.ForeignKey(
-        Department, on_delete=models.CASCADE)
+        Department, on_delete=models.CASCADE, null=True, blank=True)
     faculty_id = models.ForeignKey(
-        Faculty, on_delete=models.CASCADE)
+        Faculty, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class DegreeProgram(models.Model):
@@ -125,14 +132,17 @@ class Student(models.Model):
 
 class Studentload(models.Model):
     class Meta:
-        unique_together = (('student_number', 'offer_code'))
         verbose_name_plural = "Studentload"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student_number', 'offer_no'], name='student_number_and_offer_no_uniq_Studentload')
+        ]
     student_number = models.ForeignKey(
-        Student, on_delete=models.CASCADE, primary_key=True)
-    offer_code = models.ForeignKey(
-        Offerings, on_delete=models.CASCADE)
-    sem_id = models.CharField(max_length=220)
-    academic_year = models.CharField(max_length=225)
+        Student, on_delete=models.CASCADE, null=True, blank=True)
+    offer_no = models.ForeignKey(
+        Offerings, on_delete=models.CASCADE, null=True, blank=True)
+    sem_id = models.CharField(max_length=220, null=True, blank=True)
+    academic_year = models.CharField(max_length=225, null=True, blank=True)
 
 
 #

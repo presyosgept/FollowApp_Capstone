@@ -272,17 +272,17 @@
     <thead>
       <tr>
         <th  style="font-size: 17px;">Student Number</th>
-        <th  style="font-size: 17px;">Offer Code</th>
+        <th  style="font-size: 17px;">Offer No</th>
         <th  style="font-size: 17px;">Semester ID</th>
         <th  style="font-size: 17px;">Academic Year</th>
       </tr>
     </thead> {% for obj in student_load %} <tbody>
       <tr>
         <td  style="font-size: 15px;">
-          <b>{{obj.student_number}}</b>
+          <b>{{obj.student_number_id}}</b>
         </td>
         <td style="text-align: left; font-size: 15px;">
-           <b>{{obj.offer_code}}</b>
+           <b>{{obj.offer_no_id}}</b>
         </td>
          <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.sem_id}}</b>

@@ -649,7 +649,6 @@ def upload_subject_offerings(request):
                     is_faculty = bool(check_faculty)
                     is_offerings = bool(check_offerings)
                     is_subject = bool(check_subject)
-                    print(bool(check_faculty))
 
                     if is_depa:
                         if data[7] not in check_depa:
@@ -696,22 +695,34 @@ def upload_subject_offerings(request):
                         subject = Subject(
                             subject_code=data[1], subject_title=data[2])
                         subject.save()
+
+                for data in imported_data:
+                    print(data[5])
+                    get_offer_no = Offerings.objects.get(
+                        offer_no=str(data[0]), sem_id=str(data[5]))
+                    get_subject_code = Subject.objects.get(
+                        subject_code=data[1])
+                    get_department_code = Department.objects.get(
+                        department_code=data[7])
+                    get_faculty_id = Faculty.objects.get(
+                        faculty_id=str(data[8]))
                     value = SubjectOfferings(
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3],
-                        data[4],
-                        data[5],
-                        data[6],
-                        data[7],
-                        data[8]
+                        offer_no=get_offer_no,
+                        subject_code=get_subject_code,
+                        subject_title=data[2],
+                        school_days=str(data[3]),
+                        school_time=str(data[4]),
+                        sem_id=str(data[5]),
+                        academic_year=str(data[6]),
+                        department_code=get_department_code,
+                        faculty_id=get_faculty_id
                     )
                     value.save()
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
-    except Exception:
+    except Exception as e:
+        print('helo', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings})
 
@@ -805,17 +816,22 @@ def upload_student_load(request):
 
             if(col == 4):
                 for data in imported_data:
+                    get_student_number = Student.objects.get(
+                        student_number=str(data[0]))
+                    get_offer_no = Offerings.objects.get(
+                        offer_no=str(data[1]), sem_id=str(data[2]))
                     value = Studentload(
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3]
+                        student_number=get_student_number,
+                        offer_no=get_offer_no,
+                        sem_id=str(data[2]),
+                        academic_year=str(data[3])
                     )
                     value.save()
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
-    except Exception:
+    except Exception as e:
+        print('hi', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
 # admin

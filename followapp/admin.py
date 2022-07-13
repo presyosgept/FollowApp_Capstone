@@ -4,6 +4,7 @@ from .models import Semester, Offerings, Subject, School, Department, Faculty, C
 from .models import AccountCreated
 # admin.site.register(Semester)
 
+
 admin.site.register(Semester)
 
 
@@ -83,7 +84,7 @@ admin.site.register(Studentload)
 
 
 class StudentloadAdmin(ImportExportModelAdmin):
-    list_display = ('student_number', 'offer_code',
+    list_display = ('student_number', 'offer_no',
                     'sem_id', 'academic_year')
 
 

@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'counseling.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'followapp_db',
+        'NAME': 'followapp',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',
