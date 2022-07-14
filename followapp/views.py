@@ -606,7 +606,7 @@ def upload_subject_offerings(request):
                         subject.save()
 
                 for data in imported_data:
-                    print(data[5])
+                    print(data[0])
                     get_offer_no = Offerings.objects.get(
                         offer_no=str(data[0]), sem_id=str(data[5]))
                     get_subject_code = Subject.objects.get(
