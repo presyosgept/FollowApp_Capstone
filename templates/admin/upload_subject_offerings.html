@@ -114,9 +114,8 @@
     font-weight: normal;
     border: none;
     border-collapse: collapse;
-     width: 85vw;
-    max-width: 100%;
-    white-space: nowrap;
+     width: 90vw;
+ 
     background-color: white;
     overflow-y: scroll;
   }
@@ -128,7 +127,7 @@
   }
 
   .fl-table td {
-    border-right: 1px solid #f8f8f8;
+    border-right: 1px solid #98b4ac;
     font-size: 12px;
   }
 
@@ -239,7 +238,6 @@
   </button>
 </div>
 <br>
-<br>
 <div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
     <p>
       <b>{{message}} !</b>
@@ -252,7 +250,6 @@
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} <center>
       <input type="file" name="myfile" class="input" style="font-size: 17.5px; font-weight: bold;">
     </center>
-    <br>
     <br>
     <div class="wrap">
       <button type="submit" class="button">Upload</button>
@@ -270,48 +267,44 @@
   <table class="fl-table">
     <thead>
       <tr>
-        <th  style="font-size: 17px;">Offer Number</th>
-        <th  style="font-size: 17px;">Subject Code</th>
-        <th  style="font-size: 17px;">School Days</th>
-        <th  style="font-size: 17px;">Start Time</th>
-        <th  style="font-size: 17px;">End Time</th>
-        <th  style="font-size: 17px;">Status</th>
-        <th  style="font-size: 17px;">Semester ID</th>
-        <th  style="font-size: 17px;">Academic Year</th>
-        <th  style="font-size: 17px;">Department Code</th>
-        <th  style="font-size: 17px;">Faculty ID</th>
+        <th  style="font-size: 15px;">Offer Number</th>
+        <th  style="font-size: 15px;">Subject Code</th>
+        <th  style="font-size: 15px;">School Days</th>
+        <th  style="font-size: 15px;">Start Time</th>
+        <th  style="font-size: 15px;">End Time</th>
+        <th  style="font-size: 15px;">Semester ID</th>
+        <th  style="font-size: 15px;">Academic Year</th>
+        <th  style="font-size: 15px;">Department Code</th>
+        <th  style="font-size: 15px;">Faculty ID</th>
       </tr>
     </thead>  {% for obj in subject_offerings %} 
     <tbody>
       <tr>
-        <td style="font-size: 15px;">
+        <td style="font-size: 13px;">
           <b>{{obj.offer_no.offer_no}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.subject_code_id}}</b>
         </td>
-       <td  style="text-align: left; font-size: 15px;">
+       <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.subject_title}}</b>
         </td>
-           <td  style="text-align: left; font-size: 15px;">
+           <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.school_days}}</b>
         </td>
-         <td  style="text-align: left; font-size: 15px;">
+         <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.school_time}}</b>
         </td>
-           <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.status}}</b>
-        </td>
-          <td  style="text-align: left; font-size: 15px;">
+          <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.sem_id}}</b>
         </td>
-          <td  style="text-align: left; font-size: 15px;">
+          <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.academic_year}}</b>
         </td>
-         <td  style="text-align: left; font-size: 15px;">
+         <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.department_code_id}}</b>
         </td>
-          <td  style="text-align: left; font-size: 15px;">
+          <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.faculty_id_id}}</b>
         </td>
       </tr>

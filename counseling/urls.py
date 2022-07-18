@@ -29,10 +29,8 @@ from followapp.views import(
 
     # admin
     admin_home_view,
-    upload_offerings,
     upload_school,
     upload_faculty,
-    upload_counselor,
     upload_subject_offerings,
     upload_degree_program,
     upload_student,
@@ -48,8 +46,21 @@ from followapp.views import(
     view_degree_program,
     view_student,
     view_student_load,
+
+
+    view_student_detail,
+    view_faculty_detail,
+
     edit_department,
     edit_subject,
+
+    search_student,
+    search_faculty,
+
+    view_faculty_with_load,
+    search_faculty_with_load,
+    view_student_with_load,
+    search_student_with_load,
 
     # director
     director_home_view,
@@ -77,10 +88,8 @@ urlpatterns = [
 
     # admin
     path('head/', admin_home_view, name="admin_home_view"),
-    path('admin/upload_offerings', upload_offerings, name="upload_offerings"),
     path('admin/upload_school', upload_school, name="upload_school"),
     path('admin/upload_faculty', upload_faculty, name="upload_faculty"),
-    path('admin/upload_counselor', upload_counselor, name="upload_counselor"),
     path('admin/upload_subject_offerings',
          upload_subject_offerings, name="upload_subject_offerings"),
     path('admin/upload_degree_program',
@@ -101,10 +110,32 @@ urlpatterns = [
     path('admin/view_student', view_student, name="view_student"),
     path('admin/view_student_load',
          view_student_load, name="view_student_load"),
+
     path('admin/edit_department/<str:code>',
          edit_department, name="edit_department"),
     path('admin/edit_subject/<str:code>',
          edit_subject, name="edit_subject"),
+
+    path('admin/search_faculty/<str:search>',
+         search_faculty, name="search_faculty"),
+    path('admin/search_student/<str:search>',
+         search_student, name="search_student"),
+
+
+    path('admin/view_faculty_with_load',
+         view_faculty_with_load, name="view_faculty_with_load"),
+    path('admin/search_faculty_with_load/<str:search>',
+         search_faculty_with_load, name="search_faculty_with_load"),
+    path('admin/view_student_with_load',
+         view_student_with_load, name="view_student_with_load"),
+    path('admin/search_student_with_load/<str:search>',
+         search_student_with_load, name="search_student_with_load"),
+
+
+    path('admin/view_faculty_detail/<str:faculty_id>',
+         view_faculty_detail, name="view_faculty_detail"),
+    path('admin/view_student_detail/<str:student_number>',
+         view_student_detail, name="view_student_detail"),
 
 
     # director

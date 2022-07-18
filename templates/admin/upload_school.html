@@ -115,9 +115,7 @@
     font-weight: normal;
     border: none;
     border-collapse: collapse;
-     width: 85vw;
-    max-width: 100%;
-    white-space: nowrap;
+     width: 90vw;
     background-color: white;
     overflow-y: scroll;
   }
@@ -240,7 +238,7 @@
   </button>
 </div>
 <br>
-<br>
+
 <div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
     <p>
       <b>{{message}} !</b>
@@ -253,7 +251,6 @@
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} <center>
       <input type="file" name="myfile" class="input" style="font-size: 17.5px; font-weight: bold;">
     </center>
-    <br>
     <br>
     <div class="wrap">
       <button type="submit" class="button">Upload</button>

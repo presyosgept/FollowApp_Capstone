@@ -10,6 +10,10 @@ from functools import partial
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 
+class SearchForm(forms.Form):
+    search = forms.CharField()
+
+
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
@@ -39,7 +43,8 @@ class EditDepartmentForm(forms.ModelForm):
 
     class Meta:
         model = Department
-        fields = ['department_code', 'department_name', 'school_code']
+        fields = ['department_code', 'department_name',
+                  'school_code']
 
 
 # class EditSubjectForm(forms.ModelForm):
@@ -55,8 +60,14 @@ class EditDepartmentForm(forms.ModelForm):
 
 UNITS_CHOICES = [
     ('--', '--'),
+    ('1', '1'),
+    ('2', '2'),
     ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
     ('6', '6'),
+    ('7', '7'),
+    ('8', '8'),
     ('9', '9'),
 ]
 

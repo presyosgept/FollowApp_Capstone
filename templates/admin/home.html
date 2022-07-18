@@ -613,7 +613,6 @@ margin-left: 100px; */
                 </a>
                 <div class="nav__dropdown-collapse">
                   <div class="nav__dropdown-content">
-                    
                     <a href="{% url 'upload_subject_offerings' %}" class="nav__dropdown-item">Upload Subject Offerings</a>
                     <a href="{% url 'upload_school' %}" class="nav__dropdown-item">Upload School</a>
                     <a href="{% url 'upload_degree_program' %}" class="nav__dropdown-item">Upload Degree Program</a>
@@ -645,6 +644,19 @@ margin-left: 100px; */
                   </div>
                 </div>
               </div>
+              <div class="nav__dropdown">
+                <a href="#refer" class="nav__link">
+                  <i class='bx bx-file-find nav__icon'></i>
+                  <span class="nav__name">View Load</span>
+                  <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                </a>
+                <div class="nav__dropdown-collapse">
+                  <div class="nav__dropdown-content">
+                    <a href="{% url 'view_faculty_with_load' %}" class="nav__dropdown-item"> Faculty</a>
+                    <a href="{% url 'view_student_with_load' %}" class="nav__dropdown-item"> Student</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <br>
@@ -657,15 +669,6 @@ margin-left: 100px; */
     <!--========== CONTENTS NOTIFICATION ==========-->
     <div class="divHome">
       <section id="notif"> {% block content %} <br>
-        <div id="bgslider">
-          <figure>
-            <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
-            <img src="https://sscrmnl.edu.ph/wp-content/themes/sscr-manila/library/images/usjr_gc.jpg" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2016/06/OEAM1298-1024x683.jpg" alt="Slider">
-            <img src="https://images.squarespace-cdn.com/content/v1/5b7dc424a9e0283283f2127c/1602681165031-381SWS8LMY0K8K2YFSPV/everwell-online-therapy-ontario-counselling_001.png" alt="Slider">
-          </figure>
-        </div>
         <br>
         <div class="cards_item">
           <a href=#>

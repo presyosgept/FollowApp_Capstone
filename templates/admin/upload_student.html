@@ -103,7 +103,11 @@
     margin-right: auto;
   }
       /* Table Styles */
-
+td { 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    word-wrap: break-word;
+}
 
   .fl-table {
     margin-left: auto;
@@ -116,9 +120,9 @@
     font-weight: normal;
     border: none;
     border-collapse: collapse;
-     width: 85vw;
+     table-layout: auto;
+
     max-width: 100%;
-    white-space: nowrap;
     background-color: white;
     overflow-y: scroll;
   }
@@ -241,7 +245,7 @@
   </button>
 </div>
 <br>
-<br>
+
 <div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
     <p>
       <b>{{message}} !</b>
@@ -254,7 +258,6 @@
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} <center>
       <input type="file" name="myfile" class="input" style="font-size: 17.5px; font-weight: bold;">
     </center>
-    <br>
     <br>
     <div class="wrap">
       <button type="submit" class="button">Upload</button>
@@ -282,42 +285,38 @@
         <th  style="font-size: 17px;">Program Code</th>
         <th  style="font-size: 17px;">Year</th>
         <th  style="font-size: 17px;">Student Email</th>
-        <th  style="font-size: 17px;">Role</th>
       </tr>
     </thead> {% for obj in student %} <tbody>
       <tr>
-        <td  style="font-size: 15px;">
+        <td  style="font-size: 12px;">
           <b>{{obj.student_number}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.lastname}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.firstname}}</b>
         </td>
-       <td  style="text-align: left; font-size: 15px;">
+       <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.middlename}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.IQ}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.birthdate}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 12px;">
            <b>{{obj.hometown}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.program_code_id}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.year}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.student_email}}</b>
-        </td>
-               <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.role}}</b>
         </td>
       </tr>
     </tbody> {% endfor %}

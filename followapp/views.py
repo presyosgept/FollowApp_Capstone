@@ -39,7 +39,7 @@ from .models import Semester, Offerings, Subject, School, Department, Faculty, C
 from .models import AccountCreated
 from .resources import SemesterResource, OfferingsResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -332,8 +332,10 @@ def edit_department(request, code):
     if request.method == "POST":
         edit_form = EditDepartmentForm(request.POST, instance=department)
         if edit_form.is_valid():
+            print('aaaaaa')
             new_department_name = edit_form['department_name'].value()
             new_school_code = edit_form['school_code'].value()
+            print('papa', new_school_code)
             get_school_code = School.objects.get(school_code=new_school_code)
             edit = Department.objects.get(department_code=code)
             edit.department_name = new_department_name
@@ -346,7 +348,79 @@ def edit_department(request, code):
 @login_required(login_url='login')
 def view_faculty(request, *args, **kwargs):
     faculty = Faculty.objects.all()
-    return render(request, "admin/view_faculty.html", {'faculty': faculty})
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_faculty', search=search_choice)
+    return render(request, "admin/view_faculty.html", {'faculty': faculty, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def search_faculty(request, search):
+    all_faculty = Faculty.objects.all()
+    faculty = []
+    for obj in all_faculty:
+        if search in obj.lastname:
+            faculty.append(Faculty(faculty_id=obj.faculty_id,
+                                   lastname=obj.lastname, firstname=obj.firstname,
+                                   middlename=obj.middlename,
+                                   department_code=obj.department_code))
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_faculty', search=search_choice)
+    return render(request, "admin/search_faculty.html", {"faculty": faculty, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def view_faculty_with_load(request, *args, **kwargs):
+    faculty = Faculty.objects.all()
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_faculty_with_load', search=search_choice)
+    return render(request, "admin/view_faculty_with_load.html", {'faculty': faculty, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def search_faculty_with_load(request, search):
+    all_faculty = Faculty.objects.all()
+    faculty = []
+    for obj in all_faculty:
+        if search in obj.lastname:
+            faculty.append(Faculty(faculty_id=obj.faculty_id,
+                                   lastname=obj.lastname, firstname=obj.firstname,
+                                   middlename=obj.middlename,
+                                   department_code=obj.department_code))
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_faculty_with_load', search=search_choice)
+    return render(request, "admin/search_faculty_with_load.html", {"faculty": faculty, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def view_faculty_detail(request, faculty_id):
+    subject_offerings = SubjectOfferings.objects.all()
+    get_faculty = Faculty.objects.get(faculty_id=faculty_id)
+    get_subject_offerings = []
+    for obj in subject_offerings:
+        if obj.faculty_id.faculty_id == faculty_id:
+            get_subject_offerings.append(SubjectOfferings(
+                offer_no=obj.offer_no,
+                subject_code=obj.subject_code,
+                subject_title=obj.subject_title,
+                school_days=obj.school_days,
+                school_time=obj.school_time))
+    return render(request, "admin/view_faculty_detail.html", {'get_subject_offerings': get_subject_offerings, 'get_faculty': get_faculty})
 
 
 @login_required(login_url='login')
@@ -370,46 +444,94 @@ def view_degree_program(request, *args, **kwargs):
 @login_required(login_url='login')
 def view_student(request, *args, **kwargs):
     student = Student.objects.all()
-    return render(request, "admin/view_student.html", {'student': student})
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student', search=search_choice)
+    return render(request, "admin/view_student.html", {'student': student, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def search_student(request, search):
+    all_student = Student.objects.all()
+    student = []
+    for obj in all_student:
+        if search in obj.lastname:
+            student.append(Student(student_number=obj.student_number,
+                                   lastname=obj.lastname, firstname=obj.firstname,
+                                   middlename=obj.middlename, gender=obj.gender,
+                                   avg_grade=obj.avg_grade, IQ=obj.IQ,
+                                   birthdate=obj.birthdate, hometown=obj.hometown,
+                                   program_code=obj.program_code, year=obj.year,
+                                   student_email=obj.student_email, role=obj.role))
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student', search=search_choice)
+    return render(request, "admin/search_student.html", {"student": student, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def view_student_with_load(request, *args, **kwargs):
+    student = Student.objects.all()
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student_with_load', search=search_choice)
+    return render(request, "admin/view_student_with_load.html", {'student': student, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def search_student_with_load(request, search):
+    all_student = Student.objects.all()
+    student = []
+    for obj in all_student:
+        if search in obj.lastname:
+            student.append(Student(student_number=obj.student_number,
+                                   lastname=obj.lastname, firstname=obj.firstname,
+                                   middlename=obj.middlename, gender=obj.gender,
+                                   avg_grade=obj.avg_grade, IQ=obj.IQ,
+                                   birthdate=obj.birthdate, hometown=obj.hometown,
+                                   program_code=obj.program_code, year=obj.year,
+                                   student_email=obj.student_email, role=obj.role))
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student_with_load', search=search_choice)
+    return render(request, "admin/search_student_with_load.html", {"student": student, 'search_form': search_form})
+
+
+@login_required(login_url='login')
+def view_student_detail(request, student_number):
+    subject_offerings = SubjectOfferings.objects.all()
+    get_student_load = Studentload.objects.filter(
+        student_number=student_number)
+    get_student = Student.objects.get(student_number=student_number)
+    get_subject_offerings = []
+    for obj in subject_offerings:
+        for obj1 in get_student_load:
+            if obj1.offer_no.offer_no == obj.offer_no.offer_no:
+                get_subject_offerings.append(SubjectOfferings(
+                    offer_no=obj.offer_no,
+                    subject_code=obj.subject_code,
+                    subject_title=obj.subject_title,
+                    school_days=obj.school_days,
+                    school_time=obj.school_time))
+    return render(request, "admin/view_student_detail.html", {'get_subject_offerings': get_subject_offerings, 'get_student': get_student})
 
 
 @login_required(login_url='login')
 def view_student_load(request, *args, **kwargs):
     student_load = Studentload.objects.all()
     return render(request, "admin/view_student_load.html", {'student_load': student_load})
-
-
-@login_required(login_url='login')
-def upload_offerings(request):
-    try:
-        offerings = Offerings.objects.all()
-        if request.method == 'POST':
-            OfferingsResource()
-            dataset = Dataset()
-            new_offerings = request.FILES['myfile']
-            imported_data = dataset.load(new_offerings.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_offerings)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 6):
-                for data in imported_data:
-                    value = Offerings(
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3],
-                        data[4],
-                        data[5],
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_offerings.html", {"offerings": offerings})
 
 
 @login_required(login_url='login')
@@ -504,34 +626,104 @@ def upload_faculty(request):
     return render(request, "admin/upload_faculty.html", {"faculty": faculty})
 
 
-@login_required(login_url='login')
-def upload_counselor(request):
-    try:
-        counselor = Counselor.objects.all()
-        if request.method == 'POST':
-            CounselorResource()
-            dataset = Dataset()
-            new_counselor = request.FILES['myfile']
-            imported_data = dataset.load(new_counselor.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_counselor)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
+# @login_required(login_url='login')
+# def upload_subject_offerings(request):
+#     try:
+#         subject_offerings = SubjectOfferings.objects.all()
+#         if request.method == 'POST':
+#             SubjectOfferingsResource()
+#             dataset = Dataset()
+#             new_sem = request.FILES['myfile']
+#             imported_data = dataset.load(new_sem.read(), format='xlsx')
+#             wb_obj = openpyxl.load_workbook(new_sem)
+#             sheet_obj = wb_obj.active
+#             col = sheet_obj.max_column
+#             row = sheet_obj.max_row
 
-            if(col == 3):
-                for data in imported_data:
-                    value = Counselor(
-                        data[0],
-                        data[1],
-                        data[2]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_counselor.html", {"counselor": counselor})
+#             if(col == 9):
+#                 for data in imported_data:
+#                     check_depa = Department.objects.all()
+#                     check_faculty = Faculty.objects.all()
+#                     check_offerings = Offerings.objects.all()
+#                     check_subject = Subject.objects.all()
+#                     is_depa = bool(check_depa)
+#                     is_faculty = bool(check_faculty)
+#                     is_offerings = bool(check_offerings)
+#                     is_subject = bool(check_subject)
+
+#                     if is_depa:
+#                         if data[7] not in check_depa:
+#                             depa = Department(department_code=data[7])
+#                             depa.save()
+#                     else:
+#                         depa = Department(department_code=data[7])
+#                         depa.save()
+
+#                     if is_faculty:
+#                         if str(data[8]) not in check_faculty:
+#                             depa = Department.objects.get(
+#                                 department_code=data[7])
+#                             faculty = Faculty(faculty_id=str(
+#                                 data[8]), department_code=depa)
+#                             faculty.save()
+#                     else:
+#                         depa = Department.objects.get(
+#                             department_code=data[7])
+#                         faculty = Faculty(faculty_id=str(
+#                             data[8]), department_code=depa)
+#                         faculty.save()
+
+#                     flag = 0
+#                     if is_offerings:
+#                         for obj in check_offerings:
+#                             if str(data[0]) == obj.offer_no and str(data[5]) == obj.sem_id:
+#                                 flag = 1
+#                         if flag == 0:
+#                             offerings = Offerings(offer_no=str(data[0]), days=str(data[3]), school_time=str(
+#                                 data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
+#                             offerings.save()
+#                     else:
+#                         offerings = Offerings(
+#                             offer_no=str(data[0]), days=str(data[3]), school_time=str(data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
+#                         offerings.save()
+
+#                     if is_subject:
+#                         if data[1] not in check_subject:
+#                             subject = Subject(
+#                                 subject_code=data[1], subject_title=data[2])
+#                             subject.save()
+#                     else:
+#                         subject = Subject(
+#                             subject_code=data[1], subject_title=data[2])
+#                         subject.save()
+
+#                 for data in imported_data:
+#                     get_offer_no = Offerings.objects.get(
+#                         offer_no=str(data[0]), sem_id=str(data[5]))
+#                     get_subject_code = Subject.objects.get(
+#                         subject_code=data[1])
+#                     get_department_code = Department.objects.get(
+#                         department_code=data[7])
+#                     get_faculty_id = Faculty.objects.get(
+#                         faculty_id=str(data[8]))
+#                     value = SubjectOfferings(
+#                         offer_no=get_offer_no,
+#                         subject_code=get_subject_code,
+#                         subject_title=data[2],
+#                         school_days=str(data[3]),
+#                         school_time=str(data[4]),
+#                         sem_id=str(data[5]),
+#                         academic_year=str(data[6]),
+#                         department_code=get_department_code,
+#                         faculty_id=get_faculty_id
+#                     )
+#                     value.save()
+#                 messages.info(request, 'Successfully Added')
+#             else:
+#                 messages.info(request, 'Failed to Add the Data')
+#     except Exception as e:
+#         messages.info(request, 'Please Choose File')
+#     return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings})
 
 
 @login_required(login_url='login')
@@ -606,7 +798,8 @@ def upload_subject_offerings(request):
                         subject.save()
 
                 for data in imported_data:
-                    print(data[0])
+                    check_subjectOfferings = SubjectOfferings.objects.all()
+                    is_subjectOfferings = bool(check_subjectOfferings)
                     get_offer_no = Offerings.objects.get(
                         offer_no=str(data[0]), sem_id=str(data[5]))
                     get_subject_code = Subject.objects.get(
@@ -615,18 +808,52 @@ def upload_subject_offerings(request):
                         department_code=data[7])
                     get_faculty_id = Faculty.objects.get(
                         faculty_id=str(data[8]))
-                    value = SubjectOfferings(
-                        offer_no=get_offer_no,
-                        subject_code=get_subject_code,
-                        subject_title=data[2],
-                        school_days=str(data[3]),
-                        school_time=str(data[4]),
-                        sem_id=str(data[5]),
-                        academic_year=str(data[6]),
-                        department_code=get_department_code,
-                        faculty_id=get_faculty_id
-                    )
-                    value.save()
+
+                    if is_subjectOfferings:
+                        check_if_exist = SubjectOfferings.objects.get(
+                            offer_no=get_offer_no, sem_id=str(data[5]))
+                        if check_if_exist:
+                            check_if_exist.offer_no = get_offer_no
+                            check_if_exist.save()
+                            check_if_exist.subject_code = get_subject_code
+                            check_if_exist.save()
+                            check_if_exist.subject_title = str(data[3])
+                            check_if_exist.save()
+                            check_if_exist.school_time = str(data[4])
+                            check_if_exist.save()
+                            check_if_exist.sem_id = str(data[5])
+                            check_if_exist.save()
+                            check_if_exist.academic_year = str(data[6])
+                            check_if_exist.save()
+                            check_if_exist.faculty_id = get_faculty_id
+                            check_if_exist.save()
+                        else:
+                            value = SubjectOfferings(
+                                offer_no=get_offer_no,
+                                subject_code=get_subject_code,
+                                subject_title=data[2],
+                                school_days=str(data[3]),
+                                school_time=str(data[4]),
+                                sem_id=str(data[5]),
+                                academic_year=str(data[6]),
+                                department_code=get_department_code,
+                                faculty_id=get_faculty_id
+                            )
+                            value.save()
+                    else:
+                        value = SubjectOfferings(
+                            offer_no=get_offer_no,
+                            subject_code=get_subject_code,
+                            subject_title=data[2],
+                            school_days=str(data[3]),
+                            school_time=str(data[4]),
+                            sem_id=str(data[5]),
+                            academic_year=str(data[6]),
+                            department_code=get_department_code,
+                            faculty_id=get_faculty_id
+                        )
+                        value.save()
+
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
@@ -708,6 +935,43 @@ def upload_student(request):
     return render(request, "admin/upload_student.html", {"student": student})
 
 
+# @login_required(login_url='login')
+# def upload_student_load(request):
+#     try:
+#         student_load = Studentload.objects.all()
+#         if request.method == 'POST':
+#             StudentloadResource()
+#             dataset = Dataset()
+#             new_student_load = request.FILES['myfile']
+#             imported_data = dataset.load(
+#                 new_student_load.read(), format='xlsx')
+#             wb_obj = openpyxl.load_workbook(new_student_load)
+#             sheet_obj = wb_obj.active
+#             col = sheet_obj.max_column
+#             row = sheet_obj.max_row
+
+#             if(col == 4):
+#                 for data in imported_data:
+#                     get_student_number = Student.objects.get(
+#                         student_number=str(data[0]))
+#                     get_offer_no = Offerings.objects.get(
+#                         offer_no=str(data[1]), sem_id=str(data[2]))
+#                     value = Studentload(
+#                         student_number=get_student_number,
+#                         offer_no=get_offer_no,
+#                         sem_id=str(data[2]),
+#                         academic_year=str(data[3])
+#                     )
+#                     value.save()
+#                 messages.info(request, 'Successfully Added')
+#             else:
+#                 messages.info(request, 'Failed to Add the Data')
+#     except Exception as e:
+#         print('helloo', e)
+#         messages.info(request, 'Please Choose File')
+#     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
+
+
 @login_required(login_url='login')
 def upload_student_load(request):
     try:
@@ -725,22 +989,44 @@ def upload_student_load(request):
 
             if(col == 4):
                 for data in imported_data:
+                    check_student_load = Studentload.objects.all()
+                    is_student_load = bool(check_student_load)
                     get_student_number = Student.objects.get(
                         student_number=str(data[0]))
                     get_offer_no = Offerings.objects.get(
                         offer_no=str(data[1]), sem_id=str(data[2]))
-                    value = Studentload(
-                        student_number=get_student_number,
-                        offer_no=get_offer_no,
-                        sem_id=str(data[2]),
-                        academic_year=str(data[3])
-                    )
-                    value.save()
+                    flag = 0
+                    if is_student_load:
+                        check_if_exist = Studentload.objects.get(
+                            student_number=get_student_number, offer_no=get_offer_no)
+                        if check_if_exist:
+                            check_if_exist.student_number = get_student_number
+                            check_if_exist.save()
+                            check_if_exist.offer_no = get_offer_no
+                            check_if_exist.save()
+                            check_if_exist.sem_id = data[2]
+                            check_if_exist.save()
+                            check_if_exist.academic_year = str(data[3])
+                            check_if_exist.save()
+                        else:
+                            value = Studentload(student_number=get_student_number,
+                                                offer_no=get_offer_no,
+                                                sem_id=str(data[2]),
+                                                academic_year=str(data[3])
+                                                )
+                            value.save()
+                    else:
+                        value = Studentload(
+                            student_number=get_student_number,
+                            offer_no=get_offer_no,
+                            sem_id=str(data[2]),
+                            academic_year=str(data[3]))
+                        value.save()
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
     except Exception as e:
-        print('hi', e)
+        print('helloo', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
 # admin

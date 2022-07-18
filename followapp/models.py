@@ -43,6 +43,9 @@ class School(models.Model):
     class Meta:
         verbose_name_plural = "School"
 
+    def __str__(self):
+        return self.school_code
+
 
 class Department(models.Model):
     department_code = models.CharField(max_length=25, primary_key=True)
@@ -52,6 +55,9 @@ class Department(models.Model):
 
     class Meta:
         verbose_name_plural = "Department"
+
+    def __str__(self):
+        return self.school_code
 
 
 class Faculty(models.Model):
