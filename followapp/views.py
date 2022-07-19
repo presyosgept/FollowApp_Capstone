@@ -752,7 +752,16 @@ def upload_subject_offerings(request):
                     is_subject = bool(check_subject)
 
                     if is_depa:
-                        if data[7] not in check_depa:
+                        get_depa_exist = Department.objects.get(
+                            department_code=data[7])
+                        if get_depa_exist:
+                            get_depa_exist.department_code = data[7]
+                            get_depa_exist.save()
+                            get_depa_exist.department_name = get_depa_exist.department_name
+                            get_depa_exist.save()
+                            get_depa_exist.school_code = get_depa_exist.school_code
+                            get_depa_exist.save()
+                        else:
                             depa = Department(department_code=data[7])
                             depa.save()
                     else:
@@ -760,9 +769,26 @@ def upload_subject_offerings(request):
                         depa.save()
 
                     if is_faculty:
-                        if str(data[8]) not in check_faculty:
-                            depa = Department.objects.get(
-                                department_code=data[7])
+                        depa = Department.objects.get(
+                            department_code=data[7])
+                        get_faculty_exist = Faculty.objects.get(
+                            faculty_id=str(data[8]))
+                        if get_faculty_exist:
+                            get_faculty_exist.faculty_id = get_faculty_exist.faculty_id
+                            get_faculty_exist.save()
+                            get_faculty_exist.lastname = get_faculty_exist.lastname
+                            get_faculty_exist.save()
+                            get_faculty_exist.firstname = get_faculty_exist.firstname
+                            get_faculty_exist.save()
+                            get_faculty_exist.middlename = get_faculty_exist.middlename
+                            get_faculty_exist.save()
+                            get_faculty_exist.email = get_faculty_exist.email
+                            get_faculty_exist.save()
+                            get_faculty_exist.role = get_faculty_exist.role
+                            get_faculty_exist.save()
+                            get_faculty_exist.department_code = depa
+                            get_faculty_exist.save()
+                        else:
                             faculty = Faculty(faculty_id=str(
                                 data[8]), department_code=depa)
                             faculty.save()
@@ -773,12 +799,21 @@ def upload_subject_offerings(request):
                             data[8]), department_code=depa)
                         faculty.save()
 
-                    flag = 0
                     if is_offerings:
-                        for obj in check_offerings:
-                            if str(data[0]) == obj.offer_no and str(data[5]) == obj.sem_id:
-                                flag = 1
-                        if flag == 0:
+                        get_offering_exist = Offerings.objects.get(
+                            offer_no=str(data[0]))
+                        if get_offering_exist:
+                            get_offering_exist.offer_no = str(data[0])
+                            get_offering_exist.save()
+                            get_offering_exist.days = str(data[3])
+                            get_offering_exist.save()
+                            get_offering_exist.school_time = str(data[4])
+                            get_offering_exist.save()
+                            get_offering_exist.sem_id = str(data[5])
+                            get_offering_exist.save()
+                            get_offering_exist.academic_year = str(data[6])
+                            get_offering_exist.save()
+                        else:
                             offerings = Offerings(offer_no=str(data[0]), days=str(data[3]), school_time=str(
                                 data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
                             offerings.save()
@@ -788,7 +823,13 @@ def upload_subject_offerings(request):
                         offerings.save()
 
                     if is_subject:
-                        if data[1] not in check_subject:
+                        get_subject_exist = Subject.objects.get(
+                            subject_code=data[1])
+                        if get_subject_exist:
+                            get_subject_exist.subject_code = data[1]
+                            get_subject_exist.subject_title = data[2]
+                            get_subject_exist.units = get_subject_exist
+                        else:
                             subject = Subject(
                                 subject_code=data[1], subject_title=data[2])
                             subject.save()
@@ -817,7 +858,7 @@ def upload_subject_offerings(request):
                             check_if_exist.save()
                             check_if_exist.subject_code = get_subject_code
                             check_if_exist.save()
-                            check_if_exist.subject_title = str(data[3])
+                            check_if_exist.subject_title = data[2],
                             check_if_exist.save()
                             check_if_exist.school_time = str(data[4])
                             check_if_exist.save()
