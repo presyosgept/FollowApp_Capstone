@@ -81,7 +81,7 @@ qs = Faculty.objects.all()
 qs_code = []
 for obj in qs:
     if obj.role == 'Counselor':
-        name = obj.lastname + ',' + obj.firstname
+        name = obj.lastname + ', ' + obj.firstname
         qs_code.append([obj.faculty_id, name])
 
 

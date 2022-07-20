@@ -1123,5 +1123,7 @@ def counselor_home_view(request, *args, **kwargs):
 def teacher_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
-    return render(request, "teacher/teacher_home.html",  {"form": teacher_name})
+    subjects = SubjectOfferings.objects.filter(
+        faculty_id=teacher_name.faculty_id)
+    return render(request, "teacher/home.html",  {"form": teacher_name, 'subjects': subjects})
 # teacher

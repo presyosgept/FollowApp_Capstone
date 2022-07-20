@@ -18,7 +18,7 @@ class Offerings(models.Model):
         verbose_name_plural = "Offerings"
         constraints = [
             models.UniqueConstraint(
-                fields=['offer_no', 'sem_id'], name='offer_no__and_sem_id_uniq_Offerings')
+                fields=['offer_no', 'sem_id'], name='offer_no_and_sem_id_uniq_Offerings')
         ]
     offer_no = models.CharField(max_length=225)
     days = models.CharField(max_length=220, null=True, blank=True)
