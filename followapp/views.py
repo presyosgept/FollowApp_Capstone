@@ -35,11 +35,11 @@ from django.conf import settings
 import random
 from django.contrib.auth.models import User
 
-from .models import Semester,  Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-from .models import AccountCreated
-from .resources import SemesterResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
+from .models import Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import AccountCreated, StudentAdditionalInformation
+from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -77,7 +77,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = 'fb709237a6965c8fc8558970dc4f7a4e'
+                auth_token = 'db139ab5052595bd99c5062e33a8e359'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -103,7 +103,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = 'fb709237a6965c8fc8558970dc4f7a4e'
+                    auth_token = 'db139ab5052595bd99c5062e33a8e359'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -230,17 +230,18 @@ def loginPage(request):
                         flag = 0
                     if flag == 1:
                         request.session['username'] = username
-                        return redirect('student_home_view')
-                        # # return redirect('student_home_view')
-                        # check = StudentInfo.objects.all()
-                        # if check is not None:
-                        #     stud = StudentInfo.objects.get(studnumber=username)
-                        #     if stud.status == 'undone':
-                        #         return redirect('student_add_info')
-                        #     else:
-                        #         return redirect('student_home_view')
-                        # else:
-                        #     return redirect('student_add_info')
+                        get_students = StudentAdditionalInformation.objects.all()
+                        check = bool(get_students)
+                        if check:
+                            print('aaaa')
+                            stud = StudentAdditionalInformation.objects.get(
+                                student_number=username)
+                            if stud.status == 'undone':
+                                return redirect('student_add_information')
+                            else:
+                                return redirect('student_home_view')
+                        else:
+                            return redirect('student_add_information')
 
                     else:
                         try:
@@ -319,6 +320,20 @@ def view_school(request, *args, **kwargs):
 
 
 @login_required(login_url='login')
+def edit_school(request, name):
+    school = School.objects.get(school_name=name)
+    edit_form = EditSchoolForm(instance=school)
+    if request.method == "POST":
+        edit_form = EditSchoolForm(request.POST, instance=school)
+        if edit_form.is_valid():
+            new_school_code = edit_form['school_code'].value()
+            edit = School.objects.get(school_name=name)
+            edit.school_code = new_school_code
+            edit.save()
+    return render(request, "admin/edit_school.html", {'school': school, 'edit_form': edit_form})
+
+
+@login_required(login_url='login')
 def view_department(request, *args, **kwargs):
     department = Department.objects.all()
     return render(request, "admin/view_department.html", {'department': department})
@@ -333,7 +348,8 @@ def edit_department(request, code):
         if edit_form.is_valid():
             new_department_name = edit_form['department_name'].value()
             new_school_code = edit_form['school_code'].value()
-            get_school_code = School.objects.get(school_code=new_school_code)
+            get_school_code = School.objects.get(
+                id=new_school_code)
             edit = Department.objects.get(department_code=code)
             edit.department_name = new_department_name
             edit.save()
@@ -450,6 +466,25 @@ def view_degree_program(request, *args, **kwargs):
 
 
 @login_required(login_url='login')
+def edit_degree_program(request, code):
+    degree_program = DegreeProgram.objects.get(program_code=code)
+    edit_form = EditDegreeProgramForm(instance=degree_program)
+    if request.method == "POST":
+        edit_form = EditDegreeProgramForm(
+            request.POST, instance=degree_program)
+        if edit_form.is_valid():
+            new_program_name = edit_form['program_name'].value()
+            new_school_code = edit_form['school_code'].value()
+            get_school = School.objects.get(id=new_school_code)
+            edit = DegreeProgram.objects.get(program_code=code)
+            edit.program_name = new_program_name
+            edit.save()
+            edit.school_code = get_school
+            edit.save()
+    return render(request, "admin/edit_degree_program.html", {'degree_program': degree_program, 'edit_form': edit_form})
+
+
+@login_required(login_url='login')
 def view_student(request, *args, **kwargs):
     student = Student.objects.all()
     search_form = SearchForm()
@@ -526,7 +561,7 @@ def view_student_detail(request, student_number):
     get_subject_offerings = []
     for obj in subject_offerings:
         for obj1 in get_student_load:
-            if obj1.offer_no.offer_no == obj.offer_no.offer_no:
+            if obj1.offer_no.offer_no == obj.offer_no:
                 get_subject_offerings.append(SubjectOfferings(
                     offer_no=obj.offer_no,
                     subject_code=obj.subject_code,
@@ -540,66 +575,6 @@ def view_student_detail(request, student_number):
 def view_student_load(request, *args, **kwargs):
     student_load = Studentload.objects.all()
     return render(request, "admin/view_student_load.html", {'student_load': student_load})
-
-
-@login_required(login_url='login')
-def upload_school(request):
-    try:
-        school = School.objects.all()
-        if request.method == 'POST':
-            SchoolResource()
-            dataset = Dataset()
-            new_school = request.FILES['myfile']
-            imported_data = dataset.load(new_school.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_school)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 2):
-                for data in imported_data:
-                    value = School(
-                        data[0],
-                        data[1]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_school.html", {"school": school})
-
-
-@login_required(login_url='login')
-def upload_degree_program(request):
-    try:
-        degree_program = DegreeProgram.objects.all()
-        if request.method == 'POST':
-            DegreeProgramResource()
-            dataset = Dataset()
-            new_degree_program = request.FILES['myfile']
-            imported_data = dataset.load(
-                new_degree_program.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_degree_program)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 3):
-                for data in imported_data:
-                    value = DegreeProgram(
-                        data[0],
-                        data[1],
-                        data[2]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_degree_program.html", {"degree_program": degree_program})
 
 
 @login_required(login_url='login')
@@ -864,28 +839,51 @@ def upload_student(request):
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 13):
+            if(col == 11):
                 for data in imported_data:
+                    try:
+                        check_if_exist_school = School.objects.get(
+                            school_name=str(data[4]))
+                    except Exception:
+                        value = School(school_name=str(data[4]))
+                        value.save()
+                    try:
+                        check_if_exist_degree = DegreeProgram.objects.get(
+                            program_code=str(data[6]))
+                    except Exception:
+                        value = DegreeProgram(program_code=str(data[6]))
+                        value.save()
+                    try:
+                        get_department = Department.objects.get(
+                            department_code=str(data[5]))
+                    except Exception:
+                        depa = Department(department_code=str(data[5]))
+                        depa.save()
+                    get_department = Department.objects.get(
+                        department_code=str(data[5]))
+                    get_school = School.objects.get(
+                        school_name=str(data[4]))
+                    get_degree = DegreeProgram.objects.get(
+                        program_code=str(data[6]))
                     value = Student(
-                        data[0],
-                        data[1],
-                        data[2],
-                        data[3],
-                        data[4],
-                        data[5],
-                        data[6],
-                        data[7],
-                        data[8],
-                        data[9],
-                        data[10],
-                        data[11],
-                        data[12],
+                        student_number=str(data[0]),
+                        lastname=data[1],
+                        firstname=data[2],
+                        middlename=data[3],
+                        school_name=get_school,
+                        department_code=get_department,
+                        program_code=get_degree,
+                        academic_year=str(data[7]),
+                        sem_id=data[8],
+                        student_email=data[9],
+                        role=data[10]
                     )
                     value.save()
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
-    except Exception:
+    except Exception as e:
+        print('hi', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student})
 
@@ -1024,18 +1022,91 @@ def student_list_enrolled(request, offer_no):
 
     return render(request, "teacher/student_list_enrolled.html",  {"form": teacher_name, 'list': list})
 
+
 # teacher
 
 # student
+
+@login_required(login_url='login')
+def student_add_information(request, *args, **kwargs):
+    user = request.session.get('username')
+    student_name = Student.objects.get(student_number=user)
+    infoForm = StudentAdditionalInformationForm(instance=student_name)
+    if request.method == "POST":
+        infoForm = StudentAdditionalInformationForm(
+            request.POST, instance=student_name)
+        if infoForm.is_valid():
+            student_number = infoForm['student_number'].value()
+            lastname = infoForm['lastname'].value()
+            firstname = infoForm['firstname'].value()
+            middlename = infoForm['middlename'].value()
+            student_email = infoForm['student_email'].value()
+            student_contact_number = infoForm['student_contact_number'].value()
+            mother_firstname = infoForm['mother_firstname'].value()
+            mother_lastname = infoForm['mother_lastname'].value()
+            father_firstname = infoForm['father_firstname'].value()
+            father_lastname = infoForm['father_lastname'].value()
+            guardian_firstname = infoForm['guardian_firstname'].value()
+            guardian_lastname = infoForm['guardian_lastname'].value()
+            student_contact_number = infoForm['student_contact_number'].value()
+            mother_contact_number = infoForm['mother_contact_number'].value()
+            father_contact_number = infoForm['father_contact_number'].value()
+            guardian_contact_number = infoForm['guardian_contact_number'].value(
+            )
+            info = StudentAdditionalInformation(student_number=student_number, lastname=lastname,
+                                                firstname=firstname, middlename=middlename, student_email=student_email, student_contact_number=student_contact_number,
+                                                mother_firstname=mother_firstname, mother_lastname=mother_lastname, mother_contact_number=mother_contact_number,
+                                                father_firstname=father_firstname, father_lastname=father_lastname, father_contact_number=father_contact_number,
+                                                guardian_firstname=guardian_firstname, guardian_lastname=guardian_lastname, guardian_contact_number=guardian_contact_number,
+                                                status="done")
+            info.save()
+            return redirect('student_home_view')
+    return render(request, "student/add_information.html", {"form": student_name, "info": infoForm})
 
 
 @login_required(login_url='login')
 def student_home_view(request, *args, **kwargs):
     user = request.session.get('username')
-    print('herereeeee')
-    print(user)
-    print(type(user))
     student_name = Student.objects.get(student_number=user)
     return render(request, "student/home.html", {"form": student_name})
+
+
+@login_required(login_url='login')
+def edit_information(request, *args, **kwargs):
+    user = request.session.get('username')
+    student_name = StudentAdditionalInformation.objects.get(
+        student_number=user)
+    infoForm = StudentAdditionalInformationForm(instance=student_name)
+    if request.method == "POST":
+        infoForm = StudentAdditionalInformationForm(
+            request.POST, instance=student_name)
+        if infoForm.is_valid():
+            student_number = infoForm['student_number'].value()
+            lastname = infoForm['lastname'].value()
+            firstname = infoForm['firstname'].value()
+            middlename = infoForm['middlename'].value()
+            student_email = infoForm['student_email'].value()
+            student_contact_number = infoForm['student_contact_number'].value()
+            mother_firstname = infoForm['mother_firstname'].value()
+            mother_lastname = infoForm['mother_lastname'].value()
+            father_firstname = infoForm['father_firstname'].value()
+            father_lastname = infoForm['father_lastname'].value()
+            guardian_firstname = infoForm['guardian_firstname'].value()
+            guardian_lastname = infoForm['guardian_lastname'].value()
+            student_contact_number = infoForm['student_contact_number'].value()
+            mother_contact_number = infoForm['mother_contact_number'].value()
+            father_contact_number = infoForm['father_contact_number'].value()
+            guardian_contact_number = infoForm['guardian_contact_number'].value(
+            )
+            info = StudentAdditionalInformation(student_number=student_number, lastname=lastname,
+                                                firstname=firstname, middlename=middlename, student_email=student_email, student_contact_number=student_contact_number,
+                                                mother_firstname=mother_firstname, mother_lastname=mother_lastname, mother_contact_number=mother_contact_number,
+                                                father_firstname=father_firstname, father_lastname=father_lastname, father_contact_number=father_contact_number,
+                                                guardian_firstname=guardian_firstname, guardian_lastname=guardian_lastname, guardian_contact_number=guardian_contact_number,
+                                                status="done")
+            info.save()
+            messages.info(request, 'Success')
+    return render(request, "student/edit_information.html", {"form": student_name, "info": infoForm})
+
 
 # student

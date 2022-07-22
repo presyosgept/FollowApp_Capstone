@@ -29,10 +29,8 @@ from followapp.views import(
 
     # admin
     admin_home_view,
-    upload_school,
     upload_faculty,
     upload_subject_offerings,
-    upload_degree_program,
     upload_student,
     upload_student_load,
 
@@ -52,6 +50,8 @@ from followapp.views import(
 
     edit_department,
     edit_subject,
+    edit_school,
+    edit_degree_program,
 
     search_student,
     search_faculty,
@@ -75,6 +75,8 @@ from followapp.views import(
 
     # student
     student_home_view,
+    student_add_information,
+    edit_information,
 
 )
 
@@ -89,12 +91,9 @@ urlpatterns = [
 
     # admin
     path('head/', admin_home_view, name="admin_home_view"),
-    path('admin/upload_school', upload_school, name="upload_school"),
     path('admin/upload_faculty', upload_faculty, name="upload_faculty"),
     path('admin/upload_subject_offerings',
          upload_subject_offerings, name="upload_subject_offerings"),
-    path('admin/upload_degree_program',
-         upload_degree_program, name="upload_degree_program"),
     path('admin/upload_student', upload_student, name="upload_student"),
     path('admin/upload_student_load',
          upload_student_load, name="upload_student_load"),
@@ -115,6 +114,10 @@ urlpatterns = [
          edit_department, name="edit_department"),
     path('admin/edit_subject/<str:code>',
          edit_subject, name="edit_subject"),
+    path('admin/edit_school/<str:name>',
+         edit_school, name="edit_school"),
+    path('admin/edit_degree_program/<str:code>',
+         edit_degree_program, name="edit_degree_program"),
 
     path('admin/search_faculty/<str:search>',
          search_faculty, name="search_faculty"),
@@ -155,6 +158,9 @@ urlpatterns = [
 
     # student
     path('student/', student_home_view, name="student_home_view"),
+    path('student_add_information/', student_add_information,
+         name="student_add_information"),
+    path('student/edit_information', edit_information, name="edit_information"),
 
     path('admin/', admin.site.urls),
 ]

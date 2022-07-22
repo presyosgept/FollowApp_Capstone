@@ -5,14 +5,6 @@ from viewflow.fields import CompositeKey
 from compositefk.fields import CompositeForeignKey, LocalFieldValue
 
 
-class Semester(models.Model):
-    sem_id = models.CharField(max_length=225, primary_key=True)
-    semester = models.CharField(max_length=225)
-
-    class Meta:
-        verbose_name_plural = "Semester"
-
-
 class Subject(models.Model):
     subject_code = models.CharField(max_length=225, primary_key=True)
     subject_title = models.CharField(max_length=220)
@@ -23,7 +15,7 @@ class Subject(models.Model):
 
 
 class School(models.Model):
-    school_code = models.CharField(max_length=220, primary_key=True)
+    school_code = models.CharField(max_length=220)
     school_name = models.CharField(max_length=220)
 
     class Meta:
@@ -37,7 +29,7 @@ class Department(models.Model):
     department_code = models.CharField(max_length=25, primary_key=True)
     department_name = models.CharField(max_length=220)
     school_code = models.ForeignKey(
-        School, on_delete=models.CASCADE, blank=True, null=True)
+        School, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Department"
@@ -50,7 +42,7 @@ class Faculty(models.Model):
     faculty_id = models.CharField(max_length=15, primary_key=True)
     lastname = models.CharField(max_length=220)
     firstname = models.CharField(max_length=220)
-    middlename = models.CharField(max_length=220, null=True, blank=True)
+    middlename = models.CharField(max_length=220)
     email = models.EmailField(max_length=254)
     role = models.CharField(max_length=220)
     department_code = models.ForeignKey(
@@ -76,14 +68,14 @@ class SubjectOfferings(models.Model):
             models.UniqueConstraint(
                 fields=['offer_no', 'sem_id'], name='offer_no_and_sem_id_uniq_SubjectOfferings')
         ]
-    offer_no = models.CharField(max_length=220, null=True, blank=True)
+    offer_no = models.CharField(max_length=220,)
     subject_code = models.ForeignKey(
-        Subject, on_delete=models.CASCADE)
-    subject_title = models.CharField(max_length=220, null=True, blank=True)
-    school_days = models.CharField(max_length=220, null=True, blank=True)
-    school_time = models.CharField(max_length=220, null=True, blank=True)
-    sem_id = models.CharField(max_length=255, null=True, blank=True)
-    academic_year = models.CharField(max_length=225, null=True, blank=True)
+        Subject, on_delete=models.CASCADE, null=True, blank=True)
+    subject_title = models.CharField(max_length=220)
+    school_days = models.CharField(max_length=220)
+    school_time = models.CharField(max_length=220)
+    sem_id = models.CharField(max_length=255)
+    academic_year = models.CharField(max_length=225)
     department_code = models.ForeignKey(
         Department, on_delete=models.CASCADE, null=True, blank=True)
     faculty_id = models.ForeignKey(
@@ -93,7 +85,8 @@ class SubjectOfferings(models.Model):
 class DegreeProgram(models.Model):
     program_code = models.CharField(max_length=220, primary_key=True)
     program_name = models.CharField(max_length=220)
-    school_code = models.ForeignKey(School, on_delete=models.CASCADE)
+    school_code = models.ForeignKey(
+        School, on_delete=models.CASCADE, null=True, blank=True)
     faculty_id = models.ForeignKey(
         Faculty, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -106,14 +99,14 @@ class Student(models.Model):
     lastname = models.CharField(max_length=220)
     firstname = models.CharField(max_length=220)
     middlename = models.CharField(max_length=220)
-    gender = models.CharField(max_length=220)
-    avg_grade = models.CharField(max_length=220)
-    IQ = models.IntegerField()
-    birthdate = models.CharField(max_length=220)
-    hometown = models.CharField(max_length=220)
+    school_name = models.ForeignKey(
+        School, on_delete=models.CASCADE, null=True, blank=True)
+    department_code = models.ForeignKey(
+        Department, on_delete=models.CASCADE, null=True, blank=True)
     program_code = models.ForeignKey(
-        DegreeProgram, on_delete=models.CASCADE)
-    year = models.IntegerField()
+        DegreeProgram, on_delete=models.CASCADE, null=True, blank=True)
+    academic_year = models.CharField(max_length=225)
+    sem_id = models.CharField(max_length=220)
     student_email = models.EmailField(max_length=254)
     role = models.CharField(max_length=220)
 
@@ -132,15 +125,15 @@ class Studentload(models.Model):
         Student, on_delete=models.CASCADE, null=True, blank=True)
     offer_no = models.ForeignKey(
         SubjectOfferings, on_delete=models.CASCADE, null=True, blank=True)
-    sem_id = models.CharField(max_length=220, null=True, blank=True)
-    academic_year = models.CharField(max_length=225, null=True, blank=True)
-
+    sem_id = models.CharField(max_length=220)
+    academic_year = models.CharField(max_length=225)
 
 #
 #
 #
 #
 # own table
+
 
 class AccountCreated(models.Model):
     id_number = models.CharField(max_length=15, primary_key=True)
@@ -151,28 +144,26 @@ class AccountCreated(models.Model):
         verbose_name_plural = "AccountCreated"
 
 
-# class StudentAdditionalInformation(models.Model):
-#     student_number = models.CharField(max_length=15, primary_key=True)
-#     lastname = models.CharField(max_length=220)
-#     firstname = models.CharField(max_length=220)
-#     middlename = models.CharField(max_length=220)
-#     program_code = models.ForeignKey(DegreeProgram, on_delete=models.CASCADE)
-#     year = models.IntegerField()
-#     student_email = models.EmailField(max_length=254)
-#     student_contact_number = models.CharField(max_length=220)
-#     mother_lastname = models.CharField(max_length=220)
-#     mother_firstname = models.CharField(max_length=220)
-#     father_lastname = models.CharField(max_length=220)
-#     father_firstname = models.CharField(max_length=220)
-#     guardian_lastname = models.CharField(max_length=220)
-#     guardian_firstname = models.CharField(max_length=220)
-#     mother_contact_number = models.CharField(max_length=220)
-#     father_contact_number = models.CharField(max_length=220)
-#     guardian_contact_number = models.CharField(max_length=220)
-#     status = models.CharField(max_length=254, default='undone')
+class StudentAdditionalInformation(models.Model):
+    student_number = models.CharField(max_length=15, primary_key=True)
+    lastname = models.CharField(max_length=220)
+    firstname = models.CharField(max_length=220)
+    middlename = models.CharField(max_length=220)
+    student_email = models.EmailField(max_length=254)
+    student_contact_number = models.CharField(max_length=220)
+    mother_lastname = models.CharField(max_length=220)
+    mother_firstname = models.CharField(max_length=220)
+    mother_contact_number = models.CharField(max_length=220)
+    father_lastname = models.CharField(max_length=220)
+    father_firstname = models.CharField(max_length=220)
+    father_contact_number = models.CharField(max_length=220)
+    guardian_lastname = models.CharField(max_length=220)
+    guardian_firstname = models.CharField(max_length=220)
+    guardian_contact_number = models.CharField(max_length=220)
+    status = models.CharField(max_length=254, default='undone')
 
-#     class Meta:
-#         verbose_name_plural = "StudentAdditionalInformation"
+    class Meta:
+        verbose_name_plural = "StudentAdditionalInformation"
 
 
 # class AccountsApi(models.Model):

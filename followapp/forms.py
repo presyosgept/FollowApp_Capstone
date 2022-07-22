@@ -1,6 +1,6 @@
 from multiselectfield import MultiSelectFormField
 from django.forms.widgets import CheckboxSelectMultiple
-from .models import Semester, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import StudentAdditionalInformation, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import User
@@ -34,6 +34,25 @@ class AccountCreatedForm(forms.Form):
     password = forms.CharField()
 
 # Edit Data In admin
+
+
+class EditDegreeProgramForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditDegreeProgramForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = DegreeProgram
+        fields = ['program_name', 'school_code']
+
+
+class EditSchoolForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditSchoolForm, self).__init__(*args, **kwargs)
+        self.fields['school_name'].disabled = True
+
+    class Meta:
+        model = School
+        fields = ['school_code', 'school_name']
 
 
 class EditDepartmentForm(forms.ModelForm):
@@ -104,28 +123,24 @@ class AssignCounselorForm(forms.Form):
 #     search = forms.CharField()
 
 
-# class StudentInfoForm(forms.ModelForm):
+class StudentAdditionalInformationForm(forms.ModelForm):
 
-#     def __init__(self, *args, **kwargs):
-#         super(StudentInfoForm, self).__init__(*args, **kwargs)
-#         self.fields['studnumber'].disabled = True
-#         self.fields['firstname'].disabled = True
-#         self.fields['lastname'].disabled = True
-#         self.fields['program_code'].disabled = True
-#         self.fields['year'].disabled = True
-#         self.fields['student_email'].disabled = True
+    def __init__(self, *args, **kwargs):
+        super(StudentAdditionalInformationForm, self).__init__(*args, **kwargs)
+        self.fields['student_number'].disabled = True
+        self.fields['firstname'].disabled = True
+        self.fields['lastname'].disabled = True
+        self.fields['middlename'].disabled = True
+        self.fields['student_email'].disabled = True
 
-#     class Meta:
-#         model = StudentInfo
-#         fields = ['studnumber', 'firstname', 'lastname',  'degree_program',
-#                   'year', 'student_email', 'student_contact_number',
-#                   'mother_lastname', 'mother_firstname',
-#                   'father_lastname', 'father_firstname',
-#                   'guardian_lastname', 'guardian_firstname',
-#                   'mother_contact_number',
-#                   'father_contact_number',
-#                   'guardian_contact_number',
-#                   ]
+    class Meta:
+        model = StudentAdditionalInformation
+        fields = ['student_number', 'firstname', 'lastname', 'middlename',
+                  'student_email', 'student_contact_number',
+                  'mother_lastname', 'mother_firstname', 'mother_contact_number',
+                  'father_lastname', 'father_firstname', 'father_contact_number',
+                  'guardian_lastname', 'guardian_firstname', 'guardian_contact_number',
+                  ]
 
 
 # class OfferingForm(forms.ModelForm):

@@ -283,11 +283,11 @@
         <th  style="font-size: 17px;">Lastname</th>
         <th  style="font-size: 17px;">Firstname</th>
         <th  style="font-size: 17px;">Middlename</th>
-        <th  style="font-size: 17px;">IQ</th>
-        <th  style="font-size: 17px;">Birthdate</th>
-        <th  style="font-size: 17px;">Hometown</th>
+        <th  style="font-size: 17px;">School Name</th>
+        <th  style="font-size: 17px;">Department Code</th>
         <th  style="font-size: 17px;">Program Code</th>
-        <th  style="font-size: 17px;">Year</th>
+         <th  style="font-size: 17px;">Sem Id</th>
+        <th  style="font-size: 17px;">Academic Year</th>
         <th  style="font-size: 17px;">Student Email</th>
       </tr>
     </thead> {% for obj in student %} <tbody>
@@ -305,19 +305,19 @@
            <b>{{obj.middlename}}</b>
         </td>
                <td  style="text-align: center; font-size: 15px;">
-           <b>{{obj.IQ}}</b>
+           <b>{{obj.school_name.school_name}}</b>
         </td>
                <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.birthdate|slice:':9'}}</b>
-        </td>
-               <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.hometown}}</b>
+           <b>{{obj.department_code.department_code}}</b>
         </td>
                <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.program_code_id}}</b>
         </td>
+        <td  style="text-align: center; font-size: 15px;">
+           <b>{{obj.sem_id}}</b>
+        </td>
                <td  style="text-align: center; font-size: 15px;">
-           <b>{{obj.year}}</b>
+           <b>{{obj.academic_year}}</b>
         </td>
                <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.student_email}}</b>

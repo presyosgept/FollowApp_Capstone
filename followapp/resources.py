@@ -1,10 +1,5 @@
 from import_export import resources
-from .models import Semester, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-
-
-class SemesterResource(resources.ModelResource):
-    class Meta:
-        model = Semester
+from .models import Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 
 
 class SubjectResource(resources.ModelResource):
