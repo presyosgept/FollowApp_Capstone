@@ -13,20 +13,6 @@ class Semester(models.Model):
         verbose_name_plural = "Semester"
 
 
-class Offerings(models.Model):
-    class Meta:
-        verbose_name_plural = "Offerings"
-        constraints = [
-            models.UniqueConstraint(
-                fields=['offer_no', 'sem_id'], name='offer_no_and_sem_id_uniq_Offerings')
-        ]
-    offer_no = models.CharField(max_length=225)
-    days = models.CharField(max_length=220, null=True, blank=True)
-    school_time = models.CharField(max_length=220, null=True, blank=True)
-    sem_id = models.CharField(max_length=220, null=True, blank=True)
-    academic_year = models.CharField(max_length=225, null=True, blank=True)
-
-
 class Subject(models.Model):
     subject_code = models.CharField(max_length=225, primary_key=True)
     subject_title = models.CharField(max_length=220)
@@ -90,8 +76,7 @@ class SubjectOfferings(models.Model):
             models.UniqueConstraint(
                 fields=['offer_no', 'sem_id'], name='offer_no_and_sem_id_uniq_SubjectOfferings')
         ]
-    offer_no = models.ForeignKey(
-        Offerings, on_delete=models.CASCADE, null=True, blank=True)
+    offer_no = models.CharField(max_length=220, null=True, blank=True)
     subject_code = models.ForeignKey(
         Subject, on_delete=models.CASCADE)
     subject_title = models.CharField(max_length=220, null=True, blank=True)
@@ -146,7 +131,7 @@ class Studentload(models.Model):
     student_number = models.ForeignKey(
         Student, on_delete=models.CASCADE, null=True, blank=True)
     offer_no = models.ForeignKey(
-        Offerings, on_delete=models.CASCADE, null=True, blank=True)
+        SubjectOfferings, on_delete=models.CASCADE, null=True, blank=True)
     sem_id = models.CharField(max_length=220, null=True, blank=True)
     academic_year = models.CharField(max_length=225, null=True, blank=True)
 

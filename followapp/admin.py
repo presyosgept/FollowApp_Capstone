@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import Semester, Offerings, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import Semester, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 from .models import AccountCreated
 # admin.site.register(Semester)
 
@@ -10,14 +10,6 @@ admin.site.register(Semester)
 
 class SemesterAdmin(ImportExportModelAdmin):
     list_display = ('sem_id', 'semester')
-
-
-admin.site.register(Offerings)
-
-
-class OfferingsAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'offer_no', 'days', 'school_time',
-                    'sem_id', 'academic_year')
 
 
 admin.site.register(Subject)

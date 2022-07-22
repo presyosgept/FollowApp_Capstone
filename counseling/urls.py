@@ -36,7 +36,6 @@ from followapp.views import(
     upload_student,
     upload_student_load,
 
-    view_offerings,
     view_subject,
     view_school,
     view_department,
@@ -71,9 +70,11 @@ from followapp.views import(
     counselor_home_view,
 
     # teacher
-    teacher_home_view
+    teacher_home_view,
+    student_list_enrolled,
 
     # student
+    student_home_view,
 
 )
 
@@ -97,7 +98,6 @@ urlpatterns = [
     path('admin/upload_student', upload_student, name="upload_student"),
     path('admin/upload_student_load',
          upload_student_load, name="upload_student_load"),
-    path('admin/view_offerings', view_offerings, name="view_offerings"),
     path('admin/view_subject', view_subject, name="view_subject"),
     path('admin/view_school', view_school, name="view_school"),
     path('admin/view_department', view_department, name="view_department"),
@@ -150,6 +150,11 @@ urlpatterns = [
 
     # teacher
     path('teacher/', teacher_home_view, name="teacher_home_view"),
+    path('teacher/student_list_enrolled/<str:offer_no>',
+         student_list_enrolled, name="student_list_enrolled"),
+
+    # student
+    path('student/', student_home_view, name="student_home_view"),
 
     path('admin/', admin.site.urls),
 ]

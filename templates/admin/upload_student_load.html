@@ -154,7 +154,7 @@
     }
     th, td {
   padding: 8px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 
@@ -208,7 +208,7 @@
     }
 
     .fl-table thead th {
-      text-align: left;
+      text-align: center;
       border-bottom: 1px solid #f7f7f9;
     }
 
@@ -271,7 +271,7 @@
 
 {% if not student_load %} 
       <div class="no-data">
-    No Data Yet!
+    No Data Available
   </div>
 {% else %}
 
@@ -286,16 +286,16 @@
       </tr>
     </thead> {% for obj in student_load %} <tbody>
       <tr>
-        <td  style="font-size: 15px;">
+        <td  style="text-align: center; font-size: 15px;">
           <b>{{obj.student_number_id}}</b>
         </td>
-        <td style="text-align: left; font-size: 15px;">
+        <td style="text-align: center; font-size: 15px;">
            <b>{{obj.offer_no.offer_no}}</b>
         </td>
-         <td  style="text-align: left; font-size: 15px;">
+         <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.sem_id}}</b>
         </td>
-         <td style="text-align: left; font-size: 15px;">
+         <td style="text-align: center; font-size: 15px;">
            <b>{{obj.academic_year}}</b>
         </td>
       </tr>

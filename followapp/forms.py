@@ -1,6 +1,6 @@
 from multiselectfield import MultiSelectFormField
 from django.forms.widgets import CheckboxSelectMultiple
-from .models import Semester, Offerings, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import Semester, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import User
@@ -74,6 +74,18 @@ UNITS_CHOICES = [
 
 class EditSubjectForm(forms.Form):
     units = forms.CharField(widget=forms.Select(choices=UNITS_CHOICES))
+
+
+SEM_CHOICES = [
+    ('--', '--'),
+    ('1st', '1st'),
+    ('2nd', '2nd'),
+    ('Summer', 'Summer'),
+]
+
+
+class CheckSemForm(forms.Form):
+    sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
 # Edit Data In admin
 
 

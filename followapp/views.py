@@ -35,11 +35,11 @@ from django.conf import settings
 import random
 from django.contrib.auth.models import User
 
-from .models import Semester, Offerings, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import Semester,  Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 from .models import AccountCreated
-from .resources import SemesterResource, OfferingsResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
+from .resources import SemesterResource, SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -64,7 +64,7 @@ def register(request):
         char = '1234567890'
         for x in range(0, 1):
             code = ''
-            for x in range(0, 8):
+            for x in range(0, 5):
                 code_char = random.choice(char)
                 code = code + code_char
         username = request.POST.get('id_number')
@@ -77,7 +77,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = '6a4c0f4f25343f30f14f9adb73f858f7'
+                auth_token = 'fb709237a6965c8fc8558970dc4f7a4e'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -103,7 +103,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = '6a4c0f4f25343f30f14f9adb73f858f7'
+                    auth_token = 'fb709237a6965c8fc8558970dc4f7a4e'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -222,14 +222,15 @@ def loginPage(request):
                 if request.method == 'POST':
                     flag = 0
                     username = request.POST.get('username')
-                    qs = Student.objects.all()
-                    for student in qs:
-                        if student.student_number == username:
-                            if student.role == 'Learner':
-                                flag = 1
+                    try:
+                        qs = Student.objects.get(student_number=username)
+                        if qs is not None:
+                            flag = 1
+                    except Exception:
+                        flag = 0
                     if flag == 1:
+                        request.session['username'] = username
                         return redirect('student_home_view')
-                        # request.session['username'] = username
                         # # return redirect('student_home_view')
                         # check = StudentInfo.objects.all()
                         # if check is not None:
@@ -242,18 +243,22 @@ def loginPage(request):
                         #     return redirect('student_add_info')
 
                     else:
-                        qs = Faculty.objects.all()
-                        for teacher in qs:
-                            if teacher.faculty_id == username:
-                                if teacher.role == 'Teacher':
-                                    request.session['username'] = username
-                                    flag = 2
-                                elif teacher.role == 'Counselor':
-                                    request.session['username'] = username
-                                    flag = 3
-                                elif teacher.role == 'Director':
-                                    request.session['username'] = username
-                                    flag = 4
+                        try:
+                            qs = Faculty.objects.get(faculty_id=username)
+                            if qs is not None:
+                                check = True
+                        except Exception:
+                            check = False
+                        if check:
+                            if qs.role == 'Teacher':
+                                request.session['username'] = username
+                                flag = 2
+                            elif qs.role == 'Counselor':
+                                request.session['username'] = username
+                                flag = 3
+                            elif qs.role == 'Director':
+                                request.session['username'] = username
+                                flag = 4
                     if flag == 2:
                         return redirect('teacher_home_view')
                     if flag == 3:
@@ -284,12 +289,6 @@ def home(request, *args, **kwargs):
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
     return render(request, "admin/home.html", {})
-
-
-@login_required(login_url='login')
-def view_offerings(request, *args, **kwargs):
-    offerings = Offerings.objects.all()
-    return render(request, "admin/view_offerings.html", {"offerings": offerings})
 
 
 @login_required(login_url='login')
@@ -332,10 +331,8 @@ def edit_department(request, code):
     if request.method == "POST":
         edit_form = EditDepartmentForm(request.POST, instance=department)
         if edit_form.is_valid():
-            print('aaaaaa')
             new_department_name = edit_form['department_name'].value()
             new_school_code = edit_form['school_code'].value()
-            print('papa', new_school_code)
             get_school_code = School.objects.get(school_code=new_school_code)
             edit = Department.objects.get(department_code=code)
             edit.department_name = new_department_name
@@ -431,8 +428,19 @@ def view_counselor(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def view_subject_offerings(request, *args, **kwargs):
-    subject_offerings = SubjectOfferings.objects.all()
-    return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings})
+    subject_offerings = SubjectOfferings.objects.filter(
+        sem_id='1st')
+    check_sem = CheckSemForm()
+    if request.method == 'POST':
+        check_sem = CheckSemForm(request.POST)
+        if check_sem.is_valid():
+            sem_choice = check_sem['sem'].value()
+            if sem_choice == '--':
+                subject_offerings = SubjectOfferings.objects.all()
+            else:
+                subject_offerings = SubjectOfferings.objects.filter(
+                    sem_id=sem_choice)
+    return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings, 'check_sem': check_sem})
 
 
 @login_required(login_url='login')
@@ -564,6 +572,37 @@ def upload_school(request):
 
 
 @login_required(login_url='login')
+def upload_degree_program(request):
+    try:
+        degree_program = DegreeProgram.objects.all()
+        if request.method == 'POST':
+            DegreeProgramResource()
+            dataset = Dataset()
+            new_degree_program = request.FILES['myfile']
+            imported_data = dataset.load(
+                new_degree_program.read(), format='xlsx')
+            wb_obj = openpyxl.load_workbook(new_degree_program)
+            sheet_obj = wb_obj.active
+            col = sheet_obj.max_column
+            row = sheet_obj.max_row
+
+            if(col == 3):
+                for data in imported_data:
+                    value = DegreeProgram(
+                        data[0],
+                        data[1],
+                        data[2]
+                    )
+                    value.save()
+                messages.info(request, 'Successfully Added')
+            else:
+                messages.info(request, 'Failed to Add the Data')
+    except Exception:
+        messages.info(request, 'Please Choose File')
+    return render(request, "admin/upload_degree_program.html", {"degree_program": degree_program})
+
+
+@login_required(login_url='login')
 def upload_faculty(request):
     try:
         faculty = Faculty.objects.all()
@@ -626,111 +665,16 @@ def upload_faculty(request):
     return render(request, "admin/upload_faculty.html", {"faculty": faculty})
 
 
-# @login_required(login_url='login')
-# def upload_subject_offerings(request):
-#     try:
-#         subject_offerings = SubjectOfferings.objects.all()
-#         if request.method == 'POST':
-#             SubjectOfferingsResource()
-#             dataset = Dataset()
-#             new_sem = request.FILES['myfile']
-#             imported_data = dataset.load(new_sem.read(), format='xlsx')
-#             wb_obj = openpyxl.load_workbook(new_sem)
-#             sheet_obj = wb_obj.active
-#             col = sheet_obj.max_column
-#             row = sheet_obj.max_row
-
-#             if(col == 9):
-#                 for data in imported_data:
-#                     check_depa = Department.objects.all()
-#                     check_faculty = Faculty.objects.all()
-#                     check_offerings = Offerings.objects.all()
-#                     check_subject = Subject.objects.all()
-#                     is_depa = bool(check_depa)
-#                     is_faculty = bool(check_faculty)
-#                     is_offerings = bool(check_offerings)
-#                     is_subject = bool(check_subject)
-
-#                     if is_depa:
-#                         if data[7] not in check_depa:
-#                             depa = Department(department_code=data[7])
-#                             depa.save()
-#                     else:
-#                         depa = Department(department_code=data[7])
-#                         depa.save()
-
-#                     if is_faculty:
-#                         if str(data[8]) not in check_faculty:
-#                             depa = Department.objects.get(
-#                                 department_code=data[7])
-#                             faculty = Faculty(faculty_id=str(
-#                                 data[8]), department_code=depa)
-#                             faculty.save()
-#                     else:
-#                         depa = Department.objects.get(
-#                             department_code=data[7])
-#                         faculty = Faculty(faculty_id=str(
-#                             data[8]), department_code=depa)
-#                         faculty.save()
-
-#                     flag = 0
-#                     if is_offerings:
-#                         for obj in check_offerings:
-#                             if str(data[0]) == obj.offer_no and str(data[5]) == obj.sem_id:
-#                                 flag = 1
-#                         if flag == 0:
-#                             offerings = Offerings(offer_no=str(data[0]), days=str(data[3]), school_time=str(
-#                                 data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
-#                             offerings.save()
-#                     else:
-#                         offerings = Offerings(
-#                             offer_no=str(data[0]), days=str(data[3]), school_time=str(data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
-#                         offerings.save()
-
-#                     if is_subject:
-#                         if data[1] not in check_subject:
-#                             subject = Subject(
-#                                 subject_code=data[1], subject_title=data[2])
-#                             subject.save()
-#                     else:
-#                         subject = Subject(
-#                             subject_code=data[1], subject_title=data[2])
-#                         subject.save()
-
-#                 for data in imported_data:
-#                     get_offer_no = Offerings.objects.get(
-#                         offer_no=str(data[0]), sem_id=str(data[5]))
-#                     get_subject_code = Subject.objects.get(
-#                         subject_code=data[1])
-#                     get_department_code = Department.objects.get(
-#                         department_code=data[7])
-#                     get_faculty_id = Faculty.objects.get(
-#                         faculty_id=str(data[8]))
-#                     value = SubjectOfferings(
-#                         offer_no=get_offer_no,
-#                         subject_code=get_subject_code,
-#                         subject_title=data[2],
-#                         school_days=str(data[3]),
-#                         school_time=str(data[4]),
-#                         sem_id=str(data[5]),
-#                         academic_year=str(data[6]),
-#                         department_code=get_department_code,
-#                         faculty_id=get_faculty_id
-#                     )
-#                     value.save()
-#                 messages.info(request, 'Successfully Added')
-#             else:
-#                 messages.info(request, 'Failed to Add the Data')
-#     except Exception as e:
-#         messages.info(request, 'Please Choose File')
-#     return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings})
-
-
 @login_required(login_url='login')
 def upload_subject_offerings(request):
     try:
         subject_offerings = SubjectOfferings.objects.all()
+        list_for_wrong_semester = []
+        check_sem = CheckSemForm()
         if request.method == 'POST':
+            check_sem = CheckSemForm(request.POST)
+            if check_sem.is_valid():
+                sem_choice = check_sem['sem'].value()
             SubjectOfferingsResource()
             dataset = Dataset()
             new_sem = request.FILES['myfile']
@@ -744,17 +688,19 @@ def upload_subject_offerings(request):
                 for data in imported_data:
                     check_depa = Department.objects.all()
                     check_faculty = Faculty.objects.all()
-                    check_offerings = Offerings.objects.all()
                     check_subject = Subject.objects.all()
                     is_depa = bool(check_depa)
                     is_faculty = bool(check_faculty)
-                    is_offerings = bool(check_offerings)
                     is_subject = bool(check_subject)
 
                     if is_depa:
-                        get_depa_exist = Department.objects.get(
-                            department_code=data[7])
-                        if get_depa_exist:
+                        try:
+                            get_depa_exist = Department.objects.get(
+                                department_code=data[7])
+                            check_depa = bool(get_depa_exist)
+                        except Exception:
+                            check_depa = False
+                        if check_depa:
                             get_depa_exist.department_code = data[7]
                             get_depa_exist.save()
                             get_depa_exist.department_name = get_depa_exist.department_name
@@ -771,9 +717,13 @@ def upload_subject_offerings(request):
                     if is_faculty:
                         depa = Department.objects.get(
                             department_code=data[7])
-                        get_faculty_exist = Faculty.objects.get(
-                            faculty_id=str(data[8]))
-                        if get_faculty_exist:
+                        try:
+                            get_faculty_exist = Faculty.objects.get(
+                                faculty_id=str(data[8]))
+                            check_faculty = bool(get_faculty_exist)
+                        except Exception:
+                            check_faculty = False
+                        if check_faculty:
                             get_faculty_exist.faculty_id = get_faculty_exist.faculty_id
                             get_faculty_exist.save()
                             get_faculty_exist.lastname = get_faculty_exist.lastname
@@ -799,33 +749,14 @@ def upload_subject_offerings(request):
                             data[8]), department_code=depa)
                         faculty.save()
 
-                    if is_offerings:
-                        get_offering_exist = Offerings.objects.get(
-                            offer_no=str(data[0]))
-                        if get_offering_exist:
-                            get_offering_exist.offer_no = str(data[0])
-                            get_offering_exist.save()
-                            get_offering_exist.days = str(data[3])
-                            get_offering_exist.save()
-                            get_offering_exist.school_time = str(data[4])
-                            get_offering_exist.save()
-                            get_offering_exist.sem_id = str(data[5])
-                            get_offering_exist.save()
-                            get_offering_exist.academic_year = str(data[6])
-                            get_offering_exist.save()
-                        else:
-                            offerings = Offerings(offer_no=str(data[0]), days=str(data[3]), school_time=str(
-                                data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
-                            offerings.save()
-                    else:
-                        offerings = Offerings(
-                            offer_no=str(data[0]), days=str(data[3]), school_time=str(data[4]), sem_id=str(data[5]), academic_year=str(data[6]))
-                        offerings.save()
-
                     if is_subject:
-                        get_subject_exist = Subject.objects.get(
-                            subject_code=data[1])
-                        if get_subject_exist:
+                        try:
+                            get_subject_exist = Subject.objects.get(
+                                subject_code=data[1])
+                            check_subjects = bool(get_subject_exist)
+                        except Exception:
+                            check_subjects = False
+                        if check_subjects:
                             get_subject_exist.subject_code = data[1]
                             get_subject_exist.subject_title = data[2]
                             get_subject_exist.units = get_subject_exist
@@ -841,8 +772,6 @@ def upload_subject_offerings(request):
                 for data in imported_data:
                     check_subjectOfferings = SubjectOfferings.objects.all()
                     is_subjectOfferings = bool(check_subjectOfferings)
-                    get_offer_no = Offerings.objects.get(
-                        offer_no=str(data[0]), sem_id=str(data[5]))
                     get_subject_code = Subject.objects.get(
                         subject_code=data[1])
                     get_department_code = Department.objects.get(
@@ -851,26 +780,52 @@ def upload_subject_offerings(request):
                         faculty_id=str(data[8]))
 
                     if is_subjectOfferings:
-                        check_if_exist = SubjectOfferings.objects.get(
-                            offer_no=get_offer_no, sem_id=str(data[5]))
-                        if check_if_exist:
-                            check_if_exist.offer_no = get_offer_no
-                            check_if_exist.save()
-                            check_if_exist.subject_code = get_subject_code
-                            check_if_exist.save()
-                            check_if_exist.subject_title = data[2],
-                            check_if_exist.save()
-                            check_if_exist.school_time = str(data[4])
-                            check_if_exist.save()
-                            check_if_exist.sem_id = str(data[5])
-                            check_if_exist.save()
-                            check_if_exist.academic_year = str(data[6])
-                            check_if_exist.save()
-                            check_if_exist.faculty_id = get_faculty_id
-                            check_if_exist.save()
+                        try:
+                            check_if_exist = SubjectOfferings.objects.get(
+                                offer_no=str(data[0]), sem_id=str(data[5]))
+                            check_exist = bool(check_if_exist)
+                        except Exception:
+                            check_exist = False
+                        if check_exist:
+                            if sem_choice == check_if_exist.sem_id:
+                                check_if_exist.offer_no = str(data[0])
+                                check_if_exist.save()
+                                check_if_exist.subject_code = get_subject_code
+                                check_if_exist.save()
+                                check_if_exist.subject_title = data[2],
+                                check_if_exist.save()
+                                check_if_exist.school_time = str(data[4])
+                                check_if_exist.save()
+                                check_if_exist.sem_id = str(data[5])
+                                check_if_exist.save()
+                                check_if_exist.academic_year = str(data[6])
+                                check_if_exist.save()
+                                check_if_exist.faculty_id = get_faculty_id
+                                check_if_exist.save()
+                            else:
+                                list_for_wrong_semester.append(
+                                    SubjectOfferings(offer_no=str(data[0])))
                         else:
+                            if sem_choice == str(data[5]):
+                                value = SubjectOfferings(
+                                    offer_no=str(data[0]),
+                                    subject_code=get_subject_code,
+                                    subject_title=data[2],
+                                    school_days=str(data[3]),
+                                    school_time=str(data[4]),
+                                    sem_id=str(data[5]),
+                                    academic_year=str(data[6]),
+                                    department_code=get_department_code,
+                                    faculty_id=get_faculty_id
+                                )
+                                value.save()
+                            else:
+                                list_for_wrong_semester.append(
+                                    SubjectOfferings(offer_no=str(data[0])))
+                    else:
+                        if sem_choice == str(data[5]):
                             value = SubjectOfferings(
-                                offer_no=get_offer_no,
+                                offer_no=str(data[0]),
                                 subject_code=get_subject_code,
                                 subject_title=data[2],
                                 school_days=str(data[3]),
@@ -881,19 +836,9 @@ def upload_subject_offerings(request):
                                 faculty_id=get_faculty_id
                             )
                             value.save()
-                    else:
-                        value = SubjectOfferings(
-                            offer_no=get_offer_no,
-                            subject_code=get_subject_code,
-                            subject_title=data[2],
-                            school_days=str(data[3]),
-                            school_time=str(data[4]),
-                            sem_id=str(data[5]),
-                            academic_year=str(data[6]),
-                            department_code=get_department_code,
-                            faculty_id=get_faculty_id
-                        )
-                        value.save()
+                        else:
+                            list_for_wrong_semester.append(
+                                SubjectOfferings(offer_no=str(data[0])))
 
                 messages.info(request, 'Successfully Added')
             else:
@@ -901,38 +846,7 @@ def upload_subject_offerings(request):
     except Exception as e:
         print('helo', e)
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings})
-
-
-@login_required(login_url='login')
-def upload_degree_program(request):
-    try:
-        degree_program = DegreeProgram.objects.all()
-        if request.method == 'POST':
-            DegreeProgramResource()
-            dataset = Dataset()
-            new_degree_program = request.FILES['myfile']
-            imported_data = dataset.load(
-                new_degree_program.read(), format='xlsx')
-            wb_obj = openpyxl.load_workbook(new_degree_program)
-            sheet_obj = wb_obj.active
-            col = sheet_obj.max_column
-            row = sheet_obj.max_row
-
-            if(col == 3):
-                for data in imported_data:
-                    value = DegreeProgram(
-                        data[0],
-                        data[1],
-                        data[2]
-                    )
-                    value.save()
-                messages.info(request, 'Successfully Added')
-            else:
-                messages.info(request, 'Failed to Add the Data')
-    except Exception:
-        messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_degree_program.html", {"degree_program": degree_program})
+    return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings, 'check_sem': check_sem, 'list_for_wrong_semester': list_for_wrong_semester})
 
 
 @login_required(login_url='login')
@@ -976,43 +890,6 @@ def upload_student(request):
     return render(request, "admin/upload_student.html", {"student": student})
 
 
-# @login_required(login_url='login')
-# def upload_student_load(request):
-#     try:
-#         student_load = Studentload.objects.all()
-#         if request.method == 'POST':
-#             StudentloadResource()
-#             dataset = Dataset()
-#             new_student_load = request.FILES['myfile']
-#             imported_data = dataset.load(
-#                 new_student_load.read(), format='xlsx')
-#             wb_obj = openpyxl.load_workbook(new_student_load)
-#             sheet_obj = wb_obj.active
-#             col = sheet_obj.max_column
-#             row = sheet_obj.max_row
-
-#             if(col == 4):
-#                 for data in imported_data:
-#                     get_student_number = Student.objects.get(
-#                         student_number=str(data[0]))
-#                     get_offer_no = Offerings.objects.get(
-#                         offer_no=str(data[1]), sem_id=str(data[2]))
-#                     value = Studentload(
-#                         student_number=get_student_number,
-#                         offer_no=get_offer_no,
-#                         sem_id=str(data[2]),
-#                         academic_year=str(data[3])
-#                     )
-#                     value.save()
-#                 messages.info(request, 'Successfully Added')
-#             else:
-#                 messages.info(request, 'Failed to Add the Data')
-#     except Exception as e:
-#         print('helloo', e)
-#         messages.info(request, 'Please Choose File')
-#     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
-
-
 @login_required(login_url='login')
 def upload_student_load(request):
     try:
@@ -1034,13 +911,16 @@ def upload_student_load(request):
                     is_student_load = bool(check_student_load)
                     get_student_number = Student.objects.get(
                         student_number=str(data[0]))
-                    get_offer_no = Offerings.objects.get(
+                    get_offer_no = SubjectOfferings.objects.get(
                         offer_no=str(data[1]), sem_id=str(data[2]))
-                    flag = 0
                     if is_student_load:
-                        check_if_exist = Studentload.objects.get(
-                            student_number=get_student_number, offer_no=get_offer_no)
-                        if check_if_exist:
+                        try:
+                            check_if_exist = Studentload.objects.get(
+                                student_number=get_student_number, offer_no=get_offer_no)
+                            check = bool(check_if_exist)
+                        except Exception:
+                            check = False
+                        if check:
                             check_if_exist.student_number = get_student_number
                             check_if_exist.save()
                             check_if_exist.offer_no = get_offer_no
@@ -1067,7 +947,6 @@ def upload_student_load(request):
             else:
                 messages.info(request, 'Failed to Add the Data')
     except Exception as e:
-        print('helloo', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
 # admin
@@ -1126,4 +1005,37 @@ def teacher_home_view(request, *args, **kwargs):
     subjects = SubjectOfferings.objects.filter(
         faculty_id=teacher_name.faculty_id)
     return render(request, "teacher/home.html",  {"form": teacher_name, 'subjects': subjects})
+
+
+@login_required(login_url='login')
+def student_list_enrolled(request, offer_no):
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    get_offerings = SubjectOfferings.objects.get(offer_no=offer_no)
+    studentload = Studentload.objects.filter(offer_no=get_offerings)
+    students = Student.objects.all()
+    list = []
+    for obj in students:
+        for obj1 in studentload:
+            if obj.student_number == obj1.student_number.student_number:
+                list.append(Student(student_number=obj.student_number,
+                                    lastname=obj.lastname, firstname=obj.firstname,
+                                    middlename=obj.middlename, program_code=obj.program_code))
+
+    return render(request, "teacher/student_list_enrolled.html",  {"form": teacher_name, 'list': list})
+
 # teacher
+
+# student
+
+
+@login_required(login_url='login')
+def student_home_view(request, *args, **kwargs):
+    user = request.session.get('username')
+    print('herereeeee')
+    print(user)
+    print(type(user))
+    student_name = Student.objects.get(student_number=user)
+    return render(request, "student/home.html", {"form": student_name})
+
+# student

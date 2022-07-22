@@ -115,7 +115,7 @@
     margin-bottom: 3vh;
     box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: normal;
     border: none;
     border-collapse: collapse;
@@ -133,7 +133,7 @@
 
   .fl-table td {
     border-right: 1px solid #ffffff;
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .fl-table thead th {
@@ -203,7 +203,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       width: 120px;
-      font-size: 13px;
+      font-size: 15px;
       text-overflow: ellipsis;
     }
 
@@ -271,7 +271,7 @@
 
 {% if not student %} 
           <div class="no-data">
-    No Data Yet!
+    No Data Available
   </div>
 {% else %}
 
@@ -292,34 +292,34 @@
       </tr>
     </thead> {% for obj in student %} <tbody>
       <tr>
-        <td  style="font-size: 12px;">
+        <td  style="text-align: center; font-size: 15px;">
           <b>{{obj.student_number}}</b>
         </td>
-        <td  style="text-align: left; font-size: 13px;">
+        <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.lastname}}</b>
         </td>
-        <td  style="text-align: left; font-size: 13px;">
+        <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.firstname}}</b>
         </td>
-       <td  style="text-align: left; font-size: 13px;">
+       <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.middlename}}</b>
         </td>
-               <td  style="text-align: left; font-size: 13px;">
+               <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.IQ}}</b>
         </td>
-               <td  style="text-align: left; font-size: 13px;">
-           <b>{{obj.birthdate}}</b>
+               <td  style="text-align: left; font-size: 15px;">
+           <b>{{obj.birthdate|slice:':9'}}</b>
         </td>
-               <td  style="text-align: left; font-size: 12px;">
+               <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.hometown}}</b>
         </td>
-               <td  style="text-align: left; font-size: 13px;">
+               <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.program_code_id}}</b>
         </td>
-               <td  style="text-align: left; font-size: 13px;">
+               <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.year}}</b>
         </td>
-               <td  style="text-align: left; font-size: 13px;">
+               <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.student_email}}</b>
         </td>
       </tr>
