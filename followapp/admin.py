@@ -1,10 +1,14 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from .models import Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-from .models import AccountCreated, StudentAdditionalInformation
-# admin.site.register(Semester)
-
+from .models import Calendar, AccountCreated, StudentAdditionalInformation, Referral, Notification, SetScheduleCounselor, NotificationFeedback, CounselorFeedback
+admin.site.register(Calendar)
+admin.site.register(CounselorFeedback)
+admin.site.register(NotificationFeedback)
+admin.site.register(Notification)
+admin.site.register(Referral)
 admin.site.register(StudentAdditionalInformation)
+admin.site.register(SetScheduleCounselor)
 
 
 admin.site.register(Subject)

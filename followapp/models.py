@@ -5,6 +5,40 @@ from viewflow.fields import CompositeKey
 from compositefk.fields import CompositeForeignKey, LocalFieldValue
 
 
+class Referral(models.Model):
+    student_number = models.CharField(max_length=220)
+    firstname = models.CharField(max_length=220, blank=True, null=True)
+    lastname = models.CharField(max_length=220, blank=True, null=True)
+    middlename = models.CharField(max_length=220, blank=True, null=True)
+    degree_program = models.CharField(max_length=220, blank=True, null=True)
+    subject_referred = ArrayField(
+        ArrayField(
+            models.CharField(max_length=225)
+        ), blank=True, null=True
+    )
+    reasons = models.CharField(max_length=10000)
+    counselor_id = models.CharField(max_length=220, blank=True, null=True)
+    faculty_id = ArrayField(
+        ArrayField(
+            models.CharField(max_length=225, blank=True, null=True)
+        ), blank=True, null=True
+    )
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    status = models.CharField(
+        max_length=220, default='pending')
+    BEHAVIOR_PROBLEM = (('CHEATING', 'CHEATING'),
+                        ('TARDINESS', 'TARDINESS'), ('DISRESPECTFUL', 'DISRESPECTFUL'),
+                        ('BAD ATTITUDE', 'BAD ATTITUDE'), ('OTHERS', 'OTHERS'))
+    behavior_problem = MultiSelectField(
+        max_length=220, choices=BEHAVIOR_PROBLEM)
+    feedback = models.CharField(max_length=10000, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "Referral"
+
+
 class Subject(models.Model):
     subject_code = models.CharField(max_length=225, primary_key=True)
     subject_title = models.CharField(max_length=220)
@@ -166,6 +200,79 @@ class StudentAdditionalInformation(models.Model):
         verbose_name_plural = "StudentAdditionalInformation"
 
 
+class SetScheduleCounselor(models.Model):
+    faculty_id = models.CharField(max_length=220)
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    choice = models.CharField(max_length=220)
+
+    class Meta:
+        verbose_name_plural = "SetScheduleCounselor"
+
+
+class Notification(models.Model):
+    AUTOMATIC_REFERRAL = 'automatic_referral'
+    MANUAL_REFERRAL = 'manual_referral'
+    APPOINTMENT = 'appointment'
+
+    CHOICES = (
+        (AUTOMATIC_REFERRAL, 'automatic_referral'),
+        (MANUAL_REFERRAL, 'manual_referral'),
+        (APPOINTMENT, 'appointment')
+    )
+
+    to_user = models.CharField(max_length=220)
+    notification_type = models.CharField(max_length=100, choices=CHOICES)
+    is_read_student = models.BooleanField(default=False)
+    is_read_counselor = models.BooleanField(default=False)
+    extra_id = models.IntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=220)
+    schedDay = models.DateTimeField()
+    schedStartTime = models.TimeField()
+    schedEndTime = models.TimeField()
+
+    class Meta:
+        verbose_name_plural = "Notification"
+
+
+class NotificationFeedback(models.Model):
+    FEEDBACK_TEACHER = 'feedback_teacher'
+    FEEDBACK_STUDENT = 'feedback_student'
+
+    CHOICES = (
+        (FEEDBACK_TEACHER, 'feedback_teacher'),
+        (FEEDBACK_STUDENT, 'feedback_student')
+    )
+
+    to_user = models.CharField(max_length=220)
+    notification_type = models.CharField(max_length=100, choices=CHOICES)
+    is_read = models.BooleanField(default=False)
+    extra_id = models.IntegerField()
+    referral_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=220)
+
+    class Meta:
+        verbose_name_plural = "NotificationFeedback"
+
+
+class CounselorFeedback(models.Model):
+    feedback = models.CharField(max_length=10000)
+    remarks = models.CharField(max_length=10000)
+
+    class Meta:
+        verbose_name_plural = "CounselorFeedback"
+
+
+class Calendar(models.Model):
+    pickedDate = models.DateField(null=True)
+
+    class Meta:
+        verbose_name_plural = "Calendar"
+
 # class AccountsApi(models.Model):
 #     id_number = models.CharField(max_length=15, primary_key=True)
 #     email = models.CharField(max_length=220)
@@ -246,78 +353,12 @@ class StudentAdditionalInformation(models.Model):
 #         verbose_name_plural = "CounselorFeedback"
 
 
-# class Notification(models.Model):
-#     AUTOMATIC_REFERRAL = 'automatic_referral'
-#     MANUAL_REFERRAL = 'manual_referral'
-#     APPOINTMENT = 'appointment'
-
-#     CHOICES = (
-#         (AUTOMATIC_REFERRAL, 'automatic_referral'),
-#         (MANUAL_REFERRAL, 'manual_referral'),
-#         (APPOINTMENT, 'appointment')
-#     )
-
-#     to_user = models.CharField(max_length=220)
-#     notification_type = models.CharField(max_length=100, choices=CHOICES)
-#     is_read_student = models.BooleanField(default=False)
-#     is_read_counselor = models.BooleanField(default=False)
-#     extra_id = models.IntegerField()
-
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     created_by = models.CharField(max_length=220)
-#     schedDay = models.DateTimeField()
-#     schedStartTime = models.TimeField()
-#     schedEndTime = models.TimeField()
-
-#     class Meta:
-#         verbose_name_plural = "Notification"
-
-
-# class NotificationFeedback(models.Model):
-#     FEEDBACK_TEACHER = 'feedback_teacher'
-#     FEEDBACK_STUDENT = 'feedback_student'
-
-#     CHOICES = (
-#         (FEEDBACK_TEACHER, 'feedback_teacher'),
-#         (FEEDBACK_STUDENT, 'feedback_student')
-#     )
-
-#     to_user = models.CharField(max_length=220)
-#     notification_type = models.CharField(max_length=100, choices=CHOICES)
-#     is_read = models.BooleanField(default=False)
-#     extra_id = models.IntegerField()
-#     referral_id = models.IntegerField()
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     created_by = models.CharField(max_length=220)
-
-#     class Meta:
-#         verbose_name_plural = "NotificationFeedback"
-
-
-# class Calendar(models.Model):
-#     pickedDate = models.DateField(null=True)
-
-#     class Meta:
-#         verbose_name_plural = "Calendar"
-
-
 # class FilterDate(models.Model):
 #     pickedStartDate = models.DateField()
 #     pickedEndDate = models.DateField()
 
 #     class Meta:
 #         verbose_name_plural = "FilterDate"
-
-
-# class SetScheduleCounselor(models.Model):
-#     employee_id = models.CharField(max_length=220)
-#     date = models.DateField()
-#     start_time = models.TimeField()
-#     end_time = models.TimeField()
-#     choice = models.CharField(max_length=220)
-
-#     class Meta:
-#         verbose_name_plural = "SetScheduleCounselor"
 
 
 # class NewTime(models.Model):

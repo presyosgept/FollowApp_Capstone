@@ -115,7 +115,7 @@
     margin-bottom: 3vh;
     box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: normal;
     border: none;
     border-collapse: collapse;
@@ -133,7 +133,7 @@
 
   .fl-table td {
     border-right: 1px solid #ffffff;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .fl-table thead th {
@@ -203,7 +203,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       width: 120px;
-      font-size: 15px;
+      font-size: 14px;
       text-overflow: ellipsis;
     }
 
@@ -279,47 +279,47 @@
   <table class="fl-table">
     <thead>
       <tr>
-        <th  style="font-size: 17px;">Student ID</th>
-        <th  style="font-size: 17px;">Lastname</th>
-        <th  style="font-size: 17px;">Firstname</th>
-        <th  style="font-size: 17px;">Middlename</th>
-        <th  style="font-size: 17px;">School Name</th>
-        <th  style="font-size: 17px;">Department Code</th>
-        <th  style="font-size: 17px;">Program Code</th>
-         <th  style="font-size: 17px;">Sem Id</th>
-        <th  style="font-size: 17px;">Academic Year</th>
-        <th  style="font-size: 17px;">Student Email</th>
+        <th  style="font-size: 15px;">Student ID</th>
+        <th  style="font-size: 15px;">Lastname</th>
+        <th  style="font-size: 15px;">Firstname</th>
+        <th  style="font-size: 15px;">Middlename</th>
+        <th  style="font-size: 15px;">School Name</th>
+        <th  style="font-size: 15px;">Department Code</th>
+        <th  style="font-size: 15px;">Program Code</th>
+         <th  style="font-size: 15px;">Sem Id</th>
+        <th  style="font-size: 15px;">Academic Year</th>
+        <th  style="font-size: 15px;">Student Email</th>
       </tr>
     </thead> {% for obj in student %} <tbody>
       <tr>
-        <td  style="text-align: center; font-size: 15px;">
+        <td  style="text-align: center; font-size: 14px;">
           <b>{{obj.student_number}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 14px;">
            <b>{{obj.lastname}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 14px;">
            <b>{{obj.firstname}}</b>
         </td>
-       <td  style="text-align: left; font-size: 15px;">
+       <td  style="text-align: left; font-size: 14px;">
            <b>{{obj.middlename}}</b>
         </td>
-               <td  style="text-align: center; font-size: 15px;">
+               <td  style="text-align: center; font-size: 14px;">
            <b>{{obj.school_name.school_name}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 14px;">
            <b>{{obj.department_code.department_code}}</b>
         </td>
-               <td  style="text-align: center; font-size: 15px;">
+               <td  style="text-align: center; font-size: 14px;">
            <b>{{obj.program_code_id}}</b>
         </td>
-        <td  style="text-align: center; font-size: 15px;">
+        <td  style="text-align: center; font-size: 14px;">
            <b>{{obj.sem_id}}</b>
         </td>
-               <td  style="text-align: center; font-size: 15px;">
+               <td  style="text-align: center; font-size: 14px;">
            <b>{{obj.academic_year}}</b>
         </td>
-               <td  style="text-align: left; font-size: 15px;">
+               <td  style="text-align: left; font-size: 14px;">
            <b>{{obj.student_email}}</b>
         </td>
       </tr>

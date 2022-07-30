@@ -6,7 +6,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     width: 28vw;
-    height: 16vh;
+    height: 20vh;
     border-radius: 5px;
     background-color: #98b4ac;
     float: left;
@@ -244,6 +244,10 @@
     font-weight: bold;
     font-size: 19px;
   }
+  #id_sem{
+    width: 8vw;
+    height: 3vh;
+  }
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -258,18 +262,18 @@
   </button> {% endfor %} </div>
 <br>
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} 
-    {{check_sem.sem}}
     <div class="semester-card">
-  <div style="margin-left: 2vw; margin-top: 1vh;">
-    <input type="file" name="myfile" class="input" style="font-size: 17.5px; font-weight: bold;">
+              <div style="margin-left: 2vw; margin-top: 1vh;">
+     <label style="font-size: 17px; font-weight: bold;">Semester: {{check_sem.sem}}</label>
+     </div>
+  <div style="margin-left: 2vw;">
+    <input type="file" name="myfile" class="input" style="font-size: 16px; font-weight: bold;">
   </div>
     <div style="margin-left: 2vw;">
       <button type="submit" class="button">Upload</button>
     </div>
       </div> 
   </form>
-
-  
 
   
 {% if list_for_wrong_semester %} 

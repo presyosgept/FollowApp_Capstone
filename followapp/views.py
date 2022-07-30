@@ -16,7 +16,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
-# from .utilities import create_notification, create_feedback
+from .utilities import create_notification, create_feedback
 from django.views import generic
 from django.utils import timezone
 from datetime import date, datetime, timedelta
@@ -35,11 +35,11 @@ from django.conf import settings
 import random
 from django.contrib.auth.models import User
 
-from .models import Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-from .models import AccountCreated, StudentAdditionalInformation
+from .models import Calendar, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, Notification, SetScheduleCounselor, NotificationFeedback
 from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 counselorNotif = 0
@@ -233,7 +233,6 @@ def loginPage(request):
                         get_students = StudentAdditionalInformation.objects.all()
                         check = bool(get_students)
                         if check:
-                            print('aaaa')
                             stud = StudentAdditionalInformation.objects.get(
                                 student_number=username)
                             if stud.status == 'undone':
@@ -289,6 +288,61 @@ def home(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
+    # Referral.objects.all().delete()
+    # Notification.objects.all().delete()
+    # timeArray = []
+    # newTime = str('2')+':00'
+    # timeArray.append(datetime.strptime(newTime, '%H:%M').time())
+    # newTime = str('2')+':30'
+    # d = datetime.strptime(newTime, "%H:%M").time()
+    # with_ampm = d.strftime("%I:%M %p")
+    # print('with_ampm', with_ampm)
+    # print('d', d)
+    # print('newTime', newTime)
+    # print('timeArray', timeArray)
+    # subject = SubjectOfferings.objects.get(offer_no='60002')
+    # splitDate = subject.school_time.split('-')
+    # check_a = 'hello'
+    # check_b = 'l'
+    # if check_b in check_a:
+    #     print('work')
+    # checkaaa = bool(check_b in check_a)
+    # print(checkaaa)
+    # time = '12:30 pm'
+    # convert_into_time = datetime.strptime(time, '%H:%M %p').time()
+    # convert_into_time_with_ampm = convert_into_time.strftime('%I:%M %p')
+    # print(convert_into_time, type(convert_into_time))
+    # print(convert_into_time_with_ampm, type(convert_into_time_with_ampm))
+    # time1 = '8:30 pm'
+    # time2 = '8:30 pm'
+
+    # print(time2, type(time2))
+    # d = datetime.strptime("22:30", "%H:%M")
+    # with_ampm = d.strftime("%I:%M %p")
+    # print(d.strftime("%I:%M %p"))
+
+    # today = date.today()
+    # day_name = today.strftime("%a")
+    # abbreviation = day_name[0]
+    # print('abbreviation', abbreviation)
+    # print('day_name[0]', day_name[0])
+    # today = date.today()
+    # day_name = today.strftime("%a")
+    # abbreviation = day_name[0:2]
+    # print(abbreviation)
+    # print(day_name[0:2])
+    # a = '10124534534534534454'
+    # ap = []
+    # get = []
+    # value = ChessBoard.objects.get(id=2)
+    # print(value.board)
+    # for obj in value.board:
+    #     get.append(obj)
+    # get.append(a)
+    # print(get)
+    # value.board = get
+    # value.save()
+    # print(value.board)
     return render(request, "admin/home.html", {})
 
 
@@ -352,7 +406,6 @@ def edit_department(request, code):
                 id=new_school_code)
             edit = Department.objects.get(department_code=code)
             edit.department_name = new_department_name
-            edit.save()
             edit.school_code = get_school_code
             edit.save()
     return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form})
@@ -478,7 +531,6 @@ def edit_degree_program(request, code):
             get_school = School.objects.get(id=new_school_code)
             edit = DegreeProgram.objects.get(program_code=code)
             edit.program_name = new_program_name
-            edit.save()
             edit.school_code = get_school
             edit.save()
     return render(request, "admin/edit_degree_program.html", {'degree_program': degree_program, 'edit_form': edit_form})
@@ -623,13 +675,9 @@ def upload_faculty(request):
                     else:
                         check = Faculty.objects.get(faculty_id=id)
                         check.lastname = data[1]
-                        check.save()
                         check.firstname = data[2]
-                        check.save()
                         check.middlename = data[3]
-                        check.save()
                         check.email = data[4]
-                        check.save()
                         check.role = data[5]
                         check.save()
                 messages.info(request, 'Successfully Added')
@@ -677,9 +725,7 @@ def upload_subject_offerings(request):
                             check_depa = False
                         if check_depa:
                             get_depa_exist.department_code = data[7]
-                            get_depa_exist.save()
                             get_depa_exist.department_name = get_depa_exist.department_name
-                            get_depa_exist.save()
                             get_depa_exist.school_code = get_depa_exist.school_code
                             get_depa_exist.save()
                         else:
@@ -700,17 +746,11 @@ def upload_subject_offerings(request):
                             check_faculty = False
                         if check_faculty:
                             get_faculty_exist.faculty_id = get_faculty_exist.faculty_id
-                            get_faculty_exist.save()
                             get_faculty_exist.lastname = get_faculty_exist.lastname
-                            get_faculty_exist.save()
                             get_faculty_exist.firstname = get_faculty_exist.firstname
-                            get_faculty_exist.save()
                             get_faculty_exist.middlename = get_faculty_exist.middlename
-                            get_faculty_exist.save()
                             get_faculty_exist.email = get_faculty_exist.email
-                            get_faculty_exist.save()
                             get_faculty_exist.role = get_faculty_exist.role
-                            get_faculty_exist.save()
                             get_faculty_exist.department_code = depa
                             get_faculty_exist.save()
                         else:
@@ -764,17 +804,11 @@ def upload_subject_offerings(request):
                         if check_exist:
                             if sem_choice == check_if_exist.sem_id:
                                 check_if_exist.offer_no = str(data[0])
-                                check_if_exist.save()
                                 check_if_exist.subject_code = get_subject_code
-                                check_if_exist.save()
-                                check_if_exist.subject_title = data[2],
-                                check_if_exist.save()
+                                check_if_exist.subject_title = data[2]
                                 check_if_exist.school_time = str(data[4])
-                                check_if_exist.save()
                                 check_if_exist.sem_id = str(data[5])
-                                check_if_exist.save()
                                 check_if_exist.academic_year = str(data[6])
-                                check_if_exist.save()
                                 check_if_exist.faculty_id = get_faculty_id
                                 check_if_exist.save()
                             else:
@@ -819,7 +853,6 @@ def upload_subject_offerings(request):
             else:
                 messages.info(request, 'Failed to Add the Data')
     except Exception as e:
-        print('helo', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings, 'check_sem': check_sem, 'list_for_wrong_semester': list_for_wrong_semester})
 
@@ -883,7 +916,6 @@ def upload_student(request):
             else:
                 messages.info(request, 'Failed to Add the Data')
     except Exception as e:
-        print('hi', e)
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student})
 
@@ -920,11 +952,8 @@ def upload_student_load(request):
                             check = False
                         if check:
                             check_if_exist.student_number = get_student_number
-                            check_if_exist.save()
                             check_if_exist.offer_no = get_offer_no
-                            check_if_exist.save()
                             check_if_exist.sem_id = data[2]
-                            check_if_exist.save()
                             check_if_exist.academic_year = str(data[3])
                             check_if_exist.save()
                         else:
@@ -983,30 +1012,582 @@ def assign_counselor(request, code):
             degree_program = DegreeProgram.objects.get(program_code=code)
     return render(request, "director/assign_counselor.html", {"form": director_name, 'degree_program': degree_program, 'edit_form': edit_form})
 
+
+@login_required(login_url='login')
+def per_degree_program(request, *args, **kwargs):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    degree_program = DegreeProgram.objects.all()
+    return render(request, "director/per_degree_program.html", {"form": director_name, 'degree_program': degree_program})
+
+
+@login_required(login_url='login')
+def view_stat_by_degree_program(request, degree):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    referrals = Referral.objects.filter(degree_program=degree)
+    stat = referrals.count()
+    return render(request, "director/view_stat_by_degree_program.html", {"referrals": referrals, "form": director_name, 'stat': stat})
+
+
+@login_required(login_url='login')
+def per_counselor(request, *args, **kwargs):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    counselor = Faculty.objects.filter(role='Counselor')
+    return render(request, "director/per_counselor.html", {"form": director_name, 'counselor': counselor})
+
+
+@login_required(login_url='login')
+def view_stat_by_counselor(request, counselor_id):
+    user = request.session.get('username')
+    director_name = Faculty.objects.get(faculty_id=user)
+    referrals = Referral.objects.filter(counselor_id=counselor_id)
+    stat = referrals.count()
+    return render(request, "director/view_stat_by_counselor.html", {"referrals": referrals, "form": director_name, 'stat': stat})
+
 # director
 
 
 # counselor
 @login_required(login_url='login')
 def counselor_home_view(request, *args, **kwargs):
+    global counselorNotif
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
-    return render(request, "counselor/home.html", {"form": counselor_name})
+    return render(request, "counselor/home.html", {"counselorNotif": counselorNotif, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def view_referred_students(request):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    qs = Referral.objects.filter(counselor_id=user, status='done')
+    return render(request, "counselor/view_referred_students.html", {"counselorNotif": counselorNotif, "objects": qs, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def view_pending_referred_students(request):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    qs = Referral.objects.filter(counselor_id=user, status='pending')
+    return render(request, "counselor/view_pending_referred_students.html", {"counselorNotif": counselorNotif, "objects": qs, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def detail_referred_student_counselor(request, id):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    qs = Referral.objects.get(id=id)
+    count = len(qs.faculty_id)
+    return render(request, "counselor/detail_referred_student_counselor.html", {"counselorNotif": counselorNotif, 'count': count, "object": qs, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_set_schedule(request, *args, **kwargs):
+    global counselorNotif
+    count = 0
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    numberOfNotif = Notification.objects.filter(
+        to_user=user).order_by('created_at')
+
+    for check in numberOfNotif:
+        if check.is_read_counselor == False:
+            count = count + 1
+    # counselorNotif = counselor_setSchedule
+    offer = SetScheduleCounselorForm(initial={
+        'employee_id': user, 'choice': 'Not Available'})
+    if request.method == "POST":
+        print('piffaaaaaaa')
+        offer = SetScheduleCounselorForm(request.POST, initial={
+            'employee_id': user, 'choice': 'Not Available'})
+        if offer.is_valid():
+            print('precious')
+            pickedDateForm = offer['date'].value()
+            start_timeForm = offer['start_time'].value()
+            end_timeForm = offer['end_time'].value()
+
+            date = datetime.strptime(pickedDateForm, "%Y-%m-%d").date()
+            ClassesCounselor = []
+            ClassesofCounselor = []
+            ClassesCounselorCheck = False
+            dateNotAvailable = date
+            timeStart = datetime.strptime(
+                start_timeForm + ':00', '%H:%M:%S').time()
+            timeEnd = datetime.strptime(
+                end_timeForm + ':00', '%H:%M:%S').time()
+            day_name = date.strftime("%a")
+            if timeEnd <= timeStart:
+                # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                messages.info(request, 'Conflict of Time')
+            else:
+                OfferCodeCounselor = SubjectOfferings.objects.filter(
+                    faculty_id=user)
+                OfferCodeCounselorChecker = bool(OfferCodeCounselor)
+
+                if(OfferCodeCounselorChecker == True):
+                    for object in OfferCodeCounselor:
+                        Subject = OfferCode.objects.get(
+                            offer_code=object.offer_code_id)
+                        ClassesofCounselor.append(Subject)
+                else:
+                    OfferCodeCounselorChecker = False
+
+                if(OfferCodeCounselorChecker == True):
+                    for object in ClassesofCounselor:
+                        for d in object.days:
+                            if d == day_name:
+                                ClassesCounselor.append(OfferCode(offer_code=object.offer_code, days=object.days,
+                                                                  start_time=object.start_time, end_time=object.end_time, room=object.room,
+                                                                  subject_code=object.subject_code, sem_id=object.sem_id, academic_year=object.academic_year,))
+                                ClassesCounselorCheck = True
+                else:
+                    ClassesCounselorCheck = False
+                notAvailableSched = SetScheduleCounselor.objects.filter(
+                    employee_id=user, date=dateNotAvailable)
+                notAvailableSchedChecker = bool(notAvailableSched)
+                print('notAvailableSched', notAvailableSched,
+                      notAvailableSchedChecker)
+                print('classes', ClassesCounselor, ClassesCounselorCheck)
+
+                checker = 0
+                checker1 = 0
+                checker2 = 0
+                ReferralNotAvailable = Referral.objects.filter(
+                    date=dateNotAvailable).order_by('start_time')
+                ReferralNotAvailableChecker = bool(ReferralNotAvailable)
+                print('referral', ReferralNotAvailable,
+                      ReferralNotAvailableChecker)
+                if(ReferralNotAvailableChecker == True and ClassesCounselorCheck == True and notAvailableSchedChecker == True):
+                    print('1')
+                    for object in ReferralNotAvailable:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                            print('1.1')
+                    if(checker != 1):
+                        for object1 in ClassesCounselor:
+                            if(object1.start_time <= timeStart and object1.end_time >= timeEnd or object1.start_time >= timeStart and object1.start_time < timeEnd or object1.end_time > timeStart and object1.end_time <= timeEnd or object1.start_time >= timeStart and object1.end_time <= timeEnd):
+                                checker1 = 1
+                                print('1.2')
+                        if(checker1 != 1):
+                            for object2 in notAvailableSched:
+                                if(object2.start_time <= timeStart and object2.end_time >= timeEnd or object2.start_time >= timeStart and object2.start_time < timeEnd or object2.end_time > timeStart and object2.end_time <= timeEnd or object2.start_time >= timeStart and object2.end_time <= timeEnd):
+                                    checker2 = 1
+                                    print('1.3')
+                            if(checker2 != 1):
+                                # -- save the id date and time in the database
+                                offer.save()
+                                newData = SetScheduleCounselor.objects.last()
+                                newData.employee_id = user
+                                newData.choice = 'Not Available'
+                                newData.save()
+                                # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                                messages.info(request, 'Success')
+                            else:
+                                messages.info(
+                                    request, 'Not Available Time')
+
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                    #ReferralNotAvailableChecker and ClassesCounselorCheck is true
+                if(ReferralNotAvailableChecker == True and ClassesCounselorCheck == True and notAvailableSchedChecker == False):
+                    print('2')
+                    for object in ReferralNotAvailable:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                    if(checker != 1):
+                        for object in ClassesCounselor:
+                            if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                                checker1 = 1
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.employee_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                #ReferralNotAvailableChecker and notAvailableChecker is true
+                if(ReferralNotAvailableChecker == True and ClassesCounselorCheck == False and notAvailableSchedChecker == True):
+                    print('3')
+                    for object in ReferralNotAvailable:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                    if(checker != 1):
+                        for object in notAvailableSched:
+                            if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                                checker1 = 1
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.employee_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                #ClassesCounselorCheck and not AvailableChecker is true
+                if(ReferralNotAvailableChecker == False and ClassesCounselorCheck == True and notAvailableSchedChecker == True):
+                    print('4')
+                    for object in ClassesCounselor:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                            print('4.1')
+                    if(checker != 1):
+                        for object in notAvailableSched:
+                            if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                                checker1 = 1
+                                print('4.2')
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.employee_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                #ClassesCounselorCheck is True
+                if(ReferralNotAvailableChecker == False and ClassesCounselorCheck == True and notAvailableSchedChecker == False):
+                    print('5,s')
+                    for object in ClassesCounselor:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                            print('a', object.start_time, object.end_time)
+                            print('b', checker)
+                    print('subject', ClassesCounselor)
+                    print('timailan', checker)
+                    if(checker != 1):
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.employee_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+                #ReferralNotAvailableChecker is True
+                if(ReferralNotAvailableChecker == True and ClassesCounselorCheck == False and notAvailableSchedChecker == False):
+                    print('6')
+                    for object in ReferralNotAvailable:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                    if(checker != 1):
+                        # -- save the id date and time in the database
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.employee_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+                #notAvailableSchedChecker is True
+                if(ReferralNotAvailableChecker == False and ClassesCounselorCheck == False and notAvailableSchedChecker == True):
+                    print('7')
+                    for object in notAvailableSched:
+                        if(object.start_time <= timeStart and object.end_time >= timeEnd or object.start_time >= timeStart and object.start_time < timeEnd or object.end_time > timeStart and object.end_time <= timeEnd or object.start_time >= timeStart and object.end_time <= timeEnd):
+                            checker = 1
+                    if(checker != 1):
+                        # -- save the id date and time in the database
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.employee_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+                # if all are false
+                if(ReferralNotAvailableChecker == False and ClassesCounselorCheck == False and notAvailableSchedChecker == False):
+                    print('8')
+                    offer.save()
+                    newData = SetScheduleCounselor.objects.last()
+                    newData.employee_id = user
+                    newData.choice = 'Not Available'
+                    newData.save()
+                    # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                    messages.info(request, 'Success')
+
+    return render(request, "counselor/counselor_set_schedule.html", {"offer": offer, "counselorNotif": counselorNotif, "form": counselor_name})
+
+
+@login_required
+def counselor_notifications(request):
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    goto = request.GET.get('goto', '')
+    notification_id = request.GET.get('notification', 0)
+    extra_id = request.GET.get('extra_id', 0)
+
+    if goto != '':
+        notification = Notification.objects.get(pk=notification_id)
+        notification.is_read = True
+        notification.save()
+
+        if notification.notification_type == Notification.AUTOMATIC_REFERRAL:
+            return render(request, "counselor/counselor.html", {})
+        elif notification.notification_type == Notification.MANUAL_REFERRAL:
+            return render(request, "counselor/counselor.html", {})
+
+    counselorNotif = Notification.objects.filter(
+        to_user=user).order_by('created_at')
+    return render(request, 'counselor/notification.html', {"notifications": counselorNotif, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_notification_detail(request, id):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    notification = Notification.objects.get(id=id)
+    notification.is_read_counselor = True
+    notification.save()
+    detail = []
+    qs = Referral.objects.filter(counselor_id=user)
+    type = "teacher"
+
+    for referedStud in qs:
+        if(referedStud.id == id):
+            if referedStud.subject_referred is not None:
+                type = "student"
+                detail.append(Referral(id=id,
+                                       firstname=referedStud.firstname,
+                                       lastname=referedStud.lastname, student_number=referedStud.student_number,
+                                       degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
+                                       reasons=referedStud.reasons, behavior_problem=referedStud.behavior_problem, date=referedStud.date,
+                                       start_time=referedStud.start_time, end_time=referedStud.end_time,
+                                       status=referedStud.status, feedback=referedStud.feedback))
+                count = len(referedStud.faculty_id)
+    if counselorNotif != 0:
+        counselorNotif = counselorNotif - 1
+    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'count': count, "objects": detail, "type": type, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_feedback_student(request, id):
+    global teacherNotif
+    global counselorNotif
+    global feedback_id
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    info = Notification.objects.get(id=id)
+    student = Referral.objects.get(id=id)
+    preparedby = Faculty.objects.get(faculty_id=student.counselor_id)
+    form1 = CounselorFeedbackForm()
+    if request.method == "POST":
+        form1 = CounselorFeedbackForm(request.POST)
+        if form1.is_valid():
+            form1.save()
+            feedback = form1['feedback'].value()
+            feedback_id = feedback_id + 1
+            messages.info(request, 'Success!')
+            teacherNotif = teacherNotif + 1
+            t = Referral.objects.get(id=id)
+            t.status = "done"
+            t.feedback = feedback
+            t.save()
+            form1 = CounselorFeedbackForm()
+            create_feedback(student.faculty_id[0],
+                            'feedback_teacher', user, feedback_id, id)
+
+            return render(request, "counselor/counselor_feedback_student.html", {"counselorNotif": counselorNotif, "info": info,  "info2": preparedby,   "student": student, "object": form1, "form": counselor_name})
+
+    return render(request, "counselor/counselor_feedback_student.html", {"counselorNotif": counselorNotif, "info": info, "info2": preparedby, "student": student, "object": form1, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_feedback(request, id):
+    # problem here
+    global counselorNotif
+    global teacherNotif
+    global feedback_id
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    check = Referral.objects.all()
+    faculty = Faculty.objects.all()
+    flagteacher = 0
+    for exist in check:
+        for teacher in faculty:
+            if exist.faculty_id == teacher.faculty_id:
+                flagteacher = 1
+
+    info = Notification.objects.get(id=id)
+    student = Referral.objects.get(id=id)
+    referredby = Faculty.objects.get(faculty_id=student.faculty_id)
+    preparedby = Faculty.objects.get(faculty_id=student.counselor_id)
+    form1 = CounselorFeedbackForm()
+    if request.method == "POST":
+        form1 = CounselorFeedbackForm(request.POST)
+        if form1.is_valid():
+            form1.save()
+            feedback = form1['feedback'].value()
+            feedback_id = feedback_id + 1
+            if flagteacher == 1:
+                create_feedback(student.faculty_id,
+                                'feedback_teacher', user, feedback_id, id)
+            messages.info(request, 'Success!')
+            t = Referral.objects.get(id=id)
+            t.status = "done"
+            t.feedback = feedback
+            t.save()
+            form1 = CounselorFeedbackForm()
+            return render(request, "counselor/counselor_feedback.html", {"counselorNotif": counselorNotif,
+                                                                         "info": info,  "info1": referredby, "info2": preparedby,   "student": student, "object": form1,
+                                                                         "form": counselor_name})
+    return render(request, "counselor/counselor_feedback.html", {"counselorNotif": counselorNotif, "info": info,
+                                                                 "info1": referredby, "info2": preparedby, "student": student, "object": form1, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_view_feedback(request):
+    global counselorNotif
+    global Search
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    student = Referral.objects.filter(counselor_id=user, status='done')
+    date = CalendarForm()
+    if request.method == "POST":
+        date = CalendarForm(request.POST)
+        if date.is_valid():
+            date_choice = date['pickedDate'].value()
+            date.save()
+            return redirect('counselor_view_feedback_with_date', date=date_choice)
+    return render(request, 'counselor/view_feedback.html', {"date": date, "counselorNotif": counselorNotif, "student": student, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_view_feedback_with_date(request, date):
+    global counselorNotif
+    global Search
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    student = Referral.objects.filter(
+        counselor_id=user, status='done', date=date)
+    date = CalendarForm()
+    if request.method == "POST":
+        date = CalendarForm(request.POST)
+        if date.is_valid():
+            date_choice = date['pickedDate'].value()
+            date.save()
+            return redirect('counselor_view_feedback_with_date', date=date_choice)
+    return render(request, 'counselor/view_feedback_with_date.html', {"date": date, "counselorNotif": counselorNotif, "student": student, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def detail_referred_student_with_feedback(request, id):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    qs = Referral.objects.get(id=id)
+    return render(request, "counselor/detail_referred_student_with_feedback.html", {"counselorNotif": counselorNotif, "object": qs, "form": counselor_name})
+
+
+@login_required(login_url='login')
+def counselor_view_schedule(request, *args, **kwargs):
+    global counselorNotif
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    today = date.today()
+    qs = Referral.objects.filter(date='2022-08-01')
+    day_name = today.strftime("%a")
+    if day_name == 'Thu':
+        day_name = day_name[:-1].upper()
+    else:
+        day_name = day_name[:1].upper()
+    counselor_load = SubjectOfferings.objects.filter(faculty_id=user)
+    referals = []
+    for obj in qs:
+        start = datetime.strptime(str(obj.start_time), "%H:%M:%S")
+        start_with_ampm = start.strftime("%I:%M %p")
+        end = datetime.strptime(str(obj.end_time), "%H:%M:%S")
+        end_with_ampm = end.strftime("%I:%M %p")
+        referals.append(
+            Referral(start_time=start_with_ampm, end_time=end_with_ampm))
+    for obj in counselor_load:
+        if day_name in obj.school_days:
+            get_time = obj.school_time.split(' - ')
+            time1 = get_time[0].split(':')
+            time2 = get_time[1].split(':')
+            if len(time1[0]) == 1:
+                start_with_ampm = '0'+time1[0]+':'+time1[1].upper()
+            if len(time2[0]) == 1:
+                end_with_ampm = '0'+time2[0]+':'+time2[1].upper()
+            referals.append(SubjectOfferings(school_time=obj.school_time))
+
+    timeArray = [
+        {'time1': '07:00 AM', 'time2': '07:30 AM'},
+        {'time1': '08:00 AM', 'time2': '08:30 AM'},
+        {'time1': '09:00 AM', 'time2': '09:30 AM'},
+        {'time1': '10:00 AM', 'time2': '10:30 AM'},
+        {'time1': '11:00 AM', 'time2': '11:30 AM'},
+        {'time1': '12:00 PM', 'time2': '12:30 PM'},
+        {'time1': '01:00 PM', 'time2': '01:30 PM'},
+        {'time1': '02:00 PM', 'time2': '02:30 PM'},
+        {'time1': '03:00 PM', 'time2': '03:30 PM'},
+        {'time1': '04:00 PM', 'time2': '04:30 PM'},
+        {'time1': '05:00 PM', 'time2': '05:30 PM'},
+        {'time1': '06:00 PM', 'time2': '06:30 PM'},
+    ]
+    return render(request, "counselor/counselor_view_schedule.html", {'timeArray': timeArray,  'referals': referals, "counselorNotif": counselorNotif, "form": counselor_name})
+
 # counselor
 
 
 # teacher
+
+
 @login_required(login_url='login')
 def teacher_home_view(request, *args, **kwargs):
+    global teacherNotif
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
     subjects = SubjectOfferings.objects.filter(
         faculty_id=teacher_name.faculty_id)
-    return render(request, "teacher/home.html",  {"form": teacher_name, 'subjects': subjects})
+    return render(request, "teacher/home.html",  {'teacherNotif': teacherNotif, "form": teacher_name, 'subjects': subjects})
 
 
 @login_required(login_url='login')
 def student_list_enrolled(request, offer_no):
+    global teacherNotif
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
     get_offerings = SubjectOfferings.objects.get(offer_no=offer_no)
@@ -1020,12 +1601,815 @@ def student_list_enrolled(request, offer_no):
                                     lastname=obj.lastname, firstname=obj.firstname,
                                     middlename=obj.middlename, program_code=obj.program_code))
 
-    return render(request, "teacher/student_list_enrolled.html",  {"form": teacher_name, 'list': list})
+    return render(request, "teacher/student_list_enrolled.html",  {'teacherNotif': teacherNotif, "form": teacher_name, 'list': list, 'offer_no': offer_no})
 
+
+@login_required(login_url='login')
+def teacher_view_referred_students(request, status):
+    global teacherNotif
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    referrals = Referral.objects.all()
+    qs = []
+    if status == 'all' or status == '--':
+        for obj in referrals:
+            if user in obj.faculty_id:
+                qs.append(Referral(id=obj.id, firstname=obj.firstname,
+                                   lastname=obj.lastname, student_number=obj.student_number,
+                                   degree_program=obj.degree_program,
+                                   subject_referred=obj.subject_referred,
+                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
+                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
+                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
+                                   status=obj.status))
+    elif (status == 'pending'):
+        for obj in referrals:
+            if user in obj.faculty_id and obj.status == 'pending':
+                qs.append(Referral(id=obj.id, firstname=obj.firstname,
+                                   lastname=obj.lastname, student_number=obj.student_number,
+                                   degree_program=obj.degree_program,
+                                   subject_referred=obj.subject_referred,
+                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
+                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
+                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
+                                   status=obj.status))
+    elif (status == 'done'):
+        for obj in referrals:
+            if user in obj.faculty_id and obj.status == 'done':
+                qs.append(Referral(id=obj.id, firstname=obj.firstname,
+                                   lastname=obj.lastname, student_number=obj.student_number,
+                                   degree_program=obj.degree_program,
+                                   subject_referred=obj.subject_referred,
+                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
+                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
+                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
+                                   status=obj.status))
+    filterform = FilterForm()
+    if request.method == "POST":
+        filterform = FilterForm(request.POST)
+        if filterform.is_valid():
+            filter_choice = filterform['filter_choice'].value()
+            return redirect('teacher_view_referred_students', status=filter_choice)
+    return render(request, "teacher/list_referred_students.html", {'teacherNotif': teacherNotif, "status": status, "filterform": filterform, "object_list": qs, "form": teacher_name})
+
+
+@login_required(login_url='login')
+def detail_referred_student(request, id):
+    global teacherNotif
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    detail = []
+    referrals = Referral.objects.all()
+    for obj in referrals:
+        if user in obj.faculty_id:
+            if(obj.id == id):
+                detail.append(Referral(firstname=obj.firstname,
+                                       lastname=obj.lastname, student_number=obj.student_number,
+                                       degree_program=obj.degree_program,
+                                       subject_referred=obj.subject_referred,
+                                       reasons=obj.reasons, behavior_problem=obj.behavior_problem,
+                                       counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
+                                       start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
+                                       feedback=obj.feedback,
+                                       status=obj.status))
+    return render(request, "teacher/detail_referred_student.html", {'teacherNotif': teacherNotif, "object_list": detail, "form": teacher_name})
+
+
+# @login_required(login_url='login')
+# def referral(request, studentReferredId, offer_no):
+#     global counselorNotif
+#     global studentNotif
+#     global teacherNotif
+#     user = request.session.get('username')
+#     teacher_name = Faculty.objects.get(faculty_id=user)
+
+#     # getting the subject of the student being referred
+#     subject_referred = SubjectOfferings.objects.get(offer_no=offer_no)
+#     # getting the student being referred
+#     studentReferred = Student.objects.get(student_number=studentReferredId)
+#     subject_referred_code = subject_referred.subject_code_id
+#     referral_form = ReferralForm(initial={
+#         'student_number': studentReferred.student_number,
+#         'firstname': studentReferred.firstname,
+#         'lastname': studentReferred.lastname,
+#         'subject_referred': subject_referred_code})
+
+#     faculty_load_object = SubjectOfferings.objects.filter(faculty_id=user)
+#     degree = DegreeProgram.objects.get(
+#         program_code=studentReferred.program_code_id)
+#     degree_program_student_referred = degree.program_code
+
+#     if request.method == "POST":
+#         reasons = request.POST['reasons']
+#         behavior = request.POST['behavior_problem']
+#         referral_form = ReferralForm(request.POST, initial={
+#             'student_number': studentReferred.student_number,
+#             'firstname': studentReferred.firstname,
+#             'lastname': studentReferred.lastname,
+#             'subject_referred': subject_referred_code})
+#         if referral_form.is_valid():
+#             print('valid')
+#             today = date.today()
+#             now = dt.datetime.now()
+#             classes_counselor = []
+#             notAvailableSched = []
+#             sample = []
+#             tomorrow = today
+#             finder = 0
+
+#             get_object_counselor_assigned = DegreeProgram.objects.get(
+#                 program_code=degree_program_student_referred)
+#             counselor_assigned_id = get_object_counselor_assigned.faculty_id_id
+#             CounselorLoad = SubjectOfferings.objects.filter(
+#                 faculty_id=counselor_assigned_id)
+
+#             for obj in CounselorLoad:
+#                 print(obj.school_time)
+
+#             timeArray = []
+#             initialtime = 0
+#             newTime = str(initialtime)+':00:00'
+
+#             for x in range(24):
+#                 timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+#                 newTime = str(initialtime)+':30:00'
+#                 timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+#                 initialtime = initialtime + 1
+#                 newTime = str(initialtime)+':00:00'
+
+#             while(finder == 0):
+#                 tomorrow = tomorrow+timedelta(days=1)
+#                 day_name = tomorrow.strftime("%a")
+#                 if(day_name != "Sun" and day_name != "Sat"):
+#                     referral_list_byday = Referral.objects.filter(
+#                         date=tomorrow)
+#                     CounselorLoadCheck = bool(CounselorLoad)
+#                     referral_list_byday_check = bool(referral_list_byday)
+#                     if(CounselorLoadCheck == True):
+#                         for object in CounselorLoad:
+#                             check = bool(
+#                                 day_name[0].upper() in object.school_days)
+#                             if(check == True):
+#                                 classes_counselor.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+#                                                                           subject_title=object.subject_title, school_days=object.school_days,
+#                                                                           school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+#                                                                           department_code=object.department_code, faculty_id=object.faculty_id))
+#                     else:
+#                         CounselorLoadCheck = False
+#                     classes_counselor_check = bool(classes_counselor)
+#                     start = datetime.strptime('8:00:00', '%H:%M:%S').time()
+#                     end = datetime.strptime('17:30:00', '%H:%M:%S').time()
+
+#                     TimeTaken = 0
+#                     TimeTaken1 = 0
+#                     TimeTaken2 = 0
+#                     counter = 0
+
+#                     if (classes_counselor_check == False and referral_list_byday_check == False):
+#                         print('1')
+#                         startTime = datetime.strptime(
+#                             '8:00:00', '%H:%M:%S').time()
+#                         endTime = datetime.strptime(
+#                             '9:00:00', '%H:%M:%S').time()
+#                         time1 = startTime
+#                         time2 = endTime
+#                         finder = 1
+#                     elif(classes_counselor_check == True and referral_list_byday_check == False):
+#                         print('2')
+#                         for x in range(len(timeArray)):
+#                             if(timeArray[x] >= start and timeArray[x] < end):
+#                                 for object in classes_counselor:
+#                                     get_time = object.school_time
+#                                     classes_counselor_time = get_time.split(
+#                                         '-')
+#                                     classes_counselor_start_time = classes_counselor_time[0].upper(
+#                                     ).replace(" ", "")
+#                                     classes_counselor_end_time = classes_counselor_time[1].upper(
+#                                     ).replace(" ", "")
+
+#                                     # for start_time
+#                                     if (classes_counselor_start_time[1]) == ':':
+#                                         classes_counselor_start_time = "".join(
+#                                             ('0', classes_counselor_start_time))
+#                                     if classes_counselor_start_time[-2:] == "AM":
+#                                         if classes_counselor_start_time[:2] == '12':
+#                                             cc_start = str(
+#                                                 '00' + classes_counselor_start_time[2:-2])
+#                                         else:
+#                                             cc_start = classes_counselor_start_time[:-2]
+#                                     else:
+#                                         if classes_counselor_start_time[:2] == '12':
+#                                             cc_start = classes_counselor_start_time[:-2]
+#                                         else:
+#                                             cc_start = str(
+#                                                 int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+#                                     # for end_time
+#                                     if classes_counselor_end_time[1] == ':':
+#                                         classes_counselor_end_time = "".join(
+#                                             ('0', classes_counselor_end_time))
+#                                     if classes_counselor_end_time[-2:] == "AM":
+#                                         if classes_counselor_end_time[:2] == '12':
+#                                             cc_end = str(
+#                                                 '00' + classes_counselor_end_time[2:-2])
+#                                         else:
+#                                             cc_end = classes_counselor_end_time[:-2]
+#                                     else:
+#                                         if classes_counselor_end_time[:2] == '12':
+#                                             cc_end = classes_counselor_end_time[:-2]
+#                                         else:
+#                                             cc_end = str(
+#                                                 int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+#                                     cc_start_convert = datetime.strptime(
+#                                         cc_start, '%H:%M').time()
+#                                     cc_end_convert = datetime.strptime(
+#                                         cc_end, '%H:%M').time()
+#                                     if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+#                                         TimeTaken += 1
+#                                 if(TimeTaken == 0 and counter == 0):
+#                                     time1 = timeArray[x]
+#                                     counter = 1
+#                                     TimeTaken = 0
+#                                 elif(TimeTaken == 0 and counter == 1):
+#                                     time2 = timeArray[x+1]
+#                                     counter = 0
+#                                     finder = 1
+#                                     break
+#                                 elif(TimeTaken != 0):
+#                                     time1 = ''
+#                                     counter = 0
+#                                     TimeTaken = 0
+
+#                     elif(classes_counselor_check == False and referral_list_byday_check == True):
+#                         print('3')
+#                         for x in range(len(timeArray)):
+#                             if(timeArray[x] >= start and timeArray[x] < end):
+#                                 for object2 in referral_list_byday:
+#                                     if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+#                                         TimeTaken += 1
+#                                 if(TimeTaken == 0 and counter == 0):
+#                                     time1 = timeArray[x]
+#                                     counter = 1
+#                                     TimeTaken = 0
+#                                 elif(TimeTaken == 0 and counter == 1):
+#                                     time2 = timeArray[x+1]
+#                                     counter = 0
+#                                     finder = 1
+#                                     break
+#                                 elif(TimeTaken != 0):
+#                                     time1 = ''
+#                                     counter = 0
+#                                     TimeTaken = 0
+
+#                     elif(classes_counselor_check == True and referral_list_byday_check == True):
+#                         print('4')
+#                         for x in range(len(timeArray)):
+#                             if(timeArray[x] >= start and timeArray[x] < end):
+#                                 for object in classes_counselor:
+#                                     get_time = object.school_time
+#                                     classes_counselor_time = get_time.split(
+#                                         '-')
+#                                     classes_counselor_start_time = classes_counselor_time[0].upper(
+#                                     ).replace(" ", "")
+#                                     classes_counselor_end_time = classes_counselor_time[1].upper(
+#                                     ).replace(" ", "")
+
+#                                     # for start_time
+#                                     if (classes_counselor_start_time[1]) == ':':
+#                                         classes_counselor_start_time = "".join(
+#                                             ('0', classes_counselor_start_time))
+#                                     if classes_counselor_start_time[-2:] == "AM":
+#                                         if classes_counselor_start_time[:2] == '12':
+#                                             cc_start = str(
+#                                                 '00' + classes_counselor_start_time[2:-2])
+#                                         else:
+#                                             cc_start = classes_counselor_start_time[:-2]
+#                                     else:
+#                                         if classes_counselor_start_time[:2] == '12':
+#                                             cc_start = classes_counselor_start_time[:-2]
+#                                         else:
+#                                             cc_start = str(
+#                                                 int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+#                                     # for end_time
+#                                     if classes_counselor_end_time[1] == ':':
+#                                         classes_counselor_end_time = "".join(
+#                                             ('0', classes_counselor_end_time))
+#                                     if classes_counselor_end_time[-2:] == "AM":
+#                                         if classes_counselor_end_time[:2] == '12':
+#                                             cc_end = str(
+#                                                 '00' + classes_counselor_end_time[2:-2])
+#                                         else:
+#                                             cc_end = classes_counselor_end_time[:-2]
+#                                     else:
+#                                         if classes_counselor_end_time[:2] == '12':
+#                                             cc_end = classes_counselor_end_time[:-2]
+#                                         else:
+#                                             cc_end = str(
+#                                                 int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+#                                     cc_start_convert = datetime.strptime(
+#                                         cc_start, '%H:%M').time()
+#                                     cc_end_convert = datetime.strptime(
+#                                         cc_end, '%H:%M').time()
+#                                     if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+#                                         TimeTaken += 1
+#                                 if(TimeTaken == 0):
+#                                     for object2 in referral_list_byday:
+#                                         if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+#                                             TimeTaken1 += 1
+#                                     if(TimeTaken1 == 0 and counter == 0):
+#                                         time1 = timeArray[x]
+#                                         counter = 1
+#                                         TimeTaken = 0
+#                                         TimeTaken1 = 0
+#                                     elif (TimeTaken1 == 0 and counter == 1):
+#                                         time2 = timeArray[x+1]
+#                                         finder = 1
+#                                         counter = 0
+#                                         TimeTaken = 0
+#                                         TimeTaken1 = 0
+#                                         break
+#                                     elif(TimeTaken1 != 0):
+#                                         time1 = ''
+#                                         TimeTaken = 0
+#                                         TimeTaken1 = 0
+#                                         counter = 0
+#                                 else:
+#                                     counter = 0
+#                                     TimeTaken = 0
+#                                     time1 = ''
+
+#                     print('time1', time1)
+#                     print('time2', time2)
+#                     if(time1 != '' and time2 != ''):
+#                         print('9')
+#                         behavior = referral_form.cleaned_data['behavior_problem']
+#                         list_subject_referred = []
+#                         list_faculty_id = []
+#                         try:
+#                             check_if_exist = Referral.objects.get(
+#                                 student_number=studentReferred.student_number, date=tomorrow)
+#                         except Exception:
+#                             check_if_exist = False
+#                         if check_if_exist:
+#                             check_subject = subject_referred.subject_code_id in check_if_exist.subject_referred
+#                             check_faculty = user in check_if_exist.faculty_id
+#                             if check_subject == False:
+#                                 list_subject_referred = [
+#                                     subject_referred.subject_code_id]
+#                                 for obj1 in check_if_exist.subject_referred:
+#                                     list_subject_referred.append(obj1)
+#                                 check_if_exist.subject_referred = list_subject_referred
+#                                 check_if_exist.save()
+#                             if check_faculty == False:
+#                                 list_faculty_id = [user]
+#                                 for obj1 in check_if_exist.faculty_id:
+#                                     list_faculty_id.append(obj1)
+#                                 check_if_exist.faculty_id = list_faculty_id
+#                                 check_if_exist.save()
+#                         else:
+#                             list_subject_referred = [
+#                                 subject_referred.subject_code_id]
+#                             list_faculty_id = [user]
+#                             studentInfo = Referral(student_number=studentReferred.student_number,
+#                                                    firstname=studentReferred.firstname,
+#                                                    lastname=studentReferred.lastname,
+#                                                    middlename=studentReferred.middlename,
+#                                                    degree_program=studentReferred.program_code_id,
+#                                                    subject_referred=list_subject_referred,
+#                                                    reasons=reasons,
+#                                                    counselor_id=counselor_assigned_id,
+#                                                    faculty_id=list_faculty_id,
+#                                                    start_time=time1, end_time=time2, date=tomorrow,
+#                                                    behavior_problem=behavior)
+#                             studentInfo.save()
+#                             create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
+#                                 studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
+#                             counselorNotif = counselorNotif + 1
+#                             studentNotif = studentNotif + 1
+#                         referral_form = ReferralForm(request.POST, initial={
+#                             'student_number': studentReferred.student_number,
+#                             'firstname': studentReferred.firstname,
+#                             'lastname': studentReferred.lastname,
+#                             'subject_referred': subject_referred_code})
+#                         messages.info(
+#                             request, 'Successfully Referred the Student')
+
+#     return render(request, "teacher/refer_a_student.html", {'teacherNotif': teacherNotif, "referral_form": referral_form, "form": teacher_name})
+
+@login_required(login_url='login')
+def referral(request, studentReferredId, offer_no):
+    global counselorNotif
+    global studentNotif
+    global teacherNotif
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+
+    # getting the subject of the student being referred
+    subject_referred = SubjectOfferings.objects.get(offer_no=offer_no)
+    # getting the student being referred
+    studentReferred = Student.objects.get(student_number=studentReferredId)
+    subject_referred_code = subject_referred.subject_code_id
+    referral_form = ReferralForm(initial={
+        'student_number': studentReferred.student_number,
+        'firstname': studentReferred.firstname,
+        'lastname': studentReferred.lastname,
+        'subject_referred': subject_referred_code})
+
+    faculty_load_object = SubjectOfferings.objects.filter(faculty_id=user)
+    degree = DegreeProgram.objects.get(
+        program_code=studentReferred.program_code_id)
+    degree_program_student_referred = degree.program_code
+
+    if request.method == "POST":
+        reasons = request.POST['reasons']
+        behavior = request.POST['behavior_problem']
+        referral_form = ReferralForm(request.POST, initial={
+            'student_number': studentReferred.student_number,
+            'firstname': studentReferred.firstname,
+            'lastname': studentReferred.lastname,
+            'subject_referred': subject_referred_code})
+        if referral_form.is_valid():
+            print('valid')
+            today = date.today()
+            now = dt.datetime.now()
+            classes_counselor = []
+            notAvailableSched = []
+            sample = []
+            tomorrow = today
+            finder = 0
+
+            get_object_counselor_assigned = DegreeProgram.objects.get(
+                program_code=degree_program_student_referred)
+            counselor_assigned_id = get_object_counselor_assigned.faculty_id_id
+            CounselorLoad = SubjectOfferings.objects.filter(
+                faculty_id=counselor_assigned_id)
+
+            for obj in CounselorLoad:
+                print(obj.school_time)
+
+            timeArray = []
+            initialtime = 0
+            newTime = str(initialtime)+':00:00'
+
+            for x in range(24):
+                timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+                newTime = str(initialtime)+':30:00'
+                timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+                initialtime = initialtime + 1
+                newTime = str(initialtime)+':00:00'
+
+            while(finder == 0):
+                tomorrow = tomorrow+timedelta(days=1)
+                day_name = tomorrow.strftime("%a")
+                if(day_name != "Sun" and day_name != "Sat"):
+                    referral_list_byday = Referral.objects.filter(
+                        date=tomorrow)
+                    CounselorLoadCheck = bool(CounselorLoad)
+                    referral_list_byday_check = bool(referral_list_byday)
+                    if(CounselorLoadCheck == True):
+                        for object in CounselorLoad:
+                            check = bool(
+                                day_name[0].upper() in object.school_days)
+                            if(check == True):
+                                classes_counselor.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                                                                          subject_title=object.subject_title, school_days=object.school_days,
+                                                                          school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                                                                          department_code=object.department_code, faculty_id=object.faculty_id))
+                    else:
+                        CounselorLoadCheck = False
+                    classes_counselor_check = bool(classes_counselor)
+
+                    notAvailableSched = SetScheduleCounselor.objects.filter(
+                        date=tomorrow, faculty_id=counselor_assigned_id)
+                    notAvailableSchedChecker = bool(notAvailableSched)
+                    start = datetime.strptime('8:00:00', '%H:%M:%S').time()
+                    end = datetime.strptime('17:30:00', '%H:%M:%S').time()
+
+                    TimeTaken = 0
+                    TimeTaken1 = 0
+                    TimeTaken2 = 0
+                    counter = 0
+
+                    if (classes_counselor_check == False and referral_list_byday_check == False and notAvailableSchedChecker == False):
+                        print('1')
+                        startTime = datetime.strptime(
+                            '8:00:00', '%H:%M:%S').time()
+                        endTime = datetime.strptime(
+                            '9:00:00', '%H:%M:%S').time()
+                        time1 = startTime
+                        time2 = endTime
+                        finder = 1
+                    elif(classes_counselor_check == True and referral_list_byday_check == False and notAvailableSchedChecker == False):
+                        print('2')
+                        for x in range(len(timeArray)):
+                            if(timeArray[x] >= start and timeArray[x] < end):
+                                for object in classes_counselor:
+                                    get_time = object.school_time
+                                    classes_counselor_time = get_time.split(
+                                        '-')
+                                    classes_counselor_start_time = classes_counselor_time[0].upper(
+                                    ).replace(" ", "")
+                                    classes_counselor_end_time = classes_counselor_time[1].upper(
+                                    ).replace(" ", "")
+
+                                    # for start_time
+                                    if (classes_counselor_start_time[1]) == ':':
+                                        classes_counselor_start_time = "".join(
+                                            ('0', classes_counselor_start_time))
+                                    if classes_counselor_start_time[-2:] == "AM":
+                                        if classes_counselor_start_time[:2] == '12':
+                                            cc_start = str(
+                                                '00' + classes_counselor_start_time[2:-2])
+                                        else:
+                                            cc_start = classes_counselor_start_time[:-2]
+                                    else:
+                                        if classes_counselor_start_time[:2] == '12':
+                                            cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            cc_start = str(
+                                                int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                    # for end_time
+                                    if classes_counselor_end_time[1] == ':':
+                                        classes_counselor_end_time = "".join(
+                                            ('0', classes_counselor_end_time))
+                                    if classes_counselor_end_time[-2:] == "AM":
+                                        if classes_counselor_end_time[:2] == '12':
+                                            cc_end = str(
+                                                '00' + classes_counselor_end_time[2:-2])
+                                        else:
+                                            cc_end = classes_counselor_end_time[:-2]
+                                    else:
+                                        if classes_counselor_end_time[:2] == '12':
+                                            cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            cc_end = str(
+                                                int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                    cc_start_convert = datetime.strptime(
+                                        cc_start, '%H:%M').time()
+                                    cc_end_convert = datetime.strptime(
+                                        cc_end, '%H:%M').time()
+                                    if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                        TimeTaken += 1
+                                if(TimeTaken == 0 and counter == 0):
+                                    time1 = timeArray[x]
+                                    counter = 1
+                                    TimeTaken = 0
+                                elif(TimeTaken == 0 and counter == 1):
+                                    time2 = timeArray[x+1]
+                                    counter = 0
+                                    finder = 1
+                                    break
+                                elif(TimeTaken != 0):
+                                    time1 = ''
+                                    counter = 0
+                                    TimeTaken = 0
+
+                    elif classes_counselor_check == False and referral_list_byday_check == True and notAvailableSchedChecker == False:
+                        print('3')
+                        for x in range(len(timeArray)):
+                            if(timeArray[x] >= start and timeArray[x] < end):
+                                for object in referral_list_byday:
+                                    if(timeArray[x+1] <= object.end_time and timeArray[x] >= object.start_time):
+                                        TimeTaken += 1
+                                if(TimeTaken == 0 and counter == 0):
+                                    time1 = timeArray[x]
+                                    counter = 1
+                                    TimeTaken = 0
+                                elif(TimeTaken == 0 and counter == 1):
+                                    time2 = timeArray[x+1]
+                                    counter = 0
+                                    finder = 1
+                                    break
+                                elif(TimeTaken != 0):
+                                    time1 = ''
+                                    counter = 0
+                                    TimeTaken = 0
+
+                    elif(classes_counselor_check == False and referral_list_byday_check == False and notAvailableSchedChecker == True):
+                        print('4')
+                        for x in range(len(timeArray)):
+                            if(timeArray[x] >= start and timeArray[x] < end):
+                                for object in notAvailableSched:
+                                    if(timeArray[x+1] <= object.end_time and timeArray[x] >= object.start_time):
+                                        TimeTaken += 1
+                                if(TimeTaken == 0 and counter == 0):
+                                    time1 = timeArray[x]
+                                    counter = 1
+                                    TimeTaken = 0
+                                elif(TimeTaken == 0 and counter == 1):
+                                    time2 = timeArray[x+1]
+                                    counter = 0
+                                    finder = 1
+                                    break
+                                elif(TimeTaken != 0):
+                                    time1 = ''
+                                    counter = 0
+                                    TimeTaken = 0
+
+                    elif(classes_counselor_check == True and referral_list_byday_check == True and notAvailableSchedChecker == True):
+                        print('5')
+                        for x in range(len(timeArray)):
+                            if(timeArray[x] >= start and timeArray[x] < end):
+                                for object in classes_counselor:
+                                    get_time = object.school_time
+                                    classes_counselor_time = get_time.split(
+                                        '-')
+                                    classes_counselor_start_time = classes_counselor_time[0].upper(
+                                    ).replace(" ", "")
+                                    classes_counselor_end_time = classes_counselor_time[1].upper(
+                                    ).replace(" ", "")
+
+                                    # for start_time
+                                    if (classes_counselor_start_time[1]) == ':':
+                                        classes_counselor_start_time = "".join(
+                                            ('0', classes_counselor_start_time))
+                                    if classes_counselor_start_time[-2:] == "AM":
+                                        if classes_counselor_start_time[:2] == '12':
+                                            cc_start = str(
+                                                '00' + classes_counselor_start_time[2:-2])
+                                        else:
+                                            cc_start = classes_counselor_start_time[:-2]
+                                    else:
+                                        if classes_counselor_start_time[:2] == '12':
+                                            cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            cc_start = str(
+                                                int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                    # for end_time
+                                    if classes_counselor_end_time[1] == ':':
+                                        classes_counselor_end_time = "".join(
+                                            ('0', classes_counselor_end_time))
+                                    if classes_counselor_end_time[-2:] == "AM":
+                                        if classes_counselor_end_time[:2] == '12':
+                                            cc_end = str(
+                                                '00' + classes_counselor_end_time[2:-2])
+                                        else:
+                                            cc_end = classes_counselor_end_time[:-2]
+                                    else:
+                                        if classes_counselor_end_time[:2] == '12':
+                                            cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            cc_end = str(
+                                                int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                    cc_start_convert = datetime.strptime(
+                                        cc_start, '%H:%M').time()
+                                    cc_end_convert = datetime.strptime(
+                                        cc_end, '%H:%M').time()
+                                    if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                        TimeTaken += 1
+                                if(TimeTaken == 0):
+                                    for object2 in referral_list_byday:
+                                        if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+                                            TimeTaken1 += 1
+                                    if(TimeTaken1 == 0):
+                                        for object3 in notAvailableSched:
+                                            print("check", timeArray[x])
+                                            if(timeArray[x+1] <= object3.end_time and timeArray[x] >= object3.start_time):
+                                                TimeTaken2 += 1
+                                        if(TimeTaken2 == 0 and counter == 0):
+                                            print('time1:', timeArray[x])
+                                            time1 = timeArray[x]
+                                            counter = 1
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            TimeTaken2 = 0
+                                        elif(TimeTaken2 == 0 and counter == 1):
+                                            print('time2:', timeArray[x])
+                                            time2 = timeArray[x+1]
+                                            finder = 1
+                                            counter = 0
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            TimeTaken2 = 0
+                                            break
+                                        elif TimeTaken2 != 0:
+                                            time1 = ''
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            TimeTaken2 = 0
+                                            counter = 0
+                                        else:
+                                            counter = 0
+                                            TimeTaken = 0
+                                            TimeTaken1-0
+                                            time1 = ''
+                                    else:
+                                        TimeTaken1 = 0
+                                        counter = 0
+                                        time1 = ''
+                                else:
+                                    counter = 0
+                                    TimeTaken = 0
+                                    time1 = ''
+                    ScheduledReferralbyDay = []
+                    ClassesCounselor = []
+                    notAvailableSched = []
+
+                    print('time1', time1)
+                    print('time2', time2)
+                    if(time1 != '' and time2 != ''):
+                        print('9')
+                        behavior = referral_form.cleaned_data['behavior_problem']
+                        list_subject_referred = []
+                        list_faculty_id = []
+                        try:
+                            check_if_exist = Referral.objects.get(
+                                student_number=studentReferred.student_number, date=tomorrow)
+                        except Exception:
+                            check_if_exist = False
+                        if check_if_exist:
+                            check_subject = subject_referred.subject_code_id in check_if_exist.subject_referred
+                            check_faculty = user in check_if_exist.faculty_id
+                            if check_subject == False:
+                                list_subject_referred = [
+                                    subject_referred.subject_code_id]
+                                for obj1 in check_if_exist.subject_referred:
+                                    list_subject_referred.append(obj1)
+                                check_if_exist.subject_referred = list_subject_referred
+                                check_if_exist.save()
+                            if check_faculty == False:
+                                list_faculty_id = [user]
+                                for obj1 in check_if_exist.faculty_id:
+                                    list_faculty_id.append(obj1)
+                                check_if_exist.faculty_id = list_faculty_id
+                                check_if_exist.save()
+                        else:
+                            list_subject_referred = [
+                                subject_referred.subject_code_id]
+                            list_faculty_id = [user]
+                            studentInfo = Referral(student_number=studentReferred.student_number,
+                                                   firstname=studentReferred.firstname,
+                                                   lastname=studentReferred.lastname,
+                                                   middlename=studentReferred.middlename,
+                                                   degree_program=studentReferred.program_code_id,
+                                                   subject_referred=list_subject_referred,
+                                                   reasons=reasons,
+                                                   counselor_id=counselor_assigned_id,
+                                                   faculty_id=list_faculty_id,
+                                                   start_time=time1, end_time=time2, date=tomorrow,
+                                                   behavior_problem=behavior)
+                            studentInfo.save()
+                            create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
+                                studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
+                            counselorNotif = counselorNotif + 1
+                            studentNotif = studentNotif + 1
+                        referral_form = ReferralForm(request.POST, initial={
+                            'student_number': studentReferred.student_number,
+                            'firstname': studentReferred.firstname,
+                            'lastname': studentReferred.lastname,
+                            'subject_referred': subject_referred_code})
+                        messages.info(
+                            request, 'Successfully Referred the Student')
+    return render(request, "teacher/refer_a_student.html", {'teacherNotif': teacherNotif, "referral_form": referral_form, "form": teacher_name})
+
+
+@login_required
+def teacher_notifications(request):
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    goto = request.GET.get('goto', '')
+    notification_id = request.GET.get('notification', 0)
+    extra_id = request.GET.get('extra_id', 0)
+
+    if goto != '':
+        notification = NotificationFeedback.objects.get(pk=notification_id)
+        notification.is_read = True
+        notification.save()
+
+        if notification.notification_type == NotificationFeedback.AUTOMATIC_REFERRAL:
+            return render(request, "teacher/counselor.html", {})
+        elif notification.notification_type == NotificationFeedback.MANUAL_REFERRAL:
+            return render(request, "teacher/counselor.html", {})
+
+    counselorNotif = NotificationFeedback.objects.filter(
+        to_user=user, notification_type="feedback_teacher").order_by('created_at')
+    return render(request, 'teacher/notification.html', {"notifications": counselorNotif, "form": teacher_name})
+
+
+@login_required(login_url='login')
+def teacher_notification_detail(request, id):
+    global teacherNotif
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    detail = []
+    notification = NotificationFeedback.objects.get(id=id)
+    notification.is_read = True
+    notification.save()
+    # fback = CounselorFeedback.objects.get(id=notification.extra_id)
+    students = Referral.objects.all()
+    for referedStud in students:
+        if notification.referral_id == referedStud.id:
+            detail.append(Referral(firstname=referedStud.firstname,
+                                   lastname=referedStud.lastname, student_number=referedStud.student_number,
+                                   degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
+                                   feedback=referedStud.feedback))
+    if teacherNotif != 0:
+        teacherNotif = teacherNotif - 1
+    return render(request, "teacher/teacher_notification_detail.html", {'teacherNotif': teacherNotif, "objects": detail, "form": teacher_name})
 
 # teacher
 
 # student
+
 
 @login_required(login_url='login')
 def student_add_information(request, *args, **kwargs):
@@ -1066,13 +2450,59 @@ def student_add_information(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def student_home_view(request, *args, **kwargs):
+    global studentNotif
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
-    return render(request, "student/home.html", {"form": student_name})
+    return render(request, "student/home.html", {"studentNotif": studentNotif, "form": student_name})
+
+
+@login_required
+def student_notifications(request):
+    global studentNotif
+    user = request.session.get('username')
+    student_name = Student.objects.get(student_number=user)
+    goto = request.GET.get('goto', '')
+    notification_id = request.GET.get('notification', 0)
+    extra_id = request.GET.get('extra_id', 0)
+
+    if goto != '':
+        notification = Notification.objects.get(pk=notification_id)
+        notification.is_read = True
+        notification.save()
+
+        if notification.notification_type == Notification.AUTOMATIC_REFERRAL:
+            return render(request, "student/student_home.html", {})
+        elif notification.notification_type == Notification.MANUAL_REFERRAL:
+            return render(request, "student/student_home", {})
+    notif = Notification.objects.filter(extra_id=user).order_by('created_at')
+    return render(request, 'student/notification.html', {"studentNotif": studentNotif, "notifications": notif, "form": student_name})
+
+
+@login_required
+def student_notification_detail(request, id):
+    global studentNotif
+    user = request.session.get('username')
+    student_name = Student.objects.get(student_number=user)
+    notification = Notification.objects.get(id=id)
+    notification.is_read_student = True
+    notification.save()
+    detail = []
+    student = Referral.objects.all()
+    for referedStud in student:
+        if (referedStud.id == id):
+            detail.append(Referral(firstname=referedStud.firstname,
+                                   lastname=referedStud.lastname, student_number=referedStud.student_number,
+                                   degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
+                                   reasons=referedStud.reasons, behavior_problem=referedStud.behavior_problem,
+                                   date=referedStud.date, start_time=referedStud.start_time, end_time=referedStud.end_time))
+    if studentNotif != 0:
+        studentNotif = studentNotif - 1
+    return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif, "object_list": detail, "form": student_name})
 
 
 @login_required(login_url='login')
 def edit_information(request, *args, **kwargs):
+    global studentNotif
     user = request.session.get('username')
     student_name = StudentAdditionalInformation.objects.get(
         student_number=user)
@@ -1106,7 +2536,17 @@ def edit_information(request, *args, **kwargs):
                                                 status="done")
             info.save()
             messages.info(request, 'Success')
-    return render(request, "student/edit_information.html", {"form": student_name, "info": infoForm})
+    return render(request, "student/edit_information.html", {"studentNotif": studentNotif, "form": student_name, "info": infoForm})
 
+
+@login_required
+def student_history(request):
+    global studentNotif
+    user = request.session.get('username')
+    student_name = Student.objects.get(student_number=user)
+    student_record = Referral.objects.filter(
+        student_number=user, status='done')
+    counselor = Faculty.objects.filter(role='Counselor')
+    return render(request, "student/view_history.html", {"studentNotif": studentNotif, "object": student_record, "counselor": counselor, "form": student_name})
 
 # student
