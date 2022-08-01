@@ -1205,6 +1205,7 @@ def counselor_set_schedule(request, *args, **kwargs):
                 end_timeForm + ':00', '%H:%M:%S').time()
             day_name = date.strftime("%a")
             if timeStartNotAvailable >= timeEndNotAvailable:
+                # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
                 messages.info(request, 'Conflict of Time')
             else:
                 classes_of_counselor = SubjectOfferings.objects.filter(
@@ -1231,7 +1232,12 @@ def counselor_set_schedule(request, *args, **kwargs):
                 referral_by_datenotAvailable_checker = bool(
                     referral_by_datenotAvailable)
 
+                # testig part
+                # referral_by_datenotAvailable_checker = False
+                # not_available_sched_checker = False
+                # classes_of_counselor_checker = False
                 if(referral_by_datenotAvailable_checker == True and classes_of_counselor_checker == True and not_available_sched_checker == True):
+                    print('1')
                     for object in classes_of_counselor:
                         get_time = object.school_time
                         classes_counselor_time = get_time.split(
@@ -1295,7 +1301,7 @@ def counselor_set_schedule(request, *args, **kwargs):
                                 newData.faculty_id = user
                                 newData.choice = 'Not Available'
                                 newData.save()
-                                offer = SetScheduleCounselorForm(request.POST)
+                                # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
                                 messages.info(request, 'Success')
                             else:  # else checker2
                                 messages.info(
@@ -1307,6 +1313,275 @@ def counselor_set_schedule(request, *args, **kwargs):
                         messages.info(
                             request, 'Not Available Time3')
 
+                if(referral_by_datenotAvailable_checker == True and classes_of_counselor_checker == True and not_available_sched_checker == False):
+                    print('2')
+                    for object in classes_of_counselor:
+                        get_time = object.school_time
+                        classes_counselor_time = get_time.split(
+                            '-')
+                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                        ).replace(" ", "")
+                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                        ).replace(" ", "")
+
+                        # for start_time
+                        if (classes_counselor_start_time[1]) == ':':
+                            classes_counselor_start_time = "".join(
+                                ('0', classes_counselor_start_time))
+                        if classes_counselor_start_time[-2:] == "AM":
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = str(
+                                    '00' + classes_counselor_start_time[2:-2])
+                            else:
+                                cc_start = classes_counselor_start_time[:-2]
+                        else:
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = classes_counselor_start_time[:-2]
+                            else:
+                                cc_start = str(
+                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                        # for end_time
+                        if classes_counselor_end_time[1] == ':':
+                            classes_counselor_end_time = "".join(
+                                ('0', classes_counselor_end_time))
+                        if classes_counselor_end_time[-2:] == "AM":
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = str(
+                                    '00' + classes_counselor_end_time[2:-2])
+                            else:
+                                cc_end = classes_counselor_end_time[:-2]
+                        else:
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = classes_counselor_end_time[:-2]
+                            else:
+                                cc_end = str(
+                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                        cc_start_convert = datetime.strptime(
+                            cc_start, '%H:%M').time()
+                        cc_end_convert = datetime.strptime(
+                            cc_end, '%H:%M').time()
+                        # sud ni sha sa for object
+                        if(cc_start_convert <= timeStartNotAvailable and cc_end_convert >= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_start_convert < cc_end_convert or cc_end_convert > timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        for object1 in referral_by_datenotAvailable:
+                            if(object1.start_time <= timeStartNotAvailable and object1.end_time >= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.start_time < timeEndNotAvailable or object1.end_time > timeStartNotAvailable and object1.end_time <= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.end_time <= timeEndNotAvailable):
+                                checker1 = 1
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.faculty_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                if(referral_by_datenotAvailable_checker == False and classes_of_counselor_checker == True and not_available_sched_checker == True):
+                    print('3')
+                    for object in classes_of_counselor:
+                        get_time = object.school_time
+                        classes_counselor_time = get_time.split(
+                            '-')
+                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                        ).replace(" ", "")
+                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                        ).replace(" ", "")
+
+                        # for start_time
+                        if (classes_counselor_start_time[1]) == ':':
+                            classes_counselor_start_time = "".join(
+                                ('0', classes_counselor_start_time))
+                        if classes_counselor_start_time[-2:] == "AM":
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = str(
+                                    '00' + classes_counselor_start_time[2:-2])
+                            else:
+                                cc_start = classes_counselor_start_time[:-2]
+                        else:
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = classes_counselor_start_time[:-2]
+                            else:
+                                cc_start = str(
+                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                        # for end_time
+                        if classes_counselor_end_time[1] == ':':
+                            classes_counselor_end_time = "".join(
+                                ('0', classes_counselor_end_time))
+                        if classes_counselor_end_time[-2:] == "AM":
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = str(
+                                    '00' + classes_counselor_end_time[2:-2])
+                            else:
+                                cc_end = classes_counselor_end_time[:-2]
+                        else:
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = classes_counselor_end_time[:-2]
+                            else:
+                                cc_end = str(
+                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                        cc_start_convert = datetime.strptime(
+                            cc_start, '%H:%M').time()
+                        cc_end_convert = datetime.strptime(
+                            cc_end, '%H:%M').time()
+                        # sud ni sha sa for object
+                        if(cc_start_convert <= timeStartNotAvailable and cc_end_convert >= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_start_convert < cc_end_convert or cc_end_convert > timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        for object1 in not_available_sched:
+                            if(object1.start_time <= timeStartNotAvailable and object1.end_time >= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.start_time < timeEndNotAvailable or object1.end_time > timeStartNotAvailable and object1.end_time <= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.end_time <= timeEndNotAvailable):
+                                checker1 = 1
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.faculty_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                if(referral_by_datenotAvailable_checker == True and classes_of_counselor_checker == False and not_available_sched_checker == True):
+                    print('4')
+                    for object in referral_by_datenotAvailable:
+                        # sud ni sha sa for object
+                        if(object.start_time <= timeStartNotAvailable and object.end_time >= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.start_time < timeEndNotAvailable or object.end_time > timeStartNotAvailable and object.end_time <= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.end_time <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        for object1 in not_available_sched:
+                            if(object1.start_time <= timeStartNotAvailable and object1.end_time >= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.start_time < timeEndNotAvailable or object1.end_time > timeStartNotAvailable and object1.end_time <= timeEndNotAvailable or object1.start_time >= timeStartNotAvailable and object1.end_time <= timeEndNotAvailable):
+                                checker1 = 1
+                        if(checker1 != 1):
+                            offer.save()
+                            newData = SetScheduleCounselor.objects.last()
+                            newData.faculty_id = user
+                            newData.choice = 'Not Available'
+                            newData.save()
+                            # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                            messages.info(request, 'Success')
+                        else:
+                            messages.info(
+                                request, 'Not Available Time')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+                if(referral_by_datenotAvailable_checker == False and classes_of_counselor_checker == True and not_available_sched_checker == False):
+                    print('5')
+                    for object in classes_of_counselor:
+                        get_time = object.school_time
+                        classes_counselor_time = get_time.split(
+                            '-')
+                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                        ).replace(" ", "")
+                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                        ).replace(" ", "")
+
+                        # for start_time
+                        if (classes_counselor_start_time[1]) == ':':
+                            classes_counselor_start_time = "".join(
+                                ('0', classes_counselor_start_time))
+                        if classes_counselor_start_time[-2:] == "AM":
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = str(
+                                    '00' + classes_counselor_start_time[2:-2])
+                            else:
+                                cc_start = classes_counselor_start_time[:-2]
+                        else:
+                            if classes_counselor_start_time[:2] == '12':
+                                cc_start = classes_counselor_start_time[:-2]
+                            else:
+                                cc_start = str(
+                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                        # for end_time
+                        if classes_counselor_end_time[1] == ':':
+                            classes_counselor_end_time = "".join(
+                                ('0', classes_counselor_end_time))
+                        if classes_counselor_end_time[-2:] == "AM":
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = str(
+                                    '00' + classes_counselor_end_time[2:-2])
+                            else:
+                                cc_end = classes_counselor_end_time[:-2]
+                        else:
+                            if classes_counselor_end_time[:2] == '12':
+                                cc_end = classes_counselor_end_time[:-2]
+                            else:
+                                cc_end = str(
+                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                        cc_start_convert = datetime.strptime(
+                            cc_start, '%H:%M').time()
+                        cc_end_convert = datetime.strptime(
+                            cc_end, '%H:%M').time()
+                        # sud ni sha sa for object
+                        if(cc_start_convert <= timeStartNotAvailable and cc_end_convert >= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_start_convert < cc_end_convert or cc_end_convert > timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable or cc_start_convert >= timeStartNotAvailable and cc_end_convert <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.faculty_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                if(referral_by_datenotAvailable_checker == True and classes_of_counselor_checker == False and not_available_sched_checker == False):
+                    print('6')
+                    for object in referral_by_datenotAvailable:
+                        # sud ni sha sa for object
+                        if(object.start_time <= timeStartNotAvailable and object.end_time >= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.start_time < timeEndNotAvailable or object.end_time > timeStartNotAvailable and object.end_time <= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.end_time <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.faculty_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                if(referral_by_datenotAvailable_checker == False and classes_of_counselor_checker == False and not_available_sched_checker == True):
+                    print('7')
+                    for object in not_available_sched:
+                        # sud ni sha sa for object
+                        if(object.start_time <= timeStartNotAvailable and object.end_time >= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.start_time < timeEndNotAvailable or object.end_time > timeStartNotAvailable and object.end_time <= timeEndNotAvailable or object.start_time >= timeStartNotAvailable and object.end_time <= timeEndNotAvailable):
+                            checker = 1
+                    if(checker != 1):
+                        offer.save()
+                        newData = SetScheduleCounselor.objects.last()
+                        newData.faculty_id = user
+                        newData.choice = 'Not Available'
+                        newData.save()
+                        # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                        messages.info(request, 'Success')
+                    else:
+                        messages.info(
+                            request, 'Not Available Time')
+
+                if(referral_by_datenotAvailable_checker == False and classes_of_counselor_checker == False and not_available_sched_checker == False):
+                    print('9')
+                    offer.save()
+                    newData = SetScheduleCounselor.objects.last()
+                    newData.faculty_id = user
+                    newData.choice = 'Not Available'
+                    newData.save()
+                    # offer = SetScheduleCounselorForm(request.POST, initial={'employee_id': user, 'choice': 'Not Available'})
+                    messages.info(request, 'Success')
     return render(request, "counselor/counselor_set_schedule.html", {"offer": offer, "counselorNotif": counselorNotif, "form": counselor_name})
 
 
