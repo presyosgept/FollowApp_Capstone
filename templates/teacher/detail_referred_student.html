@@ -1,0 +1,537 @@
+{% extends "teacher/list_referred_students.html" %} {% block title %} Referred Students {% endblock %} {% block content %} 
+<style>
+  #wrapper {
+    display: flex;
+    padding: 20px;
+  }
+
+  #square {
+    min-width: 300px;
+    height: 350px;
+    border-radius: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #98b4ac;
+    box-shadow:
+      0 9px 33px rgba(0, 0, 0, 0.07);
+    margin: auto;
+    overflow-wrap: break-word;
+  }
+
+  /* .box {
+  
+  border: 2px solid black;
+border-radius: 15px;
+
+    box-shadow:
+      5 90px 50px rgba(0, 0, 0, 0.07);
+      min-width: 550px;
+min-height: 200px;
+
+display: flex;
+  width: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+  margin-left: 20px;
+   overflow-y: auto;
+} */
+  .table-head {
+    background: #E5E4E2;
+    box-shadow: none;
+    color: #fff;
+    font-weight: 600;
+    line-height: 5px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    width: 500px;
+    margin: auto;
+    border-radius: 20px;
+  }
+
+  .table-head .table-cell {
+    border-right: none;
+  }
+
+  .table-cell {
+    display: table-cell;
+    width: 20%;
+    text-align: center;
+    padding: 4px 0;
+    border-right: 1px solid #838996;
+    vertical-align: middle;
+  }
+
+  .first-cell {
+    text-align: left;
+    padding-left: 10px;
+    width: 8%;
+  }
+
+  .last-cell {
+    border-right: none;
+    width: 15px;
+  }
+
+  /* a{
+      textdecoration: none;
+      color: #555;
+  } */
+  p {
+    font-size: 17px;
+    color: black;
+  }
+
+  .listTitle {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .table-row {
+      font-size: 11px;
+      margin: auto;
+    }
+  }
+
+  .trow-list {
+    display: inline-block;
+    width: 70%;
+    font-family: sans-serif;
+    background: transparent;
+    padding: 10px 0;
+    margin: auto;
+  }
+
+  .modal1 {
+    font-size: 21px;
+    font-weight: 300;
+    text-align: left;
+  }
+
+  .modal2 {
+    font-size: 20px;
+    text-align: left;
+    line-height: 25px;
+  }
+
+  div.item {
+    vertical-align: auto;
+    display: inline-block;
+    text-align: center;
+    width: 120px;
+  }
+
+  .caption {
+    display: block;
+  }
+
+  .item {
+    width: 200px;
+    text-align: center;
+    display: block;
+    background-color: transparent;
+    border: 1px solid transparent;
+    margin-right: 10px;
+    margin-bottom: 1px;
+    float: left;
+  }
+
+  #index-gallery {
+    width: 465px;
+  }
+
+  .form_container {
+    margin-top: 20px;
+  }
+
+  #form-title {
+    color: #fff;
+  }
+
+  .login_btn {
+    width: 100%;
+    background: #48444c !important;
+    color: white !important;
+  }
+
+  .login_btn:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+  }
+
+  .login_container {
+    padding: 0 2rem;
+  }
+
+  /* <--------- FOR BUTTON SA FEEDBAK ----->  */
+  .table-head1 {
+    background: #d8c090;
+    box-shadow: none;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    width: 300px;
+    margin-left: 20px;
+    border-radius: 20px;
+  }
+
+  .table-head1 .table-cell1 {
+    border-right: none;
+  }
+
+  .table-cell1 {
+    display: table-cell;
+  }
+
+  .first-cell1 {
+    text-align: left;
+    padding-left: 10px;
+    width: 8%;
+  }
+
+  .buttons {
+    width: 200px;
+    height: auto;
+    border: 5em;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    background-image: linear-gradient(45deg, #98b4ac, #d8c090);
+    padding: 0.7em 2em;
+    border-radius: 65px;
+    box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
+    -webkit-transition: box-shadow 0.25s;
+    transition: box-shadow 0.25s;
+    color: white;
+  }
+
+  .buttons .text {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(45deg, #d8c090, #98b4ac);
+  }
+
+  .buttons:after {
+    content: "";
+    border-radius: 18px;
+    position: absolute;
+    margin: 4px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    background: #E5E4E2;
+  }
+
+  .buttons:hover {
+    background-image: linear-gradient(-45deg, #98b4ac, #d8c090);
+    box-shadow: 0 12px 24px rgba(128, 128, 128, 0.1);
+  }
+
+  .buttons:hover .text {
+    background-image: linear-gradient(-45deg, #d8c090, #98b4ac);
+  }
+
+  .Pbox {
+    font-size: 19px;
+    line-height: 30px;
+    text-align: justify;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  .column {
+    min-width: 300px;
+    float: left;
+    margin-right: 20px;
+  }
+
+  .row {
+    width: 500px;
+    float: right;
+    text-align: left;
+    text-align: justify;
+    flex-direction: column-reverse;
+    padding: 8px;
+    margin-left: auto;
+    padding: 10px;
+    line-height: 30px;
+  }
+
+  .rowText {
+    font-size: 18px;
+    margin-left: 0 auto;
+    margin-right: 0 auto;
+    padding: 8px;
+    width: fit-content;
+
+  }
+
+  .image {
+    max-width: 320px;
+    height: 150px;
+  }
+
+  .picInfo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .column {
+    width: 250px;
+    float: left;
+    margin-right: 20px;
+  }
+
+  .row1 {
+    width: 450px;
+    float: left;
+    margin-left: 200px;
+    padding-top: 17px;
+  }
+
+  .last {
+    margin: 0;
+    padding: 10px;
+  }
+
+  .pText {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .bText {
+    color: #000;
+    font-size: 20px;
+  }
+
+  form.cleanForm {
+    width: 700px;
+    margin: 0 auto;
+  }
+
+  form.cleanForm p {
+    margin-bottom: 15px;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+.card1 {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 60rem;
+   
+    min-height: 45vh;
+    border-radius: 5px;
+    flex-direction: column;
+    /* margin: auto;
+  text-align: center; */
+    overflow: hidden;
+    background-color: whitesmoke;
+  }
+
+  @media screen and (max-width: 320px) {
+    .header__search {
+      width: 70%;
+    }
+
+    .card1 {
+      width: 70%;
+    }
+  }
+
+  .wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+
+  .button {
+    margin: 0 auto;
+    width: 160px;
+    height: 30px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-7px);
+  }
+
+  .scroll-box {
+    background: whitesmoke;
+    height: 50vh;
+       width: 35vw;
+    padding: 10px;
+    overflow-y: scroll;
+    text-align: justify;
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow:
+      5 90px 50px rgba(0, 0, 0, 0.07);
+    /* min-width: 550px;
+    min-height: 200px; */
+ 
+    text-overflow: ellipsis;
+    margin-left: 3vw;
+    margin-bottom: 2vh;
+  }
+
+  .parent_div {
+    display: flex;
+    flex-direction: row;
+    column-gap: 2rem;
+    margin-left: 1rem;
+  }
+
+  .message {
+    margin: 0 auto;
+    width: 350px;
+    height: 45px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #3c3c5c;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .info-text{
+    margin-top: 3vh;
+line-height: 4vh;
+font-size: 18px;
+margin-left: 3vw;
+overflow: hidden;
+  }
+  .add-info{
+    margin-top: 4vh; 
+    font-size: 17px; 
+          margin-bottom: 1vh; 
+          margin-left: 3vw;
+  }
+  #id_behavior_problem{
+    font-size: 2px;
+  }
+</style> 
+{% for object in object_list  reversed %} <div class="fac">
+  <button type="submit" class="buttonF">Information of Referred Student</button>
+</div>
+<br>
+<br>
+<div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
+    <p>
+      <b>{{message}} !</b>
+    </p>
+  </button> {% endfor %} </div>
+<br>
+<br>
+<div class="parent_div">
+  <div class="card1 ">
+    <form action="#" class="cleanForm" method="POST">
+      <br>
+      <div>
+        <h3 style="text-align: justify; margin-left:6px; font-size: 20px;">
+          <i>Referred Student</i>
+        </h3>
+        <!-- <p class="rowText"> -->
+        <div class="info-text"> 
+            <b>{{object.firstname}} {{object.lastname}}</b> is referred with a behavioral problem of: 
+            <br><b style="font-size: 16px;">{{object.behavior_problem}}</b>
+        </div> 
+        
+          <div class="add-info">
+           <b> <i>Additional Information stated below:</i></b>
+          </div>
+        <div class="scroll-box">
+          <p class="Pbox" style="text-align: justify; margin-left:8px;">
+           {% for obj1 in object.reasons %}
+        <b>{{obj1}}</b>
+        {% endfor %}
+          </p>
+        </div>
+        <!-- </p> -->
+      </div>
+    </form>
+  </div>
+  <br>
+  <div class="card1">
+    <form action="#" class="cleanForm" method="POST"> {% if object.feedback  %} <br>
+      <div>
+        <h3 style="text-align: justify; margin-left:8px; font-size: 20px;">
+          <i>Feedback</i>
+        </h3>
+        <p class="rowText">
+          <i>Feedback stated below:</i>
+        <div class="scroll-box">
+          <p class="Pbox" style="text-align: justify; margin-left:8px;">
+            <b> {{object.feedback}}</b>
+          </p>
+        </div>
+        </p>
+      </div> {% else %} <br>
+      <div>
+        <h3 style="text-align: justify; margin-left:8px; font-size: 20px;">
+          <i>No Feedback Available</i>
+        </h3>
+        <p class="rowText">
+          <i style="margin-left: 2vw;">---</i>
+        <div class="scroll-box">
+          <p class="Pbox" style="text-align: justify; margin-left:8px;">
+            <b> {{object.feedback}}</b>
+          </p>
+        </div>
+        </p>
+      </div> {% endif %}
+    </form>
+  </div>
+</div> {% endfor %} {% endblock %}

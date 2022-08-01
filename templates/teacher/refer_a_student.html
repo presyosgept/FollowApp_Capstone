@@ -1,0 +1,599 @@
+{% extends "teacher/home.html" %} {% block title %} Refer Student {% endblock %} {% block content %} <style>
+    .homeCard {
+      box-shadow: 0 4px 8px 0 rgba(2, 2, 2, 0.2);
+      width: 90%;
+      height: 700px;
+      border-radius: 5px;
+      background-color: var(--container-color);
+      float: center;
+      margin-right: auto;
+      margin-left: auto;
+      /* margin-left: 80px;  */
+      text-align: center;
+      overflow-y: scroll;
+      overflow-x: scroll;
+    }
+  
+    .form-control {
+      margin-left: 50px;
+      display: block;
+      width: 80%;
+      /* height: calc(1.2em + 1.2rem + 1px); */
+      height: 45x;
+      /* padding: 0.65rem 1rem; */
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #3F4254;
+      background-color: #ffffff;
+      background-clip: padding-box;
+      border: 1px solid #E4E6EF;
+      border-radius: 0.42rem;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+      transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    }
+  
+    .form-control-lg {
+      /* height: calc(1.5em + 1.65rem + 2px); */
+      height: 45px;
+      /* padding: 0.825rem 1.42rem; */
+      font-size: 1.08rem;
+      line-height: 1.5;
+      border-radius: 0.42rem;
+      outline-color: #d8c090;
+      border: 2px solid #C9C0BB;
+    }
+  
+    .txtColor {
+      color: #3B3131;
+      font-family: "Times New Roman", Times, serif;
+    }
+  
+    .txtFont {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 3px;
+      color: black;
+      font-size: 120%
+    }
+  
+    input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover,
+    input:not([type="button"]):not([type="submit"]):not([type="reset"]):focus,
+    textarea:hover,
+    textarea:focus,
+    select:hover,
+    select:focus {
+      border-color: #d8c090;
+      box-shadow: none;
+    }
+  
+    .inputColor {
+      outline-color: #d8c090;
+    }
+  
+    .login_btn {
+      width: 20%;
+      background: #d8c090 !important;
+      color: white !important;
+    }
+  
+    .login_btn:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
+    }
+  
+    .login_container {
+      padding: 0 2rem;
+    }
+  
+    button {
+      background-color: #d8c090;
+      border-radius: 20px;
+      border: 1px solid #98b4ac;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+    }
+  
+    .center {
+      margin-right: auto;
+    }
+  
+    .reffer {
+      color: #565051;
+    }
+  
+    /* === TABLE ==== */
+    .table-box {
+      margin: 50px auto;
+    }
+  
+    .table-row {
+      display: table;
+      width: 40%;
+      margin: 10px auto;
+      font-family: sans-serif;
+      background: transparent;
+      padding: 4px 0;
+      color: #555;
+      font-size: 13px;
+      box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+      height: 0.1%;
+      border-radius: 20px;
+    }
+  
+    .table-head {
+      background: #E5E4E2;
+      box-shadow: none;
+      color: #fff;
+      font-weight: 600;
+      line-height: 3px;
+      width: 400px;
+      box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    }
+  
+    .table-head .table-cell {
+      border-right: none;
+    }
+  
+    .table-cell {
+      display: table-cell;
+      width: 20%;
+      text-align: center;
+      padding: 4px 0;
+      border-right: 1px solid #d6d4d4;
+      vertical-align: middle;
+    }
+  
+    .first-cell {
+      text-align: left;
+      padding-left: 10px;
+      width: 8%;
+    }
+  
+    .last-cell {
+      border-right: none;
+    }
+  
+    /* a{
+        text-decoration: none;
+        color: #555;
+    } */
+    p {
+      font-size: 17px;
+      color: black;
+    }
+  
+    .listTitle {
+      font-size: 23px;
+      text-align: center;
+    }
+  
+    @media only screen and (max-width: 600px) {
+      .table-row {
+        font-size: 11px;
+      }
+    }
+  
+    .trow-list {
+      display: table;
+      width: 85%;
+      margin: 10px auto;
+      font-family: sans-serif;
+      background: #E3E4FA;
+      padding: 4px 0;
+      color: #555;
+      font-size: 13px;
+      box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+      line-height: 3px;
+    }
+  
+    .container {
+      border-radius: 10px;
+      background-color: #B4CFEC;
+      box-shadow:
+        0 9px 33px rgba(0, 0, 0, 0.07);
+      width: 800px;
+      height: 375px;
+      float: center;
+      margin-left: 220px;
+    }
+  
+    #id_reasons {
+      margin-left: 100px;
+      height: 200px;
+      overflow-y: scroll;
+    }
+  
+    .login_btn {
+      width: 100%;
+      background: #d8c090 !important;
+      color: white !important;
+    }
+  
+    .login_btn:focus {
+      box-shadow: none !important;
+      outline: 0px !important;
+    }
+  
+    .login_container {
+      padding: 0 2rem;
+    }
+  
+    button {
+      width: 50%;
+      margin-left: 450px;
+      background-color: #d8c090;
+      border-radius: 20px;
+      border: 1px solid #98b4ac;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+    }
+  
+    #id_reasons {
+      min-width: 1000px;
+      height: 200px;
+      overflow-y: scroll;
+    }
+  
+    /* #id_behavior_problem>label{
+  
+    display: inline-block;
+    padding: 3px 6px;
+  
+  
+  } */
+    #id_behavior_problem {
+      vertical-align: baseline;
+      width: 8vw;
+      text-align: center;
+      font-size: 17.5px;
+    }
+  
+    .left {
+      float: left;
+      margin-right: px;
+    }
+  
+    .right {
+      float: right;
+    }
+  
+    .fac {
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .buttonF {
+      width: 420px;
+      height: 55px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      font-weight: 600;
+      color: #fff;
+      background-color: #4863A0;
+      border: none;
+      border-radius: 45px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease 0s;
+      cursor: pointer;
+      outline: none;
+      margin: auto;
+    }
+  
+    .buttons {
+      margin-left: 100px;
+      width: 200px;
+      height: auto;
+      border: 5em;
+      cursor: pointer;
+      outline: none;
+      font-size: 16px;
+      -webkit-transform: translate(0);
+      transform: translate(0);
+      background-image: linear-gradient(45deg, #98b4ac, #d8c090);
+      padding: 0.7em 2em;
+      border-radius: 65px;
+      box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
+      -webkit-transition: box-shadow 0.25s;
+      transition: box-shadow 0.25s;
+      color: white;
+    }
+  
+    .buttons .text {
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-image: linear-gradient(45deg, #d8c090, #98b4ac);
+    }
+  
+    .buttons:after {
+      content: "";
+      border-radius: 18px;
+      position: absolute;
+      margin: 4px;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: -1;
+      background: #E5E4E2;
+    }
+  
+    .buttons:hover {
+      background-image: linear-gradient(-45deg, #98b4ac, #d8c090);
+      box-shadow: 0 12px 24px rgba(128, 128, 128, 0.1);
+    }
+  
+    .buttons:hover .text {
+      background-image: linear-gradient(-45deg, #d8c090, #98b4ac);
+    }
+  
+    .fac {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .buttonF {
+      position: fixed;
+      width: 100%;
+      min-width: 1320px;
+      height: 60px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      font-weight: 600;
+      color: #fff;
+      background-color: #d8c090;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease 0s;
+      cursor: pointer;
+      outline: none;
+    }
+  
+    .message {
+      padding: 12px;
+      margin: 0 auto;
+      width: 420px;
+      height: 45px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      font-weight: 500;
+      color: #000;
+      background-color: #95B9C7;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease 0s;
+      cursor: pointer;
+      outline: none;
+    }
+  
+    .parent_message {
+      float: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    .button {
+      float: right;
+      padding: auto;
+      margin: 0 auto;
+      width: 160px;
+      height: 38px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      font-weight: 500;
+      color: #fff;
+      background-color: #95B9C7;
+      border: none;
+      border-radius: 45px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease 0s;
+      cursor: pointer;
+      outline: none;
+    }
+  
+    .button:hover {
+      background-color: #d8c090;
+      box-shadow: 0px 15px 20px #C9C0BB;
+      color: #fff;
+      transform: translateY(-7px);
+    }
+  
+    .parent_form {
+      display: flex;
+      flex-direction: row;
+      column-gap: 25vw;
+      margin-left: 3vw;
+      margin-right: 0 auto;
+
+    }
+  
+    .first_form_column {
+      display: inline-block;
+      flex-direction: column;
+    }
+  
+    .second_form_column {
+      display: inline-block;
+      flex-direction: column;
+    }
+  
+    .second_label {
+      margin-left: 12px;
+      font-size: 18px;
+    }
+  
+    #id_student_number {
+      width: 400px;
+      height: 38px;
+      color: #3A3B3C;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+  
+    #id_firstname {
+      width: 400px;
+      height: 38px;
+      color: #3A3B3C;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+  
+    #id_lastname {
+      width: 400px;
+      height: 38px;
+      color: #3A3B3C;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+  
+    #id_subject_referred {
+      width: 400px;
+      height: 38px;
+      color: #3A3B3C;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+  
+    .column {
+      width: 20vw;
+      float: left;
+      /* margin-right:20px; */
+      padding: 10px;
+    }
+  
+    .row {
+      width: 370px;
+      float: right;
+      text-align: left;
+    }
+  
+    .row1 {
+      width: 450px;
+      float: left;
+      /* margin-left: 250px; */
+      text-align: left;
+    }
+  
+    .pText {
+      font-weight: 600;
+      font-size: 20px;
+    }
+  
+    .bText {
+      color: #000;
+      float: center;
+    }
+  
+    .parent_checkbox {
+      flex-direction: column;
+      column-gap: 2rem;
+      float: left;
+      margin-left:3vw;
+    }
+  
+    .parent_input {
+      column-gap: 1rem;
+      float: left;
+      margin-left: 2vw;
+      margin-bottom: 1.5rem;
+    }
+  
+    .input_text {
+      float: center;
+      margin-right: auto;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  
+    #id_reasons {
+      max-width: 450px;
+      border: 2px solid #000;
+      height: 300px;
+      border-radius: 8px;
+      font-size: 25px;
+      margin-left: auto;
+    }
+  </style>
+  <div class="fac">
+    <button type="submit" class="buttonF">Refer a Student</button>
+  </div>
+  <br>
+  <br>
+  <!-- <div class="homeCard"> -->
+  <form class="reffer" method="POST" action=""> {% csrf_token %} <br>
+    <h3 style="font-weight: bold; text-align: center; font-size: 25px;" class="txtColor">&nbsp; &nbsp; <i> To proceed with Referring a student, kindly input the following details.</i>
+    </h3> &nbsp; <div class="parent_message"> {% for message in messages %} <p class="message">
+        <b>{{message}} !</b>
+      </p> {% endfor %} </div>
+  <div style="float: left;">
+      <div class="parent_form">
+          <div class="first_form_column">
+            <div class="">
+              <p class="pText">
+                <b class="bText"></b>{{referral_form.firstname}} &nbsp;First Name
+              </p>
+              <p class="pText">
+                <b class="bText"></b>{{referral_form.lastname}} &nbsp;Last Name
+              </p>
+            </div>
+          </div>
+          <div class="second_form_column">
+            <div class="">
+              <p class="pText">
+                <b class="bText"></b>{{referral_form.student_number}} &nbsp;Student ID
+              </p>
+              <p class="pText">
+                <b class="bText"></b>{{referral_form.subject_referred}} &nbsp;Subject Reffered
+              </p>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="parent_checkbox">
+          <p class="pText">
+            <b class="bText"></b>
+            <i>Select a Behavioral Problem:</i>
+          </p>
+          <p class="pText">
+            <b class="bText"></b>{{referral_form.behavior_problem}}
+          </p>
+        </div>
+        <div class="parent_input">
+          <i>
+            <p class="input_text">Input&nbsp;Additional&nbsp;Information:</p>
+          </i>
+          {{referral_form.reasons}}
+          <br>
+          <br>
+          <button class="button" style="font-weight: bold; color: #454545;">Submit</button>
+          <br>
+          <br>
+        </div>
+  </div>
+    <br>
+  </form>
+  <!-- </div> --> {% endblock %}

@@ -1,0 +1,228 @@
+{% extends "student/home.html" %} {% block title %} Notifications {% endblock %} {% block content %} <style>
+  .card {
+    display: flex;
+    padding: 20px;
+    max-width: 408px;
+    padding-left: 5px;
+    height: 210px;
+    margin: 20px;
+    border-radius: 10px;
+    background-color: #98adb4;
+    box-shadow:
+      0 9px 33px rgba(0, 0, 0, 0.07);
+    overflow-y: scroll;
+    float: left;
+    flex-wrap: row;
+    margin-left: 140px;
+    align-items: stretch;
+  }
+
+  .txtFont {
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-align: left;
+    margin-right: 30px;
+    display: flex;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    align-items: start;
+  }
+
+  .txtFonty {
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-align: left;
+    display: flex;
+    font-size: 17px;
+    margin-left: 10px;
+    text-overflow: ellipsis;
+    margin-top: 8px;
+    align-items: center;
+    /* justify-content: center; */
+  }
+
+  /* === TABLE ==== */
+  .table-box {
+    margin: 50px auto;
+  }
+
+  .table-row {
+    display: table;
+    width: 40%;
+    margin: 10px auto;
+    font-family: sans-serif;
+    background: transparent;
+    padding: 4px 0;
+    color: #555;
+    font-size: 13px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    height: 0.1%;
+    border-radius: 20px;
+  }
+
+  .table-head {
+    background: #E5E4E2;
+    box-shadow: none;
+    color: #fff;
+    font-weight: 600;
+    height: 20px;
+    line-height: 5px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    justify-content: left;
+  }
+
+  .table-head .table-cell {
+    border-right: none;
+  }
+
+  .table-cell {
+    display: table-cell;
+    width: 3.33%;
+    padding: 4px 0;
+    /* border-right: 1px solid #d8c090; */
+    border-collapse: collapse;
+    vertical-align: middle;
+  }
+
+  .first-cell {
+    text-align: left;
+    padding-left: 10px;
+    width: 10%;
+  }
+
+  .last-cell {
+    border-right: none;
+    width: 10%;
+  }
+
+  /* a{
+    text-decoration: none;
+    color: #555;
+} */
+  p {
+    font-size: 17px;
+    color: black;
+  }
+
+  .listTitle {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .table-row {
+      font-size: 11px;
+    }
+  }
+
+  .trow-list {
+    display: table;
+    width: 85%;
+    margin: 10px auto;
+    font-family: sans-serif;
+    background: #E3E4FA;
+    padding: 4px 0;
+    color: #d8c090;
+    font-size: 15px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    line-height: 10px;
+  }
+
+  .table-box {
+    margin: 16px auto;
+  }
+
+  #customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 97%;
+  }
+
+  #customers td,
+  #customers th {
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+
+  #customers tr:hover {
+    background-color: #ddd;
+  }
+
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #E3E4FA;
+    color: white;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+</style>
+<div class="fac">
+  <button class="buttonF">Notifications</button>
+</div>
+<br> {% if not notifications %} <center>
+  <p>
+    <b>No Notifications Yet!</b>
+  </p>
+</center> {% endif %} <br>
+<br>
+<table id="customers"> {% for notification in notifications reversed %} {% if notification.notification_type == 'automatic_referral' %} <a href="#">
+    <tr>
+      <td>
+        <a href="{% url 'student_notification_detail' notification.extra_id %}">
+          <strong>{{ notification.created_by}}</strong>
+          <b>Automatic Referral</b>
+      </td>
+  </a>
+  <td>
+    <a href="{% url 'student_notification_detail' notification.extra_id %}">
+      <small>{{ notification.created_at|timesince }} ago</small>> </a>
+  </td>
+  </tr>
+  </a> {% else %} <tr> {% if notification.is_read_student == True %} <td>
+      <a style="color: gray; font-size: 16px;" href="{% url 'student_notification_detail' notification.id %}">
+        <strong></strong>
+        <b style="color: gray;">You have a Counseling Appointment on {{ notification.schedDay|date }}
+        </b>
+      </a>
+    </td>
+    <td>
+      <a style="color: gray; font-size: 16px;" href="{% url 'student_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago</a>
+    </td> {% else %} <td>
+      <a style="color:black; font-size: 16px;" href="{% url 'student_notification_detail' notification.id %}">
+        <strong></strong>
+        <b style="color: black;">You have a Counseling Appointment on {{ notification.schedDay|date }}
+        </b>
+      </a>
+    </td>
+    <td>
+      <a style="color: black; font-size: 16px;" href="{% url 'student_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago</a>
+    </td> {% endif %}
+  </tr> {% endif %} {% endfor %}
+</table> {% endblock %}

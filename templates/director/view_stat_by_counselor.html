@@ -1,0 +1,345 @@
+{% extends "director/home.html" %} {% block title %} View Offer {% endblock %} {% block content %} <style>
+  /* Table Styles */
+  .table-wrapper {
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    overflow-y: scroll;
+  }
+
+  .fl-table td,
+  .fl-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+  }
+
+  .fl-table thead th {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+
+  tr:nth-child(odd):hover td {
+    background: #C1C3D1;
+  }
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .fl-table {
+      display: block;
+      width: 100%;
+    }
+
+    .table-wrapper:before {
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+      display: block;
+    }
+
+    .fl-table thead th:last-child {
+      border-bottom: none;
+    }
+
+    .fl-table thead {
+      float: left;
+    }
+
+    .fl-table tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+      padding: 20px .625em .625em .625em;
+      height: 60px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+      display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+      background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .parent_tr {
+    font-size: 17px;
+  }
+
+  .parent_td {
+    text-align: left;
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+  }
+
+  .introduction {
+    font-size: 19px;
+    margin-left: 5vh;
+  }
+
+  .chooseDate {
+    width: fit-content;
+    height: 17vh;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+    background: whitesmoke;
+    margin-left: 0 auto;
+    
+  }
+
+  .chooseTitle {
+    /* width:fit-content;
+    height: 8vh;    */
+  }
+
+  .chooseFromTo {
+    display: flex;
+    flex-direction: row;
+    gap: 4.5vw;
+  }
+
+  .chooseTheDate {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .statistic_date {
+    margin: 0 auto;
+    padding: 0 auto;
+    width: fit-content;
+  }
+
+  .button {
+    width: 6vw;
+    height: 4vh;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #98b4ac;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #d8c090;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-3px);
+  }
+
+
+  #id_pickedStartDate {
+    height: 3vh;
+  }
+
+  #id_pickedEndDate {
+    height: 3vh;
+  }
+
+  .center_title {
+    font-size: 18px;
+  }
+
+  .dataTitle {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    position: absolute;
+    left: 48.5%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+  }
+
+  .data {
+    width: fit-content;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+    background: whitesmoke;
+    margin-bottom: 1vh;
+    margin-left: 1vh;
+    margin-right: 1vh;
+    font-size: 20px;
+  }
+</style>
+<div class="fac">
+  <button type="submit" class="buttonF">List of Students Refferral under this Counselor </button>
+</div>
+<br>
+<form method="POST" action="{% url 'view_stat_by_counselor_with_date' counselor_id %}"> {% csrf_token %} <div class="statistic_date">
+    <div class="center_title">
+      <p>
+        <i>
+          <h4>To view Record of Statistics, select the date below.</h4>
+        </i>
+      </p>
+    </div>
+        <div class="chooseDate">
+
+<div style="display: flex; flex-direction: row;">
+    <div>
+        <b> From</b> 
+      </div>
+      <div style="margin-left: 2vw;">
+        {{filterDate.pickedStartDate}}
+      </div>
+</div>
+
+<div style="display: flex; flex-direction: row;  gap: 2vw; ">
+    <div>
+        <b> To</b>
+      </div>
+
+      <div style="margin-left: 1.6vw;">
+        {{filterDate.pickedEndDate}}
+      </div>
+</div>
+      <div style="margin-top: 1vh;">
+        <button type="submit" class="button">OK</button>
+      </div>
+    </div>
+  </div>
+</form>
+<br>
+<br> <br>
+<div class="dataTitle">
+  <div class="data">
+    <b>{{stat}}</b>
+  </div>
+  <div style="margin-top: 2vh;">
+    <i>
+      <h3>referral under </h3>
+    </i>
+  </div>
+  <div class="data">
+    <b> {{couns.firstname}} {{couns.lastname}}</b>
+  </div>
+  
+</div>
+<br> <br>
+<div class="table-wrapper">
+  <table class="fl-table">
+    <thead>
+      <tr>
+        <th class="parent_tr">Lastname</th>
+        <th class="parent_tr">Firstname</th>
+        <th class="parent_tr">Date Referred</th>
+      </tr>
+    </thead> {% for form in referrals %} <tbody>
+      <tr>
+        <td style="font-size: 16px;" class="parent_td">{{form.lastname}}</td>
+        <td style="font-size: 16px;" class="parent_td">{{form.firstname}}</td>
+        <td style="font-size: 16px;" class="parent_td">{{form.date}}</td>
+      </tr>
+    <tbody> {% endfor %}
+  </table>
+  <div style="padding: 2px;"> {% if not referrals %} <center>
+      <p style="font-size: 18px;">
+        <b>No Data Available</b>
+      </p>
+    </center> {% endif %} </div>
+</div> {% endblock %}

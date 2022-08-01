@@ -1,0 +1,370 @@
+{% extends "director/home.html" %} {% block title %} Assign Counselor {% endblock %} {% block content %} <style>
+  tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color: #504A4B;
+    font-size: 16px;
+    font-weight: normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+  }
+
+  tr:hover td {
+    background: #4863A0;
+    color: #4863A0;
+    border-top: 1px solid #4863A0;
+  }
+
+  tr:first-child {
+    border-top: none;
+  }
+
+  tr:last-child {
+    border-bottom: none;
+  }
+
+  tr:nth-child(odd) td {
+    background: #EBEBEB;
+  }
+
+  tr:nth-child(odd):hover td {
+    background: #C1C3D1;
+  }
+
+  tr:last-child td:first-child {
+    border-bottom-left-radius: 3px;
+  }
+
+  tr:last-child td:last-child {
+    border-bottom-right-radius: 3px;
+  }
+
+  td {
+    background: #FFFFFF;
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 300;
+    font-size: 18px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #C1C3D1;
+  }
+
+  td:last-child {
+    border-right: 0px;
+  }
+
+  th.text-left {
+    text-align: left;
+  }
+
+  th.text-center {
+    text-align: center;
+  }
+
+  th.text-right {
+    text-align: right;
+  }
+
+  td.text-left {
+    text-align: center;
+  }
+
+  td.text-center {
+    text-align: center;
+  }
+
+  td.text-right {
+    text-align: right;
+  }
+
+  .facDay {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+
+  .buttonDay {
+    width: 320px;
+    height: 55px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    margin-left: 10px;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #000;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: bolder;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  #id_pickedDate {
+    width: 250px;
+    height: 35px;
+    color: #3A3B3C;
+  }
+
+ 
+  /* Table Styles */
+  .table-wrapper {
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    overflow-y: scroll;
+  }
+
+  .fl-table td,
+  .fl-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+  }
+
+  .fl-table thead th {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .fl-table {
+      display: block;
+      width: 100%;
+    }
+
+    .table-wrapper:before {
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+      display: block;
+    }
+
+    .fl-table thead th:last-child {
+      border-bottom: none;
+    }
+
+    .fl-table thead {
+      float: left;
+    }
+
+    .fl-table tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+      padding: 20px .625em .625em .625em;
+      height: 60px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+      display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+      background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .center_title {
+    text-align: center;
+    margin-right: 20px;
+  }
+
+  .wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+
+  .button {
+    margin: 0 auto;
+    width: 12vw;
+    height: 30px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .table_words {
+    font-size: 15px;
+    text-align: left;
+    align-items: center;
+    margin-left: 200px;
+  }
+</style>
+<div class="fac">
+  <button type="submit" class="buttonF">List of Degree Program</button>
+</div>
+<br>
+<div class="table-wrapper">
+  <table class="fl-table">
+    <thead>
+      <tr>
+        <th class="table_head">Program Code</th>
+        <th class="table_head">Program Name</th>
+         <th class="table_head">School Code</th>
+        <th class="table_head">Faculty ID</th>
+        <th class="table_head">Action</th>
+      </tr>
+    </thead> {% for object in degree_program %} <tbody>
+      <tr>
+        <td style="text-align: center; font-size: 16px;">
+         
+            <b>{{object.program_code}}</b>
+          
+        </td>
+        <td style="text-align: center; font-size: 16px;">
+         
+            <b>{{object.program_name}}</b>
+         
+        </td>
+         {% if object.school_code == None %} 
+         <td style="text-align: center; font-size: 16px;">
+        </td>
+        {% else %}
+        
+                <td style="text-align: center; font-size: 16px;">
+           <b>{{object.school_code}}</b>
+        </td>
+         {% endif %}
+        <td style="text-align: center; font-size: 16px;">
+            {% if not object.faculty_id.lastname %} 
+                    <div class="no-data">
+               ---
+            </div>
+            {% else %}
+         
+            <b>{{object.faculty_id.lastname}}</b> , <b>{{object.faculty_id.firstname}}</b>
+            {% endif %} 
+        </td>
+        <td>
+          <a href="{% url 'view_stat_by_degree_program' object.program_code %}">
+            <button type="submit" class="button">
+              <b>View Statistics</b>
+            </button>
+          </a>
+        </td>
+      </tr>
+    <tbody> {% endfor %}
+  </table>
+</div> {% endblock %}

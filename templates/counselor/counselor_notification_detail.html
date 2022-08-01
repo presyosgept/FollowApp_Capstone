@@ -1,0 +1,500 @@
+{% extends "counselor/home.html" %} {% block title %} Referred Students {% endblock %} {% block content %} <style>
+  #wrapper {
+    display: flex;
+    padding: 20px;
+  }
+
+  #square {
+    min-width: 300px;
+    height: 350px;
+    border-radius: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #98b4ac;
+    box-shadow:
+      0 9px 33px rgba(0, 0, 0, 0.07);
+    margin: auto;
+    overflow-wrap: break-word;
+  }
+
+  #box {
+    background: #f4f4f4;
+    height: 400px;
+    padding: 15px;
+    overflow-y: scroll;
+    text-align: justify;
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 5 90px 50px rgba(0, 0, 0, 0.07);
+    min-width: 90vw;
+    min-height: 200px;
+    width: 100px;
+    text-overflow: ellipsis;
+    align-items: left;
+  }
+
+  .table-head {
+    background: #E5E4E2;
+    box-shadow: none;
+    color: #fff;
+    font-weight: 600;
+    line-height: 5px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    width: 500px;
+    margin: auto;
+    border-radius: 20px;
+  }
+
+  .table-head .table-cell {
+    border-right: none;
+  }
+
+  .table-cell {
+    display: table-cell;
+    width: 20%;
+    text-align: center;
+    padding: 4px 0;
+    border-right: 1px solid #838996;
+    vertical-align: middle;
+  }
+
+  .first-cell {
+    text-align: left;
+    padding-left: 10px;
+    width: 8%;
+  }
+
+  .last-cell {
+    border-right: none;
+    width: 15px;
+  }
+
+  /* a{
+      textdecoration: none;
+      color: #555;
+  } */
+  p {
+    font-size: 17px;
+    color: black;
+  }
+
+  .listTitle {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .table-row {
+      font-size: 11px;
+      margin: auto;
+    }
+
+    .box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .schedule_appointment {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .trow-list {
+    display: inline-block;
+    width: 70%;
+    font-family: sans-serif;
+    background: transparent;
+    padding: 10px 0;
+    margin: auto;
+  }
+
+  .modal1 {
+    font-size: 21px;
+    font-weight: 300;
+    text-align: left;
+  }
+
+  .modal2 {
+    font-size: 20px;
+    text-align: left;
+    line-height: 25px;
+  }
+
+  div.item {
+    vertical-align: auto;
+    display: inline-block;
+    text-align: center;
+    width: 120px;
+  }
+
+  .caption {
+    display: block;
+  }
+
+  .item {
+    width: 200px;
+    text-align: center;
+    display: block;
+    background-color: transparent;
+    border: 1px solid transparent;
+    margin-right: 10px;
+    margin-bottom: 1px;
+    float: left;
+  }
+
+  #index-gallery {
+    width: 465px;
+  }
+
+  .form_container {
+    margin-top: 20px;
+  }
+
+  #form-title {
+    color: #fff;
+  }
+
+  .login_btn {
+    width: 100%;
+    background: #48444c !important;
+    color: white !important;
+  }
+
+  .login_btn:focus {
+    box-shadow: none !important;
+    outline: 0px !important;
+  }
+
+  .login_container {
+    padding: 0 2rem;
+  }
+
+  /* <--------- FOR BUTTON SA FEEDBAK ----->  */
+  .table-head1 {
+    background: #d8c090;
+    box-shadow: none;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1px;
+    box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
+    width: 300px;
+    margin-left: 20px;
+    border-radius: 20px;
+  }
+
+  .table-head1 .table-cell1 {
+    border-right: none;
+  }
+
+  .table-cell1 {
+    display: table-cell;
+  }
+
+  .first-cell1 {
+    text-align: left;
+    padding-left: 10px;
+    width: 8%;
+  }
+
+  .Pbox {
+    font-size: 19px;
+    line-height: 30px;
+    text-align: justify;
+  }
+
+  .column {
+    min-width: 300px;
+    float: left;
+    margin-right: 20px;
+  }
+
+  .row {
+    width: 500px;
+    float: right;
+    text-align: left;
+    text-align: justify;
+    flex-direction: column-reverse;
+    padding: 8px;
+    margin-left: auto;
+    padding: 10px;
+    line-height: 30px;
+  }
+
+  .rowText {
+    font-size: 24px;
+    margin: auto;
+  }
+
+  .image {
+    max-width: 320px;
+    height: 150px;
+  }
+
+  .picInfo {
+    display: flex;
+    justify-content: center;
+  }
+
+  .column {
+    width: 250px;
+    float: left;
+    margin-right: 20px;
+  }
+
+  .row1 {
+    width: 450px;
+    float: left;
+    margin-left: 200px;
+    padding-top: 17px;
+  }
+
+  .last {
+    margin: 0;
+    padding: 10px;
+  }
+
+  .pText {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .bText {
+    color: #000;
+    font-size: 20px;
+  }
+
+  form.cleanForm {
+    width: 700px;
+    margin: 0 auto;
+  }
+
+  form.cleanForm p {
+    margin-bottom: 15px;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* .card1 {
+   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+  min-height: 510px;
+  border-radius: 5px;
+  float: center;
+  margin-left: auto;
+  margin: auto;
+  text-align: center;
+  overflow: hidden;
+  background-color: whitesmoke;
+} */
+  @media screen and (max-width: 320px) {
+    .header__search {
+      width: 70%;
+    }
+
+    /* .card1{
+    width: 70%;
+  } */
+  }
+
+  .wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+  }
+
+  .button {
+    width: 200px;
+    height: 45px;
+    border: 5em;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    background-color: #d8c090;
+    padding: 0.7em 2em;
+    border-radius: 65px;
+    box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
+    -webkit-transition: box-shadow 0.25s;
+    transition: all 0.3s ease 0s;
+    letter-spacing: 3.5px;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-7px);
+  }
+
+  .schedule_appointment {
+    align-items: center;
+    display: inline-block;
+  }
+
+  .schedule_title {
+    font-size: 23px;
+  }
+
+  .schedule_information {
+    float: left;
+  }
+</style>
+<br>
+<div class="fac">
+  <button type="submit" class="buttonF">Students Referral Information</button>
+</div> {% for object in objects %} {% if not object.subject_referred %} <br>
+<br>
+<br>
+<div>
+  <br>
+  <!-- <form action="#" class="cleanForm" method="POST">
+              {% csrf_token %} -->
+  <div class="schedule_appointment">
+    <div class="schedule_title">
+      <h3>
+        <i>Schedule of Appointment</i>
+      </h3>
+    </div>
+    <br>
+    <br>
+    <div class="schedule_information">
+      <p class="rowText"> You are scheduled for an appointment. The Session starts at <b>{{object.start_time}}</b> and ends at <b> {{object.end_time}}</b> on <b> {{object.date}}</b>
+        <br>
+        <br>
+        <br>
+        <i>With the Reasons stated below:</i>
+        <br>
+        <br>
+      <div id="box">
+        <li class="Pbox" style="text-align: justify; margin-left:8px;">
+          <b>{{object.reasons}}</b>
+        </li>
+      </div>
+      </p>
+    </div>
+  </div>
+  <!-- </form> -->
+  <br>
+  <br> {% if object.feedback is None %} {% if type == 'teacher' %} <div class="wrap">
+    <center>
+      <a href="{% url 'counselor_feedback' object.id %}">
+        <button class="button" style="font-weight: 800;  color: black;">
+          <p style="font-weight: bold;">Feedback</p>
+        </button>
+      </a>
+    </center>
+  </div> {% else %} <div class="wrap">
+    <center>
+      <a href="{% url 'counselor_feedback_student' object.id %}">
+        <button class="button" style="font-weight: 800;  color: black;">Feedback</button>
+      </a>
+    </center>
+  </div> {% endif %} {% endif %}
+</div> {% else %}
+<!-- ANOTHER PARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+<br>
+<div class="fac">
+  <button type="submit" class="buttonF">Students Referral Information</button>
+</div>
+<br>
+<br>
+<br>
+<br> {% if not object.behavior_problem %} <div class="schedule_appointment">
+  <div class="schedule_title">
+    <h3>
+      <i>Schedule of Appointment</i>
+    </h3>
+  </div>
+  <br>
+  <br>
+  <div class="schedule_information">
+    <p class="rowText">
+      <b>{{object.lastname}}</b> is referred. </b> The Session starts at <b>{{object.start_time}}</b> and ends at <b>{{object.end_time}}</b> on <b>{{object.date}}</b>
+      <br>
+      <br>
+      <br>
+      <i>With the Reasons stated below:</i>
+      <br>
+      <br>
+    <div id="box">
+      <li class="Pbox" style="text-align: justify; margin-left:8px;">
+        <b>{{object.reasons}}</b>
+      </li>
+    </div>
+    </p>
+  </div>
+</div> {% else %} <div class="schedule_appointment">
+  <div class="schedule_title">
+    <h3>
+      <i>Schedule of Appointment</i>
+    </h3>
+  </div>
+  <br>
+  <br>
+  <div class="schedule_information">
+    <p class="rowText">
+      {% if count != 1 %} 
+            <b>{{object.lastname}}</b> is referred by <b>{{count}} faculties</b> due to as having a behavior problem of <b> {{object.behavior_problem | title}}.</b> The Session starts at <b>{{object.start_time}}</b> and ends at <b>{{object.end_time}}</b> on <b>{{object.date}}</b>
+
+      {% else %}
+            <b>{{object.lastname}}</b> is referred due to as having a behavior problem of <b> {{object.behavior_problem | title}}.</b> The Session starts at <b>{{object.start_time}}</b> and ends at <b>{{object.end_time}}</b> on <b>{{object.date}}</b>
+
+      {% endif %}
+      <br>
+      <br>
+      <br>
+      <i>With the Reasons stated below:</i>
+      <br>
+      <br>
+    <div id="box">
+      <li class="Pbox" style="text-align: justify; margin-left:8px;">
+        <b>{{object.reasons}}</b>
+      </li>
+    </div>
+    </p>
+  </div>
+</div> {% endif %}
+<!-- </form> -->
+<br>
+<br> {% if object.feedback is None %} {% if type == 'teacher' %} <center>
+  <a href="{% url 'counselor_feedback' object.id %}">
+    <button class="button" style="font-weight: 800;  color: #454545;">Feedback</button>
+  </a>
+</center>
+<br> {% else %} <center>
+  <a href="{% url 'counselor_feedback_student' object.id %}">
+    <button class="button" style="font-weight: 800;  color: #454545;">Feedback</button>
+  </a>
+</center>
+<br>
+<br> {% endif %} {% endif %} <br>
+<!-- </div> -->
+<br> {% endif %} {% endfor %} {% endblock %}

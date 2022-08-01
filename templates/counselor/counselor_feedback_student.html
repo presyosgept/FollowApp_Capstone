@@ -1,0 +1,216 @@
+{% extends "counselor/home.html" %} {% block content %} <style>
+  .card1 {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 95%;
+    height: 100vh;
+    /* min-height: fit-content; */
+    border-radius: 5px;
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+    background-color: whitesmoke;
+  }
+
+  @media screen and (max-width: 320px) {
+    .header__search {
+      width: 70%;
+    }
+
+    .card1 {
+      width: 70%;
+    }
+  }
+
+  button {
+    width: 50%;
+    margin-left: 450px;
+    background-color: #d8c090;
+    border-radius: 20px;
+    border: 1px solid #98b4ac;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+  }
+
+  form.cleanForm {
+    width: 700px;
+    margin: 0 auto;
+  }
+
+  form.cleanForm p {
+    margin-bottom: 15px;
+  }
+
+  .column {
+    width: 250px;
+    float: left;
+    margin-right: 20px;
+    padding: 10px;
+  }
+
+  .row {
+    width: 450px;
+    float: right;
+    text-align: left;
+  }
+
+  .row1 {
+    width: 450px;
+    float: left;
+    margin-left: 250px;
+    text-align: left;
+  }
+
+  .row2 {
+    width: 550px;
+    float: left;
+    margin-left: 400px;
+  }
+
+  .last {
+    margin: 0;
+    padding: 10px;
+  }
+
+  .pText {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .bText {
+    color: #000;
+    font-size: 20px;
+  }
+
+  .form-field {
+    height: 900px;
+    width: 600px;
+  }
+
+  #id_feedback {
+    width: 1100px;
+    height: 200px;
+    overflow-y: scroll;
+  }
+
+  #id_remarks {
+    width: 1100px;
+    height: 200px;
+  }
+
+  .button {
+    width: 200px;
+    height: auto;
+    border: 5em;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    background-color: #d8c090;
+    padding: 0.7em 2em;
+    border-radius: 65px;
+    box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
+    -webkit-transition: box-shadow 0.25s;
+    transition: all 0.3s ease 0s;
+    letter-spacing: 2.5px;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-7px);
+  }
+
+  .message {
+    margin: 0 auto;
+    width: 350px;
+    height: 45px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #3c3c5c;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .nameOfStudent {
+    display: row;
+    flex-direction: row;
+    background-color: red;
+    border: 2px solid;
+    margin: 9px;
+  }
+
+  .infoStud {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #id_feedback {
+    font-size: 22px;
+  }
+
+  #id_remarks {
+    font-size: 22px;
+  }
+</style>
+<br>
+<br>
+<div class="card1">
+  <br>
+  <div> {% for message in messages %} <button type="submit" class="message">
+      <b>{{message}} !</b>
+    </button> {% endfor %} </div>
+  <br>
+  <br>
+  <div style="margin-left: 12vw;">
+    <div class="infoStud">
+      <p class="pText">
+        <b class="bText">Date Referred: &nbsp;</b> {{info.created_at}}
+      </p>
+    </div>
+    <div class="infoStud">
+      <p class="pText">
+        <b class="bText">Name of Student Referred: &nbsp;</b> {{student.lastname}}, {{student.firstname}}
+      </p>
+    </div> &nbsp; &nbsp; <form method="POST" action="" class="form-field"> {% csrf_token %} <div className="flex-direction: column;">
+        <div class="infoStud">
+          <i>
+            <h4 class="bText">Actions Taken/Strategies taken by the Counselor:</h4>
+          </i>
+        </div>
+        {{object.feedback}}
+        <div class="infoStud">
+          <i>
+            <h4 class="bText">Input Remarks here:</h4>
+          </i>
+        </div>
+        {{object.remarks}}
+        <div class="infoStud">
+          <i>
+            <h4 class="bText">Prepared by: &nbsp; </b> {{info2.firstname}} {{info2.lastname}}
+            </h4>
+          </i>
+        </div>
+      </div>
+      <br>
+      <button class="button" style="font-weight: bold; color: #454545;">Submit</button>
+      <br>
+      <br>
+    </form>
+  </div>
+</div>
+<br> {% endblock %}

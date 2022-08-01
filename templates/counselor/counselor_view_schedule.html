@@ -1,0 +1,17 @@
+{% extends "counselor/home.html" %} {% block content %}
+
+    View Schedule ayaw sa ni hilabti <br>
+
+
+    {% for obj1 in timeArray %}
+        {% for obj2 in referals %}
+            {% if obj1.time1 == obj2.start_time or obj1.time2 == obj2.start_time or obj1.time1 == obj2.end_time or obj1.time2 == obj2.end_time %}
+                a {{obj1.time1}} -  {{obj1.time2}}  <br>  
+            {% endif %} 
+        {% endfor %} 
+   
+           
+           
+    {% endfor %} 
+ 
+   {% endblock %}

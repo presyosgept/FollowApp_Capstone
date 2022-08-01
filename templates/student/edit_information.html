@@ -1,0 +1,407 @@
+{% extends "student/home.html" %} {% block title %} Notifications {% endblock %} {% block content %} <style>
+  /* 
+=========================== NEW CSS ======================================================= */
+  /*===== CONTENT CONTENT =====*/
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 200%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* FORM AND BUTTONS */
+  form.cleanForm {
+    width: 800px;
+    margin: 0 auto;
+  }
+
+  form.cleanForm p {
+    margin-bottom: 15px;
+  }
+
+  .column {
+    width: 250px;
+    float: left;
+    margin-right: 20px;
+    padding: 10px;
+  }
+
+  .row {
+    width: 370px;
+    float: right;
+    text-align: left;
+  }
+
+  .row1 {
+    width: 450px;
+    float: left;
+    margin-left: 250px;
+    text-align: left;
+  }
+
+  .pText {
+    font-weight: 600;
+  }
+
+  .bText {
+    color: #000;
+    font-size: 18.5px;
+  }
+
+  .form-field {
+    height: 900px;
+    width: 600px;
+  }
+
+  #id_feedback {
+    width: 1100px;
+    height: 200px;
+    overflow-y: scroll;
+  }
+
+  #id_remarks {
+    width: 1100px;
+    height: 200px;
+  }
+
+  .card1 {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 96.2%;
+    min-height: 500px;
+    border-radius: 5px;
+    float: left;
+    margin-left: auto;
+    /* margin: auto;
+  text-align: center; */
+    overflow: hidden;
+    background-color: white;
+  }
+
+  #id_firstname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_lastname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    text-align: start;
+    font-size: 18px;
+  }
+
+  #id_student_email {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_year {
+    width: 200px;
+    height: 30px;
+    text-align: center;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_studnumber {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_mother_firstname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_mother_lastname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_mother_contact_number {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_address {
+    width: 180px;
+    height: 22px;
+    color: #3A3B3C;
+    font-size: 18px;
+  }
+
+  #id_father_firstname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_father_lastname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_father_contact_number {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_parents_email {
+    width: 180px;
+    height: 22px;
+    color: #3A3B3C;
+  }
+
+  #id_guardian_firstname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_guardian_lastname {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_guardian_contact_number {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  #id_student_contact_number {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    font-size: 18px;
+  }
+
+  .button {
+    margin: 0 auto;
+    width: 145px;
+    height: 35px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+    transform: translateY(-7px);
+  }
+
+  .message {
+    margin: 0 auto;
+    width: 300px;
+    height: 45px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #3c3c5c;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .parent_form {
+    column-gap: 10rem;
+  }
+</style>
+<div class="fac">
+  <button type="submit" class="buttonF">
+    <p style="margin: auto;">Edit Profile</p>
+  </button>
+</div>
+<br>
+<br>
+<div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
+    <p>
+      <b>{{message}} !</b>
+    </p>
+  </button> {% endfor %} </div>
+<div class="parent_form">
+  <form action="#" class="cleanForm" method="POST"> {% csrf_token %} <div class="column">
+      <div class="row">
+        <p>
+        <h3 style="font-size: 22.5px;">Student's Personal Information</h3>
+        </p>
+        <p class="pText">
+          <b class="bText">First Name: </b>{{info.firstname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Last Name: &nbsp;</b>{{info.lastname}}
+        </p>
+         <p class="pText">
+          <b class="bText">Middle Name: &nbsp;</b>{{info.middlename}}
+        </p>
+        <p class="pText">
+          <b class="bText">Student Number: &nbsp;</b>{{info.student_number}}
+        </p>
+        <br>
+        <br>
+        <h3 style="font-size: 22.5px;">*Required</h3>
+        <i style="font-size: 18px;">By No Means of Mother/Father, input N/A.</i>
+        <p>
+        <h3 style="font-size: 22.5px;">Mothers Personal Information</h3>
+        </p>
+        <p class="pText">
+          <b class="bText">Mother's Firstname: &nbsp;</b>{{info.mother_firstname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Mother's Lastname: &nbsp;</b> {{info.mother_lastname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Contact Number: <br>
+          </b> {{info.mother_contact_number}}
+        </p>
+        <br>
+        <br>
+        <p>
+        <h3 style="font-size: 22.5px;">Guardian Personal Information</h3>
+        </p>
+        <p class="pText">
+          <b class="bText">Guardian's Firstname: &nbsp;</b>{{info.guardian_firstname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Guardian's Lastname: &nbsp;</b> {{info.guardian_lastname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Contact Number: <br>
+          </b> {{info.guardian_contact_number}}
+        </p>
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="column">
+      <div class="row1">
+        <p class="pText">
+          <b class="bText">Year Level: <br>
+          </b>{{info.year}}
+        </p>
+        <p class="pText">
+          <b class="bText">Student Email: &nbsp;</b>{{info.student_email}}
+        </p>
+        <p class="pText">
+          <b class="bText">Student Contact Number: &nbsp;</b>{{info.student_contact_number}}
+        </p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="row1">
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>
+        <h3 style="font-size: 22.5px;">Fathers Personal Information</h3>
+        </p>
+        <p class="pText">
+          <b class="bText">Father's Lastname: &nbsp;</b> {{info.father_lastname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Father's Firstname: &nbsp;</b> {{info.father_firstname}}
+        </p>
+        <p class="pText">
+          <b class="bText">Contact Number: &nbsp;</b> {{info.father_contact_number}}
+        </p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+      </div>
+      <center>
+        <button class="button" style="font-weight: bold; color: #454545;">Submit</button>
+      </center>
+      <br>
+    </div>
+  </form>
+</div>
+<br>
+<br>
+<br> {% endblock %}

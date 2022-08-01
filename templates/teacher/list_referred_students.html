@@ -1,0 +1,271 @@
+{% extends "teacher/home.html" %} {% block title %} List of Referred Students {% endblock %} {% block content %} <style>
+  /* Table Styles */
+  .table-wrapper {
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    overflow-y: scroll;
+  }
+
+  .fl-table td,
+  .fl-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+  }
+
+  .fl-table thead th {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #98b4ac;
+  }
+
+  .fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+
+  tr:nth-child(odd):hover td {
+    background: #C1C3D1;
+  }
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .fl-table {
+      display: block;
+      width: 100%;
+    }
+
+    .table-wrapper:before {
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+      display: block;
+    }
+
+    .fl-table thead th:last-child {
+      border-bottom: none;
+    }
+
+    .fl-table thead {
+      float: left;
+    }
+
+    .fl-table tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+      padding: 20px .625em .625em .625em;
+      height: 80px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 20px;
+      text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+      display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+      background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .thkid {
+    font-size: 17px;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .choices {
+    text-align: center;
+       margin-left: 0 auto;
+    margin-right: 0 auto;
+  }
+
+  .center_title {
+    text-align: center;
+    margin-right: 20px;
+    font-size: 20px;
+  }
+
+  .button {
+    margin: 0 auto;
+    width: 96px;
+    height: 27px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #95B9C7;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #95B9C7;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+      transform: translateY(-3px);
+  }
+
+  #id_filter_choice {
+    min-width: 180px;
+  }
+
+  .parent_program {
+    text-align: left;
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+  }
+
+  tr:hover {
+    background-color: #E6E4E4;
+  }
+
+  #id_filter_choice {
+    height: 4.5vh;
+    width: fit-content;
+  }
+  .filter{
+    margin-left: 0 auto;
+    margin-right: 4vw;
+    font-size: 20px;
+  }
+</style>
+<div class="fac">
+  <button type="submit" class="buttonF">Referred Student </button>
+</div>
+<br>
+<br>
+<form method="POST"> {% csrf_token %} <div class="center_title">
+    <div class="filter">
+      <i>
+        <h4>Choose Filter: &nbsp; {{status|title}} </h4>
+      </i>
+    </div>
+  </div>
+  <div class="choices">
+    {{filterform.filter_choice}} &nbsp; <button type="submit" class="button">OK</button>
+  </div>
+</form>
+<br>
+<div class="table-wrapper">
+  <table class="fl-table">
+    <thead>
+      <tr>
+        <th class="thkid">Session Date</th>
+        <th class="thkid">ID Number</th>
+        <th class="thkid">Students Name</th>
+        <th class="thkid">Degree Program</th>
+        <th class="thkid">Status</th>
+        <th class="thkid">Information</th>
+      </tr>
+    </thead> {% for object in object_list reversed %} <tbody>
+      <tr>
+        <td style="font-size: 16px;" class="parent_program">{{object.date}}</td>
+        <td style="font-size: 16px;" class="parent_program">{{object.student_number}}</td>
+        <td style="font-size: 16px;" class="parent_program">{{object.lastname}}, &nbsp; {{object.firstname}}</td>
+        <td style="font-size: 16px;" class="parent_program">{{object.degree_program}}</td>
+        <td style="font-size: 16px;" class="parent_program">{{object.status|title}}</td>
+        <td style="font-size: 16px; color: black;" class="parent_program">
+          <a href="{% url 'detail_referred_student' object.id %}" style="font-weight: 550; color: black;">View More Information</a>
+        </td>
+      </tr>
+    <tbody> {% endfor %}
+  </table>
+  <div style="padding: 2px;"> {% if not object_list %} <center>
+      <p style="font-size: 16px;">
+        <b>No Students Yet!</b>
+      </p>
+    </center> {% endif %} </div>
+</div> {% endblock %}
