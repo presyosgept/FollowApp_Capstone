@@ -16,7 +16,11 @@ class Referral(models.Model):
             models.CharField(max_length=225)
         ), blank=True, null=True
     )
-    reasons = models.CharField(max_length=10000)
+    reasons = ArrayField(
+        ArrayField(
+            models.CharField(max_length=10000)
+        ), blank=True, null=True
+    )
     counselor_id = models.CharField(max_length=220, blank=True, null=True)
     faculty_id = ArrayField(
         ArrayField(

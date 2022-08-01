@@ -69,6 +69,8 @@ from followapp.views import(
     view_stat_by_degree_program,
     per_counselor,
     view_stat_by_counselor,
+    view_stat_by_counselor_with_date,
+    view_stat_by_degree_program_with_date,
 
     # counselor
     counselor_home_view,
@@ -84,6 +86,7 @@ from followapp.views import(
     counselor_view_feedback_with_date,
     detail_referred_student_with_feedback,
     counselor_view_schedule,
+
 
     # teacher
     teacher_home_view,
@@ -179,6 +182,12 @@ urlpatterns = [
          per_counselor, name="per_counselor"),
     path('director/view_stat_by_counselor/<str:counselor_id>',
          view_stat_by_counselor, name="view_stat_by_counselor"),
+    path('director/view_stat_by_counselor_with_date/<str:counselor_id>', view_stat_by_counselor_with_date,
+         name="view_stat_by_counselor_with_date"),
+    path('director/view_stat_by_degree_program_with_date/<str:degree>', view_stat_by_degree_program_with_date,
+         name="view_stat_by_degree_program_with_date"),
+
+
 
 
     # counselor
@@ -207,6 +216,7 @@ urlpatterns = [
          name='detail_referred_student_with_feedback'),
     path('counselor/counselor_view_schedule',
          counselor_view_schedule, name="counselor_view_schedule"),
+
 
 
     # teacher

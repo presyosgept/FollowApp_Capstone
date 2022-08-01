@@ -46,7 +46,6 @@ class AssignCounselorForm(forms.Form):
     faculty = forms.CharField(widget=forms.Select(choices=qs_code))
 
 
-
 class EditDegreeProgramForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditDegreeProgramForm, self).__init__(*args, **kwargs)
@@ -117,8 +116,6 @@ SEM_CHOICES = [
 class CheckSemForm(forms.Form):
     sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
 # Edit Data In admin
-
-
 
 
 # class SearchForm(forms.Form):
@@ -317,6 +314,12 @@ class CalendarForm(forms.ModelForm):
             'pickedDate': forms.SelectDateWidget()
         }
 
+
+class FilterDateForm(forms.Form):
+    pickedStartDate = forms.DateField(widget=forms.SelectDateWidget())
+    pickedEndDate = forms.DateField(widget=forms.SelectDateWidget())
+
+
 # class CalendarForm(forms.Form):
 #     pickedDate = forms.DateField(widget=forms.SelectDateWidget())
 # class FilterDateForm(forms.ModelForm):
@@ -330,30 +333,29 @@ class CalendarForm(forms.ModelForm):
 #             'pickedEndDate': DateInput(format='%m/%d/%Y')
 #         }
 TIME = (('--', '--'),
-        ('07:00 AM', '7:00 AM'), ('07:30 AM', '7:30 AM'),
-        ('08:00 AM', '8:00 AM'), ('08:30 AM', '8:30 AM'),
-        ('09:00 AM', '9:00 AM'), ('09:30 AM', '9:30 AM'),
-        ('10:00 AM', '10:00 AM'), ('10:30 AM', '10:30 AM'),
-        ('11:00 AM', '11:00 AM'), ('11:3 AM0', '11:30 AM'),
-        ('12:00 PM', '12:00 PM'), ('12:30 PM', '12:30 PM'),
-        ('01:00 PM', '1:00 PM'), ('01:30 PM', '1:30 PM'),
-        ('02:00 PM', '2:00 PM'), ('02:30 PM', '2:30 PM'),
-        ('03:00 PM', '3:00 PM'), ('03:30 PM', '3:30 PM'),
-        ('04:00 PM', '4:00 PM'), ('04:30 PM', '4:30 PM'),
-        ('05:00 PM', '5:00 PM'), ('05:30 PM', '5:30 PM'))
+        ('07:00', '7:00 AM'), ('07:30', '7:30 AM'),
+        ('08:00', '8:00 AM'), ('08:30', '8:30 AM'),
+        ('09:00', '9:00 AM'), ('09:30', '9:30 AM'),
+        ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
+        ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
+        ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
+        ('13:00', '1:00 PM'), ('13:30', '1:30 PM'),
+        ('14:00', '2:00 PM'), ('14:30', '2:30 PM'),
+        ('15:00', '3:00 PM'), ('15:30', '3:30 PM'),
+        ('16:00', '4:00 PM'), ('16:30', '4:30 PM'),
+        ('17:00', '5:00 PM'), ('17:30', '5:30 PM'))
 
 
 class SetScheduleCounselorForm(forms.ModelForm):
-    start_time = forms.CharField(widget=forms.Select(
+    start_time = forms.TimeField(widget=forms.Select(
         choices=TIME))
-    end_time = forms.CharField(widget=forms.Select(
+    end_time = forms.TimeField(widget=forms.Select(
         choices=TIME))
 
     class Meta:
         model = SetScheduleCounselor
-        fields = ['faculty_id', 'date',
-                  'start_time', 'end_time']
+        fields = ['date', 'start_time', 'end_time']
 
         widgets = {
-            'date': DateInput(format='%Y-%m-%d'),
+            'date': forms.SelectDateWidget()
         }
