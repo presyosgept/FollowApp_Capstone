@@ -14,21 +14,22 @@
 
       /*========== VARIABLES CSS ==========*/
       :root {
-        --header-height: 3.5rem;
+        --header-height: 6rem;
+        --nav-width: 259px;
         /*========== Colors ==========*/
-        --first-color: #4863A0;
+        --first-color: #fff;
         --first-color-light: #F4F0FA;
         --title-color: #19181B;
         --text-color: #58555E;
-        --navtext-color: #FFFFFF;
+        --navtext-color: #304434;
         --text-color-light: #A5A1AA;
         --body-color: #d8c090;
-        --nav-color: #98b4ac;
+        --nav-color: #e0b44c;
         --container-color: #FFFFFF;
         --card-color: #F9F6FD;
         --main1-color: #d8c090;
-        --dropdown: #4863A0;
-        --header-color: #98b4ac;
+        --dropdown: #fff;
+        --header-color: #304434;
         /*========== Font and typography ==========*/
         --body-font: 'Poppins', sans-serif;
         --normal-font-size: .938rem;
@@ -50,7 +51,7 @@
       }
 
       /*========== BASE ==========*/
-      *,
+     *,
       ::before,
       ::after {
         box-sizing: border-box;
@@ -272,6 +273,16 @@
         font-size: 15px;
       }
 
+        #id_middlename {
+        width: 400px;
+        height: 35px;
+        color: #3A3B3C;
+        border-radius: 20px;
+        text-align: start;
+        font-size: 15px;
+      }
+
+
       #id_student_email {
         width: 400px;
         height: 35px;
@@ -289,7 +300,7 @@
         font-size: 15px;
       }
 
-      #id_studnumber {
+      #id_student_number {
         width: 400px;
         height: 35px;
         color: #3A3B3C;
@@ -400,7 +411,7 @@
         letter-spacing: 2.5px;
         font-weight: 500;
         color: #000;
-        background-color: #d8c090;
+        background-color: #e0b44c;
         border: none;
         border-radius: 45px;
         box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -410,7 +421,7 @@
       }
 
       .button:hover {
-        background-color: #95B9C7;
+        background-color: #e0b44c;
         box-shadow: 0px 15px 20px #C9C0BB;
         color: #fff;
         transform: translateY(-7px);
@@ -422,11 +433,10 @@
     <!--========== HEADER ==========-->
     <header class="header">
       <div class="header__container">
-        <img style="height:50px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
-        <a style="font-weight: bold;margin-right:  auto; color: #FFFFFF;  font-family: 'Sawarabi Gothic', serif; 
-                letter-spacing: 2px;" href="#" class="header__logo">FOLLOW APP</a>
+        <img style="height:80px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
+        <a style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 30px;  " href="{% url 'counselor_home_view' %}" class="header__logo">FOLLOW APP</a>
         <div>
-          <p style="font-weight: bold; color: #FFFFFF;">Student Info Registration</p>
+          <p style="font-weight: bold; color: #FFFFFF; font-size: 23px;">Student Info Registration</p>
         </div>
       </div>
     </header>
@@ -450,9 +460,6 @@
           </p>
            <p class="pText">
             <b class="bText">Middle Name: &nbsp;</b>{{info.middlename}}
-          </p>
-          <p class="pText">
-            <b class="bText">Student Number: &nbsp;</b>{{info.student_number}}
           </p>
           <br>
           <br>
@@ -493,8 +500,7 @@
       <div class="column">
         <div class="row1">
           <p class="pText">
-            <b class="bText">Year Level: <br>
-            </b>{{info.year}}
+            <b class="bText">Student Number: &nbsp;</b>{{info.student_number}}
           </p>
           <p class="pText">
             <b class="bText">Student Email: &nbsp;</b>{{info.student_email}}

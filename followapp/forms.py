@@ -175,6 +175,11 @@ class CounselorFeedbackForm(forms.ModelForm):
 #         model = StudentSetSched
 #         fields = ['studnumber', 'firstname', 'lastname',  'reasons']
 
+
+class StudentSetSchedForm(forms.Form):
+    reasons = forms.CharField(widget=forms.Textarea)
+
+
 STATUS_CHOICES = (('--', '--'), ('all', 'All'), ('done', 'Done'),
                   ('pending', 'Pending'))
 

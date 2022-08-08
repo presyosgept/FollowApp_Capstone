@@ -288,7 +288,7 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     font-weight: 600;
-    color: #fff;
+    color: #000;
     background-color: #d8c090;
     border: none;
     border-radius: 8px;
@@ -338,8 +338,7 @@
     font-size: 16px;
     -webkit-transform: translate(0);
     transform: translate(0);
-    background-color: #d8c090;
-  
+    background-color: #304434;
     border-radius: 65px;
     box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
     -webkit-transition: box-shadow 0.25s;
@@ -348,7 +347,7 @@
   }
 
   .button:hover {
-    background-color: #95B9C7;
+    background-color: #304434;
     box-shadow: 0px 15px 20px #C9C0BB;
     color: #fff;
     transform: translateY(-3px);
@@ -479,7 +478,6 @@
           <p class="Pbox" style="text-align: justify; margin-left:8px;">
            {% for obj1 in object.reasons %}
         <b>{{obj1}}</b>
-        
         {% endfor %}
           </p>
     </div>
@@ -495,7 +493,7 @@
 </center>
 <br> {% else %} <center>
   <a href="{% url 'counselor_feedback_student' object.id %}">
-    <button class="button" style="font-weight: 800;  color: #454545;">Feedback</button>
+    <button class="button" style="font-weight: 800;  color: #fff;">Feedback</button>
   </a>
 </center>
 <br>

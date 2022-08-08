@@ -9,22 +9,22 @@
     <!-- <link rel="stylesheet" href="assets/css/styles.css"> -->
     <style>
       :root {
-        --header-height: 3.5rem;
-        --nav-width: 250px;
+        --header-height: 6rem;
+        --nav-width: 259px;
         /*========== Colors ==========*/
-        --first-color: #4863A0;
+        --first-color: #fff;
         --first-color-light: #F4F0FA;
         --title-color: #19181B;
         --text-color: #58555E;
-        --navtext-color: #FFFFFF;
+        --navtext-color: #304434;
         --text-color-light: #A5A1AA;
         --body-color: #d8c090;
-        --nav-color: #98b4ac;
+        --nav-color: #e0b44c;
         --container-color: #FFFFFF;
-        --card-color: #E9E4D4;
+        --card-color: #F9F6FD;
         --main1-color: #d8c090;
-        --dropdown: #4863A0;
-        --header-color: #98b4ac;
+        --dropdown: #fff;
+        --header-color: #304434;
         /*========== Font and typography ==========*/
         --body-font: 'Poppins', sans-serif;
         --normal-font-size: .938rem;
@@ -280,13 +280,8 @@
         }
       }
 
-      /* @media screen { 
-  .divNotif{
-      margin: var(--header-height) 0 0 0 0 0 auto;
-        max-width: 85%;
-        width: 960px;
-  }
-} */
+
+      
       @media screen and (min-width: 768px) {
         body {
           padding: 1rem 3rem 0 6rem;
@@ -336,7 +331,9 @@
 
         /* Element opacity */
         .nav__logo-name {
-          font-size: 20px;
+          font-size: 25px;
+          word-spacing: 2vw;
+          margin-left: 2vw;
         }
 
         .nav__name,
@@ -369,194 +366,7 @@
         }
       }
 
-      /*===== CARD CARD CARD =====*/
-      .card1 {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        width: 102%;
-        min-height: 530px;
-        border-radius: 5px;
-        background-color: var(--card-color);
-        float: center;
-        margin: auto;
-        /* margin-left: 80px;  */
-        text-align: center;
-        overflow-x: scroll;
-      }
-
-      .CNotifCard {
-        transition: 0.3s;
-        height: 60px;
-        width: 750px;
-        border-radius: 5px;
-        background-color: transparent;
-        float: center;
-        /* margin-top: 10px;
-  margin-bottom: 35px; */
-        margin-right: 25px;
-        margin-left: 250px;
-        text-align: center;
-        box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
-      }
-
-      .manualCard {
-        transition: 0.3s;
-        height: 300px;
-        border-radius: 5px;
-        background-color: var(--body-color);
-        float: center;
-        /* margin-top: 10px;
-  margin-bottom: 35px; */
-        margin-right: 25px;
-        margin-left: 25px;
-        text-align: center;
-      }
-
-      .refCard {
-        transition: 0.3s;
-        height: 300px;
-        border-radius: 5px;
-        background-color: var(--body-color);
-        float: center;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        margin-right: 25px;
-        margin-left: 25px;
-        text-align: center;
-      }
-
-      .card2 {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        width: 98%;
-        height: 500px;
-        border-radius: 5px;
-        background-color: var(--container-color);
-        float: center;
-        margin-top: 10px;
-        margin-bottom: 35px;
-        margin-right: 90px;
-        margin-left: 25px;
-        text-align: center;
-        overflow-x: scroll;
-      }
-
-      .card2:hover {
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-      }
-
-      /*===== CONTENT CONTENT =====*/
-      /* .divHome{
-  margin: var(--header-height) 0 0 0;
-  padding: 1rem 1rem 0;
-  font-family: var(--body-font);
-  font-size: var(--normal-font-size);
-  background-color: yellow;
-} */
-      .divNotif {
-        max-width: 85%;
-        width: 960px;
-        margin: 0 auto;
-      }
-
-      .table {
-        width: 96%;
-        border-collapse: separate;
-        border-spacing: 0 12px;
-        align-content: center;
-        margin-top: 10px;
-        margin-bottom: 35px;
-        margin-right: 90px;
-        margin-left: 25px;
-      }
-
-      .table thead {
-        background-color: var(--body-color);
-        box-shadow: 5px 6px 8px rgba(0, 0, 0, .4);
-      }
-
-      .table thead tr th {
-        font-size: 14px;
-        letter-spacing: 0.35px;
-        opacity: 1;
-        padding: 12px;
-        vertical-align: top;
-        border: 1px solid;
-      }
-
-      .table tbody tr td {
-        font-size: 14px;
-        letter-spacing: 0.35px;
-        font-weight: normal;
-        color: black;
-        text-align: center;
-        padding: 8px;
-        border: 1px solid;
-      }
-
-      .table tbody tr td .btn {
-        width: 130px;
-        text-decoration: none;
-        line-height: 35px;
-        display: inline-block;
-        background-color: var(--body-color);
-        font-weight: var(--font-medium);
-        text-align: center;
-        vertical-align: middle;
-        user-select: none;
-        border: 1px solid transparent;
-        opacity: 1;
-      }
-
-      @media (max-width: 768px) {
-        .table thead {
-          display: none;
-        }
-
-        .table,
-        .table tbody,
-        .table tr,
-        .table td {
-          display: block;
-          width: 100%;
-        }
-
-        .table tr {
-          margin-bottom: 15px;
-        }
-
-        .table tbody tr td {
-          text-align: right;
-          padding-left: 50%;
-          position: relative;
-        }
-
-        .table td:before {
-          content: attr(data-label);
-          position: absolute;
-          left: 0;
-          width: 50%;
-          padding-left: 15px;
-          font-weight: 600;
-          font-size: 14px;
-          text-align: left;
-        }
-      }
-
-      table,
-      th,
-      td {
-        margin-left: auto;
-        margin-right: auto;
-        /* border: 1px solid black; */
-        border-collapse: collapse;
-      }
-
-      th,
-      td {
-        padding: 5px;
-        text-align: center;
-      }
+      
 
       .nav__container::-webkit-scrollbar {
         display: none;
@@ -671,17 +481,19 @@
         vertical-align: middle;
       }
 
-      .cards {
+      /* .cards {
         display: flex;
         margin-left: auto;
         flex-direction: row;
         flex-wrap: wrap;
-      }
-
+      } */
       .cards_item {
-        display: flex;
-        flex-direction: row;
-        padding: 10px;
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: #d4d8d8;
+        padding: 8px;
+        border-radius: 5px;
         /* this */
       }
 
@@ -693,7 +505,8 @@
 
       @media (min-width: 56rem) {
         .cards_item {
-          width: 55%;
+          width: 91vw;
+          height: 65vh;
         }
       }
 
@@ -726,6 +539,106 @@ margin-left: 100px; */
         margin-bottom: 1.25rem;
         font-weight: 400;
       }
+      .nav__icon_color {
+        color: #ffffff;
+        font-size: 40px;
+      }
+      .nav__icon_user{
+        font-size: 100px;
+      }
+      
+      .box-menu{
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #304434;
+        color: #ffffff;
+        height: 7vh;
+        width: 57vw;
+        margin: 0 auto;
+      }      
+
+      .box-text{
+        font-size: 25px; 
+        margin-top: 1vh; 
+        margin-bottom: 1vh;
+        text-align: center; 
+        margin-left: 1vw;
+      }
+      .cards{
+  display:flex; 
+  flex-direction: row; 
+  margin-top: 10vh;
+  gap: 2vw;
+}
+
+  /* /////////// NEW CARD /////////// */
+  .card{
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+  padding: 14px 80px 18px 36px;
+  cursor: pointer;
+}
+
+.card:hover{
+     transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+.card h3{
+  font-weight: 600;
+}
+
+.card img{
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  max-height: 120px;
+}
+
+.card-1{
+  background-image: url(https://ionicframework.com/img/getting-started/ionic-native-card.png);
+  background-color: #304434;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+    flex: 1;
+    height: 30vh;
+    width: 14.5vw;
+
+
+}
+
+.card-2{
+   background-image: url(https://ionicframework.com/img/getting-started/components-card.png);
+   background-color: #304434;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+    flex: 1;
+    height: 30vh;
+    width: 14.5vw;
+
+    
+}
+
+.card-3{
+   background-image: url(https://ionicframework.com/img/getting-started/theming-card.png);
+   background-color: #304434;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+    flex: 1;
+    height: 30vh;
+    width: 14.5vw;
+}
+
+@media(max-width: 990px){
+  .card{
+    margin: 20px;
+  }
+} 
     </style>
     <title>Follow App Counselor</title>
   </head>
@@ -733,10 +646,15 @@ margin-left: 100px; */
     <!--========== HEADER ==========-->
     <header class="header">
       <div class="header__container">
-        <img style="height:50px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
-        <a style="font-weight: bold; margin-right:  auto; color: #FFFFFF; " href="{% url 'counselor_home_view' %}" class="header__logo">FOLLOW APP</a>
+        <img style="height:80px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
+        <a style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 30px;  " href="{% url 'counselor_home_view' %}" class="header__logo">FOLLOW APP</a>
         <div>
-          <p style="font-weight: bold; color: #FFFFFF; font-size: 21px; "> {{form.firstname }} {{form.lastname }} </p>
+          <a href="{% url 'counselor_home_view' %}" style="margin-right: 2vw;">
+            <i class='bx bx-home-heart nav__icon_color'></i>
+          </a>
+        </div>
+        <div>
+          <p style="font-weight: bold; color: #FFFFFF; font-size: 23px; "> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}}</p>
         </div>
       </div>
     </header>
@@ -744,15 +662,14 @@ margin-left: 100px; */
     <div class="nav" id="navbar">
       <nav class="nav__container">
         <div>
+          <div style="margin-left: 3vw;">
+            <i class='bx bx-user-circle nav__icon_user'></i>
+          </div>
           <a href="{% url 'counselor_home_view' %}" class="nav__link nav__logo">
-            <i class='bx bx-user nav__icon'></i>
             <span class="nav__logo-name">COUNSELOR</span>
           </a>
           <div class="nav__list">
             <div class="nav__items">
-              <a href="{% url 'counselor_home_view' %}">
-                <h3 class="nav__subtitle">{{request.session.username}}</h3>
-              </a>
               <a href="{% url 'counselor_notifications' %}" class="nav__link">
                 <i class='bx bx-bell nav__icon'></i>
                 <span class="nav__name">Notifications {{counselorNotif}} </span>
@@ -771,7 +688,7 @@ margin-left: 100px; */
                 </div>
               </div>
               <a href="{% url 'counselor_set_schedule' %}" class="nav__link">
-                <i class='bx bx-calendar nav__icon'></i>
+                <i class='bx bx-calendar-edit nav__icon'></i>
                 <span class="nav__name">Set Schedule</span>
               </a>
               <a href="{% url 'counselor_view_schedule' %}" class="nav__link">
@@ -803,68 +720,53 @@ margin-left: 100px; */
         </div>
         <br>
         <div class="cards_item">
-          <a href=#>
-            <div class="card">
-              <div class="card_image">
-                <img class="image_card" src="https://media.istockphoto.com/vectors/vector-illustration-in-flat-simple-style-online-psychological-help-vector-id1256551538?k=20&m=1256551538&s=612x612&w=0&h=TUertl_YRw9L55yi0XQtmD2Z1hkYCVzAQUML9uFIL9M=">
-              </div>
-              <div class="card_content">
-                <h2 class="card_title">Notifications</h2>
-              </div>
-            </div>
-          </a>
           <br>
-          <a href=#>
-            <div class="card">
-              <div class="card_image">
-                <img class="image_card" src="https://media.istockphoto.com/vectors/vector-illustration-in-flat-simple-style-online-psychological-help-vector-id1252391886?k=20&m=1252391886&s=612x612&w=0&h=gV16EIdD24s8mRlKIkecAkLcvSwZjSAV1DjC_jIPPws=">
-              </div>
-              <div class="card_content">
-                <h2 class="card_title">Referral</h2>
-              </div>
-            </div>
-          </a>
-          <br>
-          <a href=#>
-            <div class="card">
-              <div class="card_image">
-                <img class="image_card" src="https://media.istockphoto.com/vectors/vector-illustration-in-flat-simple-style-online-psychological-help-vector-id1256551538?k=20&m=1256551538&s=612x612&w=0&h=TUertl_YRw9L55yi0XQtmD2Z1hkYCVzAQUML9uFIL9M=">
-              </div>
-              <div class="card_content">
-                <h2 class="card_title">Schedules</h2>
-              </div>
-            </div>
-          </a>
-          <br>
-          <a href=#>
-            <div class="card">
-              <div class="card_image">
-                <img class="image_card" src="https://media.istockphoto.com/vectors/vector-illustration-in-flat-simple-style-online-psychological-help-vector-id1252391886?k=20&m=1252391886&s=612x612&w=0&h=gV16EIdD24s8mRlKIkecAkLcvSwZjSAV1DjC_jIPPws=">
-              </div>
-              <div class="card_content">
-                <h2 class="card_title">Feedbacks</h2>
-              </div>
-            </div>
-          </a>
-          <br>
-        </div>
-        <br>
-        <div style="display: flex;flex-direction:row;
-       flex-wrap:wrap-reverse;">
-          <div style="margin: auto; float: center; line-height: 4vh; width: fit-content; margin-bottom: 3vh; font-size: 18px;">
-            <label>
-              <h2><b>COUNSELOR</b></h2>
-              They advocate for students and work with other individuals and organizations to promote 
-the academic, career, personal, and social development of children and youth. 
-School counselors help students evaluate their abilities, interests, talents, 
-and personalities to develop realistic academic and career goals. 
-Counselors use interviews, counseling sessions, interest and aptitude
- assessment tests, and other methods to evaluate and advise students.
- They also operate career information centers and career education 
- programs. Often, counselors work with students 
-who have academic and social development problems or other special needs.
-            </label>
+          <div class="box-menu">
+            <div class="box-text">Counselor Box Menu</div>
           </div>
+          <div class="cards">
+            <a href="{% url 'view_referred_students' %}">
+              <div class="col-md-4">
+                <div class="card card-1">
+                  <h3 style="color: #e0b44c;">List of Referrals</h3>
+                  <p style="color: #e0b44c;">Display list of reffered students</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'view_pending_referred_students' %}">
+              <div class="col-md-4">
+                <div class="card card-1">
+                  <h3 style="color: #e0b44c;">List of Pending Referrals</h3>
+                  <p style="color: #e0b44c;">Fix</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'counselor_set_schedule' %}" >
+              <div class="col-md-4">
+                <div class="card card-3">
+                  <h3 style="color: #e0b44c;">Set Schedule</h3>
+                  <p style="color: #e0b44c;">Fix</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'counselor_view_schedule' %}">
+              <div class="col-md-4">
+                <div class="card card-1">
+                  <h3 style="color: #e0b44c;">Schedules</h3>
+                  <p style="color: #e0b44c;">Fix.</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'counselor_view_feedback' %}">
+              <div class="col-md-4">
+                <div class="card card-3">
+                  <h3 style="color: #e0b44c;">Feedbacks</h3>
+                  <p style="color: #e0b44c;">Fix.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <br>
         </div> 
         {% endblock %}
       </section>

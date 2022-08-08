@@ -86,6 +86,7 @@ from followapp.views import(
     counselor_view_feedback_with_date,
     detail_referred_student_with_feedback,
     counselor_view_schedule,
+    another_counselor_view_schedule,
 
 
     # teacher
@@ -104,6 +105,9 @@ from followapp.views import(
     student_history,
     student_notifications,
     student_notification_detail,
+    student_view_schedule,
+    student_set_schedule,
+    another_student_view_schedule,
 
 )
 
@@ -216,6 +220,8 @@ urlpatterns = [
          name='detail_referred_student_with_feedback'),
     path('counselor/counselor_view_schedule',
          counselor_view_schedule, name="counselor_view_schedule"),
+    path('counselor/another_counselor_view_schedule',
+         another_counselor_view_schedule, name="another_counselor_view_schedule"),
 
 
 
@@ -246,6 +252,14 @@ urlpatterns = [
          student_notifications, name="student_notifications"),
     path('student/student_notification_detail/?P:<int:id>', student_notification_detail,
          name='student_notification_detail'),
+    path('student/student_view_schedule',
+         student_view_schedule, name="student_view_schedule"),
+    path('student/another_student_view_schedule',
+         another_student_view_schedule, name="another_student_view_schedule"),
+    path('student/student_set_schedule',
+         student_set_schedule, name="student_set_schedule"),
+
+
 
     path('admin/', admin.site.urls),
 ]

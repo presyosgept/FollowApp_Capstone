@@ -12,22 +12,22 @@
       /*========== GOOGLE FONTS ==========*/
       /*========== VARIABLES CSS ==========*/
       :root {
-        --header-height: 3.5rem;
+        --header-height: 6rem;
         --nav-width: 250px;
         /*========== Colors ==========*/
-        --first-color: #4863A0;
+        --first-color: #fff;
         --first-color-light: #F4F0FA;
         --title-color: #19181B;
-        --text-color: #58555E;
-        --navtext-color: #FFFFFF;
+        --text-color: #304434;
+        --navtext-color: #304434;
         --text-color-light: #A5A1AA;
         --body-color: #d8c090;
-        --nav-color: #98b4ac;
+        --nav-color: #e0b44c;
         --container-color: #E9E4D4;
         --card-color: #F9F6FD;
         --main1-color: #d8c090;
-        --dropdown: #4863A0;
-        --header-color: #98b4ac;
+        --dropdown: #fff;
+        --header-color: #304434;
         /*========== Font and typography ==========*/
         --body-font: 'Poppins', sans-serif;
         --normal-font-size: .938rem;
@@ -340,7 +340,9 @@
 
         /* Element opacity */
         .nav__logo-name {
-          font-size: 20px;
+          font-size: 25px;
+          word-spacing: 2vw;
+          margin-left: 2vw;
         }
 
         .nav__name,
@@ -598,7 +600,7 @@
 
       .card_content {
         padding: 1rem;
-        background: #98b4ac;
+        background: #304434;
       }
 
       .card_title {
@@ -798,6 +800,13 @@
         font-size: 20px;
         font-weight: 500;
       }
+      .nav__icon_color {
+        color: #ffffff;
+        font-size: 40px;
+      }
+      .nav__icon_user{
+        font-size: 100px;
+      }
     </style>
     <title>Follow App Teacher</title>
   </head>
@@ -805,10 +814,15 @@
     <!--========== HEADER ==========-->
     <header class="header">
       <div class="header__container">
-        <img style="height:50px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
-        <a style="font-weight: bold; margin-right: auto; color: #FFFFFF; " href="{% url 'teacher_home_view' %}" class="header__logo">FOLLOW APP</a>
+        <img style="height:80px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
+        <a style="font-weight: bold; margin-right: auto; color: #FFFFFF; font-size: 30px;" href="{% url 'teacher_home_view' %}" class="header__logo">FOLLOW APP</a>
         <div>
-          <p style="font-weight: bold;color: #FFFFFF; "> {{form.firstname }} {{form.lastname }} </p>
+          <a href="{% url 'teacher_home_view' %}" style="margin-right: 2vw;">
+            <i class='bx bx-home-heart nav__icon_color'></i>
+          </a>
+        </div>
+        <div>
+          <p style="font-weight: bold;color: #FFFFFF; font-size: 23px; "> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}}</p>
         </div>
       </div>
     </header>
@@ -816,13 +830,14 @@
     <div class="nav" id="navbar">
       <nav class="nav__container">
         <div>
+          <div style="margin-left: 3vw;">
+            <i class='bx bx-user-circle nav__icon_user'></i>
+          </div>
           <a href="{% url 'teacher_home_view' %}" class="nav__link nav__logo">
-            <i class='bx bx-user nav__icon'></i>
             <span class="nav__logo-name">TEACHER</span>
           </a>
           <div class="nav__list">
             <div class="nav__items">
-              <h3 class="nav__subtitle">{{request.session.username}}</h3>
               <a href="{% url 'teacher_notifications' %}" class="nav__link">
                 <i class='bx bx-bell nav__icon'></i>
                 <span class="nav__name">Notifications {{teacherNotif}} </span>
@@ -841,8 +856,9 @@
     </div>
     <div class="custom-scrollbar">
       <br> {% block content %} <br>
+      <br>
       <div id="bgslider">
-          <figure>
+          <figure  style="margin-top: 3vh;">
             <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
             <img src="https://sscrmnl.edu.ph/wp-content/themes/sscr-manila/library/images/usjr_gc.jpg" alt="Slider">
             <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">

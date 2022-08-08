@@ -63,7 +63,7 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     font-weight: 600;
-    color: #fff;
+    color: #000;
     background-color: #d8c090;
     border: none;
     border-radius: 8px;
@@ -270,8 +270,8 @@
   <div class="student">
     <div>Student Name: <b class="student-details">{{get_student.lastname}}, {{get_student.firstname}} {{get_student.middlename}}</b></div>
     <div>Student ID: <b class="student-details">{{get_student.student_number}}</b></div>
-    <div>Degree Program: <b class="student-details">{{get_student.program_code_id}} - full name</b></div>
-   <div>Year Level: <b class="student-details">{{get_student.year}} - missing</b></div>
+    <div>Degree Program: <b class="student-details">{{get_student.program_code_id}} - {{get_degree_name.program_name}}</b></div>
+ 
   </div>
 
   <!-- <table class="fl-table">

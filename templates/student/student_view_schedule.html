@@ -1,0 +1,36 @@
+{% extends "student/home.html" %} {% block title %} Notifications {% endblock %} {% block content %}
+
+
+<form method="POST" action="{% url 'another_student_view_schedule' %}"> {% csrf_token %} <div class="center_title">
+    <p>
+      <i>
+           <p style="font-size: 19px;"><b>To view a Schedule of Counseling, select the date below.</b></p>
+      </i>
+    </p>
+  </div>
+  <div class="center">
+    {{ offer.pickedDate }}
+    <button type="submit" class="button">Submit</button>
+  </div>
+</form> <br>
+
+  {% for obj in time %} 
+       <br>{{obj.time1}} - {{obj.time2}} 
+        {% for object in schedForToday %} 
+          {% if obj.time1|safe == object.start_time|safe or obj.time2|safe == object.start_time|safe  %}
+              
+                  {{object.choice}} 
+             
+          {% endif %}
+          {% if obj.time1|safe == object.end_time|safe or obj.time2|safe == object.end_time|safe  %}
+             
+                  {{object.choice}} 
+              
+          {% endif %}
+    {% endfor %} {% endfor %}
+   
+
+
+
+
+ {% endblock %}

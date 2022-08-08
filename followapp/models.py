@@ -36,8 +36,9 @@ class Referral(models.Model):
                         ('TARDINESS', 'TARDINESS'), ('DISRESPECTFUL', 'DISRESPECTFUL'),
                         ('BAD ATTITUDE', 'BAD ATTITUDE'), ('OTHERS', 'OTHERS'))
     behavior_problem = MultiSelectField(
-        max_length=220, choices=BEHAVIOR_PROBLEM)
+        max_length=220, choices=BEHAVIOR_PROBLEM, blank=True, null=True)
     feedback = models.CharField(max_length=10000, blank=True, null=True)
+    choice = models.CharField(max_length=220, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Referral"
@@ -365,10 +366,10 @@ class Calendar(models.Model):
 #         verbose_name_plural = "FilterDate"
 
 
-# class NewTime(models.Model):
-#     time_id = models.CharField(max_length=220, primary_key=True)
-#     time1 = models.TimeField()
-#     time2 = models.TimeField()
+class NewTime(models.Model):
+    time_id = models.CharField(max_length=220, primary_key=True)
+    time1 = models.TimeField()
+    time2 = models.TimeField()
 
-#     class Meta:
-#         verbose_name_plural = "NewTime"
+    class Meta:
+        verbose_name_plural = "NewTime"
