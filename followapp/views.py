@@ -1139,15 +1139,17 @@ def view_stat_by_counselor_with_date(request, counselor_id):
 # counselor
 @login_required(login_url='login')
 def counselor_home_view(request, *args, **kwargs):
-    global counselorNotif
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     return render(request, "counselor/home.html", {"counselorNotif": counselorNotif, "form": counselor_name})
 
 
 @login_required(login_url='login')
 def view_referred_students(request):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     qs = Referral.objects.filter(counselor_id=user, status='done')
@@ -1156,7 +1158,8 @@ def view_referred_students(request):
 
 @login_required(login_url='login')
 def view_pending_referred_students(request):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     qs = Referral.objects.filter(counselor_id=user, status='pending')
@@ -1165,7 +1168,8 @@ def view_pending_referred_students(request):
 
 @login_required(login_url='login')
 def detail_referred_student_counselor(request, id):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     qs = Referral.objects.get(id=id)
@@ -1175,7 +1179,8 @@ def detail_referred_student_counselor(request, id):
 
 @login_required(login_url='login')
 def counselor_set_schedule(request, *args, **kwargs):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     offer = SetScheduleCounselorForm()
@@ -1601,7 +1606,8 @@ def counselor_notifications(request):
 
 @login_required(login_url='login')
 def counselor_notification_detail(request, id):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notification = Notification.objects.get(id=id)
@@ -1631,8 +1637,9 @@ def counselor_notification_detail(request, id):
 @login_required(login_url='login')
 def counselor_feedback_student(request, id):
     global teacherNotif
-    global counselorNotif
     global feedback_id
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     info = Notification.objects.get(id=id)
@@ -1663,9 +1670,10 @@ def counselor_feedback_student(request, id):
 @login_required(login_url='login')
 def counselor_feedback(request, id):
     # problem here
-    global counselorNotif
     global teacherNotif
     global feedback_id
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     check = Referral.objects.all()
@@ -1705,8 +1713,9 @@ def counselor_feedback(request, id):
 
 @login_required(login_url='login')
 def counselor_view_feedback(request):
-    global counselorNotif
     global Search
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     student = Referral.objects.filter(counselor_id=user, status='done')
@@ -1722,8 +1731,9 @@ def counselor_view_feedback(request):
 
 @login_required(login_url='login')
 def counselor_view_feedback_with_date(request, date):
-    global counselorNotif
     global Search
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     student = Referral.objects.filter(
@@ -1740,7 +1750,8 @@ def counselor_view_feedback_with_date(request, date):
 
 @login_required(login_url='login')
 def detail_referred_student_with_feedback(request, id):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     qs = Referral.objects.get(id=id)
@@ -1749,7 +1760,8 @@ def detail_referred_student_with_feedback(request, id):
 
 @login_required(login_url='login')
 def counselor_view_schedule(request, *args, **kwargs):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     global count
     offer = CalendarForm()
     if request.method == "POST":
@@ -2147,7 +2159,8 @@ def counselor_view_schedule(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def another_counselor_view_schedule(request, *args, **kwargs):
-    global counselorNotif
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
     global count
     offer = CalendarForm()
     if request.method == "POST":
@@ -2639,8 +2652,6 @@ def detail_referred_student(request, id):
 
 @login_required(login_url='login')
 def referral(request, studentReferredId, offer_no):
-    global counselorNotif
-    global studentNotif
     global teacherNotif
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
@@ -3213,8 +3224,6 @@ def referral(request, studentReferredId, offer_no):
                             studentInfo.save()
                             create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
                                 studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
-                            counselorNotif = counselorNotif + 1
-                            studentNotif = studentNotif + 1
                         referral_form = ReferralForm(request.POST, initial={
                             'student_number': studentReferred.student_number,
                             'firstname': studentReferred.firstname,
@@ -3280,7 +3289,6 @@ def student_add_information(request, *args, **kwargs):
     student_name = Student.objects.get(student_number=user)
     infoForm = StudentAdditionalInformationForm(instance=student_name)
     if request.method == "POST":
-        print('aaaa')
         infoForm = StudentAdditionalInformationForm(
             request.POST, instance=student_name)
         print(infoForm.errors)
@@ -3315,7 +3323,8 @@ def student_add_information(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def student_home_view(request, *args, **kwargs):
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     return render(request, "student/home.html", {"studentNotif": studentNotif, "form": student_name})
@@ -3323,7 +3332,8 @@ def student_home_view(request, *args, **kwargs):
 
 @login_required
 def student_notifications(request):
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     goto = request.GET.get('goto', '')
@@ -3345,7 +3355,8 @@ def student_notifications(request):
 
 @login_required
 def student_notification_detail(request, id):
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     notification = Notification.objects.get(id=id)
@@ -3367,7 +3378,8 @@ def student_notification_detail(request, id):
 
 @login_required(login_url='login')
 def edit_information(request, *args, **kwargs):
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = StudentAdditionalInformation.objects.get(
         student_number=user)
@@ -3406,7 +3418,8 @@ def edit_information(request, *args, **kwargs):
 
 @login_required
 def student_history(request):
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     student_record = Referral.objects.filter(
@@ -3419,7 +3432,8 @@ def student_history(request):
 def student_view_schedule(request, *args, **kwargs):
     global count1
     count1 = 0
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     today = date.today()
@@ -3515,7 +3529,8 @@ def student_view_schedule(request, *args, **kwargs):
 def another_student_view_schedule(request, *args, **kwargs):
     global count1
     count1 = 0
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     newDate = Calendar.objects.last()
@@ -3610,8 +3625,8 @@ def another_student_view_schedule(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def student_set_schedule(request, *args, **kwargs):
-    global counselorNotif
-    global studentNotif
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     schedForm = StudentSetSchedForm()
@@ -3620,11 +3635,9 @@ def student_set_schedule(request, *args, **kwargs):
         program_code=studentReferred.program_code_id)
     degree_program_student_referred = degree.program_code
     if request.method == "POST":
-        print('aaaaa')
         schedForm = StudentSetSchedForm(request.POST)
         print(schedForm.errors)
         if schedForm.is_valid():
-            print('bbbbb')
             today = date.today()
             now = dt.datetime.now()
             classes_counselor = []
@@ -4125,8 +4138,6 @@ def student_set_schedule(request, *args, **kwargs):
                             studentInfo.save()
                             create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
                                 studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
-                            counselorNotif = counselorNotif + 1
-                            studentNotif = studentNotif + 1
                         else:
                             list_reasons = [reasons]
                             for obj1 in check_if_exist.reasons:
