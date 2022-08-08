@@ -1814,28 +1814,26 @@ def counselor_view_schedule(request, *args, **kwargs):
     start = datetime.strptime('7:00:00', '%H:%M:%S').time()
     end = datetime.strptime('18:00:00', '%H:%M:%S').time()
     check = datetime.strptime('00:00:00', '%H:%M:%S').time()
-    d = datetime.strptime("8:30", "%H:%M")
-    with_ampm = d.strftime("%I:%M %p")
-    if str(with_ampm[1:]) in '8:00 am - 8:30 am':
-        print('AHDKOG', with_ampm)
-    else:
-        print('hehehehe', with_ampm[1:])
-    try:
-        check = NewTime.objects.get(time_id='12')
-        exist = True
-    except:
-        exist = False
-    if exist == False:
-        initialtime = 7
-        newTime = str(initialtime)+':00:00'
-        for x in range(12):
+    
+    initialtime = 7
+    id = 0
+    for x in range(12):
+            id +=1
             newTime = str(initialtime)+':00:00'
             time1 = datetime.strptime(newTime, '%H:%M:%S').time()
             newTime = str(initialtime)+':30:00'
             time2 = datetime.strptime(newTime, '%H:%M:%S').time()
             initialtime += 1
-            time = NewTime(time_id=x+1, time1=time1, time2=time2)
+            time = NewTime(time_id=id, time1=time1, time2=time2)
             time.save()
+            flag=1
+            while(flag==1):
+                id +=1
+                newTime = str(initialtime)+':00:00'
+                next_time = datetime.strptime(newTime, '%H:%M:%S').time()
+                time = NewTime(time_id=id, time1=time2, time2=next_time)
+                time.save()
+                flag=0
     alltime = NewTime.objects.all()
     if(classes_counselor_checker == True and referral_list_byday_checker == True and not_available_sched_checker == True):
         print('1')
@@ -2216,22 +2214,25 @@ def another_counselor_view_schedule(request, *args, **kwargs):
     end = datetime.strptime('18:00:00', '%H:%M:%S').time()
     check = datetime.strptime('00:00:00', '%H:%M:%S').time()
 
-    try:
-        check = NewTime.objects.get(time_id='12')
-        exist = True
-    except:
-        exist = False
-    if exist == False:
-        initialtime = 7
-        newTime = str(initialtime)+':00:00'
-        for x in range(12):
+    initialtime = 7
+    id = 0
+    for x in range(12):
+            id +=1
             newTime = str(initialtime)+':00:00'
             time1 = datetime.strptime(newTime, '%H:%M:%S').time()
             newTime = str(initialtime)+':30:00'
             time2 = datetime.strptime(newTime, '%H:%M:%S').time()
             initialtime += 1
-            time = NewTime(time_id=x+1, time1=time1, time2=time2)
+            time = NewTime(time_id=id, time1=time1, time2=time2)
             time.save()
+            flag=1
+            while(flag==1):
+                id +=1
+                newTime = str(initialtime)+':00:00'
+                next_time = datetime.strptime(newTime, '%H:%M:%S').time()
+                time = NewTime(time_id=id, time1=time2, time2=next_time)
+                time.save()
+                flag=0
     alltime = NewTime.objects.all()
     if(classes_counselor_checker == True and referral_list_byday_checker == True and not_available_sched_checker == True):
         print('1')
@@ -3448,10 +3449,10 @@ def student_view_schedule(request, *args, **kwargs):
                 check = bool(
                     day_name[0].upper() in get_school_days.school_days)
             if(check == True):
-                classes_of_student.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                           subject_title=object.subject_title, school_days=object.school_days,
-                                                           school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                           department_code=object.department_code, faculty_id=object.faculty_id))
+                classes_of_student.append(SubjectOfferings(offer_no=get_school_days.offer_no, subject_code=get_school_days.subject_code,
+                                                           subject_title=get_school_days.subject_title, school_days=get_school_days.school_days,
+                                                           school_time=get_school_days.school_time, sem_id=get_school_days.sem_id, academic_year=get_school_days.academic_year,
+                                                           department_code=get_school_days.department_code, faculty_id=get_school_days.faculty_id))
 
     referral_list_byday = Referral.objects.filter(
         student_number=user, date=today).order_by('start_time')
@@ -3474,23 +3475,25 @@ def student_view_schedule(request, *args, **kwargs):
     start = datetime.strptime('8:00:00', '%H:%M:%S').time()
     end = datetime.strptime('17:00:00', '%H:%M:%S').time()
     check = datetime.strptime('00:00:00', '%H:%M:%S').time()
-
-    try:
-        check = NewTime.objects.get(time_id='12')
-        exist = True
-    except:
-        exist = False
-    if exist == False:
-        initialtime = 7
-        newTime = str(initialtime)+':00:00'
-        for x in range(12):
+    initialtime = 7
+    id = 0
+    for x in range(12):
+            id +=1
             newTime = str(initialtime)+':00:00'
             time1 = datetime.strptime(newTime, '%H:%M:%S').time()
             newTime = str(initialtime)+':30:00'
             time2 = datetime.strptime(newTime, '%H:%M:%S').time()
             initialtime += 1
-            time = NewTime(time_id=x+1, time1=time1, time2=time2)
+            time = NewTime(time_id=id, time1=time1, time2=time2)
             time.save()
+            flag=1
+            while(flag==1):
+                id +=1
+                newTime = str(initialtime)+':00:00'
+                next_time = datetime.strptime(newTime, '%H:%M:%S').time()
+                time = NewTime(time_id=id, time1=time2, time2=next_time)
+                time.save()
+                flag=0
     alltime = NewTime.objects.all()
 
     if(referral_list_byday_checker == True):
@@ -3543,10 +3546,10 @@ def another_student_view_schedule(request, *args, **kwargs):
                 check = bool(
                     day_name[0].upper() in get_school_days.school_days)
             if(check == True):
-                classes_of_student.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                           subject_title=object.subject_title, school_days=object.school_days,
-                                                           school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                           department_code=object.department_code, faculty_id=object.faculty_id))
+                classes_of_student.append(SubjectOfferings(offer_no=get_school_days.offer_no, subject_code=get_school_days.subject_code,
+                                                           subject_title=get_school_days.subject_title, school_days=get_school_days.school_days,
+                                                           school_time=get_school_days.school_time, sem_id=get_school_days.sem_id, academic_year=get_school_days.academic_year,
+                                                           department_code=get_school_days.department_code, faculty_id=get_school_days.faculty_id))
 
     referral_list_byday = Referral.objects.filter(
         student_number=user, date=today).order_by('start_time')
@@ -3569,23 +3572,25 @@ def another_student_view_schedule(request, *args, **kwargs):
     start = datetime.strptime('8:00:00', '%H:%M:%S').time()
     end = datetime.strptime('17:00:00', '%H:%M:%S').time()
     check = datetime.strptime('00:00:00', '%H:%M:%S').time()
-
-    try:
-        check = NewTime.objects.get(time_id='12')
-        exist = True
-    except:
-        exist = False
-    if exist == False:
-        initialtime = 7
-        newTime = str(initialtime)+':00:00'
-        for x in range(12):
+    initialtime = 7
+    id = 0
+    for x in range(12):
+            id +=1
             newTime = str(initialtime)+':00:00'
             time1 = datetime.strptime(newTime, '%H:%M:%S').time()
             newTime = str(initialtime)+':30:00'
             time2 = datetime.strptime(newTime, '%H:%M:%S').time()
             initialtime += 1
-            time = NewTime(time_id=x+1, time1=time1, time2=time2)
+            time = NewTime(time_id=id, time1=time1, time2=time2)
             time.save()
+            flag=1
+            while(flag==1):
+                id +=1
+                newTime = str(initialtime)+':00:00'
+                next_time = datetime.strptime(newTime, '%H:%M:%S').time()
+                time = NewTime(time_id=id, time1=time2, time2=next_time)
+                time.save()
+                flag=0
     alltime = NewTime.objects.all()
 
     if(referral_list_byday_checker == True):
