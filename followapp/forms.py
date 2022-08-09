@@ -9,7 +9,19 @@ from django import forms
 from functools import partial
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
+from django.utils import timezone
 
+class CalendarForm(forms.ModelForm):
+    pickedDate=forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
+    class Meta:
+        model = Calendar
+        fields = ['pickedDate']
+        
+
+
+class FilterDateForm(forms.Form):
+    pickedStartDate = forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
+    pickedEndDate = forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
 class SearchForm(forms.Form):
     search = forms.CharField()
 
@@ -34,15 +46,15 @@ class AccountCreatedForm(forms.Form):
     password = forms.CharField()
 
 
-qs = Faculty.objects.all()
-qs_code = []
-for obj in qs:
-    if obj.role == 'Counselor':
-        name = obj.lastname + ', ' + obj.firstname
-        qs_code.append([obj.faculty_id, name])
+
 
 
 class AssignCounselorForm(forms.Form):
+    qs = Faculty.objects.filter(role = 'Counselor')
+    qs_code = []
+    for obj in qs:
+        name = obj.lastname + ', ' + obj.firstname
+        qs_code.append([obj.faculty_id, name])
     faculty = forms.CharField(widget=forms.Select(choices=qs_code))
 
 
@@ -76,17 +88,6 @@ class EditDepartmentForm(forms.ModelForm):
                   'school_code']
 
 
-# class EditSubjectForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(EditSubjectForm, self).__init__(*args, **kwargs)
-#         self.fields['subject_code'].disabled = True
-#         self.fields['subject_title'].disabled = True
-
-#     class Meta:
-#         model = Subject
-#         fields = ['subject_code', 'subject_title', 'units']
-
-
 UNITS_CHOICES = [
     ('--', '--'),
     ('1', '1'),
@@ -116,10 +117,6 @@ SEM_CHOICES = [
 class CheckSemForm(forms.Form):
     sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
 # Edit Data In admin
-
-
-# class SearchForm(forms.Form):
-#     search = forms.CharField()
 
 
 class StudentAdditionalInformationForm(forms.ModelForm):
@@ -152,29 +149,6 @@ class CounselorFeedbackForm(forms.ModelForm):
     class Meta:
         model = CounselorFeedback
         fields = '__all__'
-# class OfferingForm(forms.ModelForm):
-#     class Meta:
-#         model = Offering
-#         fields = '__all__'
-
-
-# # class FeedbackForm(forms.Form):
-# #     feedback = forms.CharField(widget=forms.Textarea)
-
-
-# class StudentSetSchedForm(forms.ModelForm):
-#     reasons = forms.CharField(widget=forms.Textarea)
-
-#     def __init__(self, *args, **kwargs):
-#         super(StudentSetSchedForm, self).__init__(*args, **kwargs)
-#         self.fields['studnumber'].disabled = True
-#         self.fields['firstname'].disabled = True
-#         self.fields['lastname'].disabled = True
-
-#     class Meta:
-#         model = StudentSetSched
-#         fields = ['studnumber', 'firstname', 'lastname',  'reasons']
-
 
 class StudentSetSchedForm(forms.Form):
     reasons = forms.CharField(widget=forms.Textarea)
@@ -198,7 +172,31 @@ class ReferralForm(forms.Form):
     lastname = forms.CharField()
     subject_referred = forms.CharField()
 
+TIME = (('--', '--'),
+        ('07:00', '7:00 AM'), ('07:30', '7:30 AM'),
+        ('08:00', '8:00 AM'), ('08:30', '8:30 AM'),
+        ('09:00', '9:00 AM'), ('09:30', '9:30 AM'),
+        ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
+        ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
+        ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
+        ('13:00', '1:00 PM'), ('13:30', '1:30 PM'),
+        ('14:00', '2:00 PM'), ('14:30', '2:30 PM'),
+        ('15:00', '3:00 PM'), ('15:30', '3:30 PM'),
+        ('16:00', '4:00 PM'), ('16:30', '4:30 PM'),
+        ('17:00', '5:00 PM'), ('17:30', '5:30 PM'))
 
+
+class SetScheduleCounselorForm(forms.ModelForm):
+    start_time = forms.TimeField(widget=forms.Select(
+        choices=TIME))
+    end_time = forms.TimeField(widget=forms.Select(
+        choices=TIME))
+    date = forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
+    class Meta:
+        model = SetScheduleCounselor
+        fields = ['date', 'start_time', 'end_time']
+
+        
 # class ReferralForm(forms.ModelForm):
 #     reasons = forms.CharField(widget=forms.Textarea)
 
@@ -311,19 +309,6 @@ class ReferralForm(forms.Form):
 #     input_type = 'date'
 
 
-class CalendarForm(forms.ModelForm):
-    class Meta:
-        model = Calendar
-        fields = ['pickedDate']
-        widgets = {
-            'pickedDate': forms.SelectDateWidget()
-        }
-
-
-class FilterDateForm(forms.Form):
-    pickedStartDate = forms.DateField(widget=forms.SelectDateWidget())
-    pickedEndDate = forms.DateField(widget=forms.SelectDateWidget())
-
 
 # class CalendarForm(forms.Form):
 #     pickedDate = forms.DateField(widget=forms.SelectDateWidget())
@@ -337,30 +322,3 @@ class FilterDateForm(forms.Form):
 #             'pickedStartDate': DateInput(format='%m/%d/%Y'),
 #             'pickedEndDate': DateInput(format='%m/%d/%Y')
 #         }
-TIME = (('--', '--'),
-        ('07:00', '7:00 AM'), ('07:30', '7:30 AM'),
-        ('08:00', '8:00 AM'), ('08:30', '8:30 AM'),
-        ('09:00', '9:00 AM'), ('09:30', '9:30 AM'),
-        ('10:00', '10:00 AM'), ('10:30', '10:30 AM'),
-        ('11:00', '11:00 AM'), ('11:30', '11:30 AM'),
-        ('12:00', '12:00 PM'), ('12:30', '12:30 PM'),
-        ('13:00', '1:00 PM'), ('13:30', '1:30 PM'),
-        ('14:00', '2:00 PM'), ('14:30', '2:30 PM'),
-        ('15:00', '3:00 PM'), ('15:30', '3:30 PM'),
-        ('16:00', '4:00 PM'), ('16:30', '4:30 PM'),
-        ('17:00', '5:00 PM'), ('17:30', '5:30 PM'))
-
-
-class SetScheduleCounselorForm(forms.ModelForm):
-    start_time = forms.TimeField(widget=forms.Select(
-        choices=TIME))
-    end_time = forms.TimeField(widget=forms.Select(
-        choices=TIME))
-
-    class Meta:
-        model = SetScheduleCounselor
-        fields = ['date', 'start_time', 'end_time']
-
-        widgets = {
-            'date': forms.SelectDateWidget()
-        }

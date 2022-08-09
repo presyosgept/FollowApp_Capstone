@@ -165,11 +165,6 @@ def signup(request):
                 for student in qs:
                     if student.student_number == username:
                         flag = 1
-                        stud = Student.objects.get(student_number=username)
-                        # studentInfo = StudentInfo(firstname=stud.firstname,
-                        #                           lastname=stud.lastname, middlename=stud.middlename, studnumber=stud.studnumber,
-                        #                           degree_program=stud.degree_program, year=stud.year, student_email=stud.student_email)
-                        # studentInfo.save()
                 if flag == 1:
                     form = CreateUserForm(request.POST)
                     if form.is_valid():
@@ -1004,17 +999,9 @@ def assign_counselor(request, code):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
     degree_program = DegreeProgram.objects.get(program_code=code)
-    qs = Faculty.objects.all()
-    qs_code = []
-    for obj in qs:
-        if obj.role == 'Counselor':
-            name = obj.lastname + ', ' + obj.firstname
-            qs_code.append([obj.faculty_id, name])
-    edit_form = AssignCounselorForm(initial={
-        'faculty': qs_code})
+    edit_form = AssignCounselorForm()
     if request.method == "POST":
-        edit_form = AssignCounselorForm(request.POST, initial={
-            'faculty': qs_code})
+        edit_form = AssignCounselorForm(request.POST)
         if edit_form.is_valid():
             new_faculty = edit_form['faculty'].value()
             get_counselor = Faculty.objects.get(faculty_id=new_faculty)
