@@ -36,7 +36,7 @@ import random
 from django.contrib.auth.models import User
 
 from .models import NewTime, Calendar, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, Notification, SetScheduleCounselor, NotificationFeedback
+from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, ReferralDetails, Notification, SetScheduleCounselor, NotificationFeedback
 from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
 from .forms import StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
@@ -76,7 +76,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = 'db139ab5052595bd99c5062e33a8e359'
+                auth_token = 'c54dd055578f839f75d4e7e5f502a019'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -102,7 +102,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = 'db139ab5052595bd99c5062e33a8e359'
+                    auth_token = 'c54dd055578f839f75d4e7e5f502a019'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -279,73 +279,31 @@ def home(request, *args, **kwargs):
 
 # admin
 
+from django.views.generic import ListView
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # print(day_name[:-1])
-    # Referral.objects.all().delete()
-    # Notification.objects.all().delete()
-    # timeArray = []
-    # newTime = str('2')+':00'
-    # timeArray.append(datetime.strptime(newTime, '%H:%M').time())
-    # newTime = str('2')+':30'
-    # d = datetime.strptime(newTime, "%H:%M").time()
-    # with_ampm = d.strftime("%I:%M %p")
-    # print('with_ampm', with_ampm)
-    # print('d', d)
-    # print('newTime', newTime)
-    # print('timeArray', timeArray)
-    # subject = SubjectOfferings.objects.get(offer_no='60002')
-    # splitDate = subject.school_time.split('-')
-    # check_a = 'hello'
-    # check_b = 'l'
-    # if check_b in check_a:
-    #     print('work')
-    # checkaaa = bool(check_b in check_a)
-    # print(checkaaa)
-    # time = '12:30 pm'
-    # convert_into_time = datetime.strptime(time, '%H:%M %p').time()
-    # convert_into_time_with_ampm = convert_into_time.strftime('%I:%M %p')
-    # print(convert_into_time, type(convert_into_time))
-    # print(convert_into_time_with_ampm, type(convert_into_time_with_ampm))
-    # time1 = '8:30 pm'
-    # time2 = '8:30 pm'
-
-    # print(time2, type(time2))
-    # d = datetime.strptime("22:30", "%H:%M")
-    # with_ampm = d.strftime("%I:%M %p")
-    # print(d.strftime("%I:%M %p"))
-
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # abbreviation = day_name[0]
-    # print('abbreviation', abbreviation)
-    # print('day_name[0]', day_name[0])
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # abbreviation = day_name[0:2]
-    # print(abbreviation)
-    # print(day_name[0:2])
-    # a = '10124534534534534454'
-    # ap = []
-    # get = []
-    # value = ChessBoard.objects.get(id=2)
-    # print(value.board)
-    # for obj in value.board:
-    #     get.append(obj)
-    # get.append(a)
-    # print(get)
-    # value.board = get
-    # value.save()
-    # print(value.board)
     return render(request, "admin/home.html", {})
 
 
 @login_required(login_url='login')
 def view_subject(request, *args, **kwargs):
-    subject = Subject.objects.all()
+    get_subject = Subject.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_subject, 10)
+    try:
+        subject = paginator.page(page)
+    except PageNotAnInteger:
+        subject = paginator.page(1)
+    except EmptyPage:
+        subject = paginator.page(paginator.num_pages)
     return render(request, "admin/view_subject.html", {"subject": subject})
 
 
@@ -366,7 +324,16 @@ def edit_subject(request, code):
 
 @login_required(login_url='login')
 def view_school(request, *args, **kwargs):
-    school = School.objects.all()
+    get_school = School.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_school, 10)
+    try:
+        school = paginator.page(page)
+    except PageNotAnInteger:
+        school = paginator.page(1)
+    except EmptyPage:
+        school = paginator.page(paginator.num_pages)
     return render(request, "admin/view_school.html", {"school": school})
 
 
@@ -386,7 +353,16 @@ def edit_school(request, name):
 
 @login_required(login_url='login')
 def view_department(request, *args, **kwargs):
-    department = Department.objects.all()
+    get_department = Department.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_department, 10)
+    try:
+        department = paginator.page(page)
+    except PageNotAnInteger:
+        department = paginator.page(1)
+    except EmptyPage:
+        department = paginator.page(paginator.num_pages)
     return render(request, "admin/view_department.html", {'department': department})
 
 
@@ -410,7 +386,16 @@ def edit_department(request, code):
 
 @login_required(login_url='login')
 def view_faculty(request, *args, **kwargs):
-    faculty = Faculty.objects.all()
+    get_faculty = Faculty.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_faculty, 10)
+    try:
+        faculty = paginator.page(page)
+    except PageNotAnInteger:
+        faculty = paginator.page(1)
+    except EmptyPage:
+        faculty = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -423,13 +408,21 @@ def view_faculty(request, *args, **kwargs):
 @login_required(login_url='login')
 def search_faculty(request, search):
     all_faculty = Faculty.objects.all()
-    faculty = []
+    get_faculty = []
     for obj in all_faculty:
         if search in obj.lastname:
-            faculty.append(Faculty(faculty_id=obj.faculty_id,
+            get_faculty.append(Faculty(faculty_id=obj.faculty_id,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,
                                    department_code=obj.department_code))
+    page = request.GET.get('page', 1)
+    paginator = Paginator(get_faculty, 10)
+    try:
+        faculty = paginator.page(page)
+    except PageNotAnInteger:
+        faculty = paginator.page(1)
+    except EmptyPage:
+        faculty = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -441,7 +434,16 @@ def search_faculty(request, search):
 
 @login_required(login_url='login')
 def view_faculty_with_load(request, *args, **kwargs):
-    faculty = Faculty.objects.all()
+    get_faculty = Faculty.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_faculty, 10)
+    try:
+        faculty = paginator.page(page)
+    except PageNotAnInteger:
+        faculty = paginator.page(1)
+    except EmptyPage:
+        faculty = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -454,13 +456,21 @@ def view_faculty_with_load(request, *args, **kwargs):
 @login_required(login_url='login')
 def search_faculty_with_load(request, search):
     all_faculty = Faculty.objects.all()
-    faculty = []
+    get_faculty = []
     for obj in all_faculty:
         if search in obj.lastname:
-            faculty.append(Faculty(faculty_id=obj.faculty_id,
+            get_faculty.append(Faculty(faculty_id=obj.faculty_id,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,
                                    department_code=obj.department_code))
+    page = request.GET.get('page', 1)
+    paginator = Paginator(get_faculty, 10)
+    try:
+        faculty = paginator.page(page)
+    except PageNotAnInteger:
+        faculty = paginator.page(1)
+    except EmptyPage:
+        faculty = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -488,30 +498,56 @@ def view_faculty_detail(request, faculty_id):
 
 @login_required(login_url='login')
 def view_counselor(request, *args, **kwargs):
-    counselor = Faculty.objects.filter(role='Counselor')
+    get_counselor = Faculty.objects.filter(role='Counselor')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_counselor, 10)
+    try:
+        counselor = paginator.page(page)
+    except PageNotAnInteger:
+        counselor = paginator.page(1)
+    except EmptyPage:
+        counselor = paginator.page(paginator.num_pages)
     return render(request, "admin/view_counselor.html", {'counselor': counselor})
 
 
 @login_required(login_url='login')
 def view_subject_offerings(request, *args, **kwargs):
-    subject_offerings = SubjectOfferings.objects.filter(
-        sem_id='1st')
+    get_subject_offerings = SubjectOfferings.objects.all()
     check_sem = CheckSemForm()
     if request.method == 'POST':
         check_sem = CheckSemForm(request.POST)
         if check_sem.is_valid():
             sem_choice = check_sem['sem'].value()
             if sem_choice == '--':
-                subject_offerings = SubjectOfferings.objects.all()
+                get_subject_offerings = SubjectOfferings.objects.all()
             else:
-                subject_offerings = SubjectOfferings.objects.filter(
+                get_subject_offerings = SubjectOfferings.objects.filter(
                     sem_id=sem_choice)
+    
+    page = request.GET.get('page', 1)
+    paginator = Paginator(get_subject_offerings, 10)
+    try:
+        subject_offerings = paginator.page(page)
+    except PageNotAnInteger:
+        subject_offerings = paginator.page(1)
+    except EmptyPage:
+        subject_offerings = paginator.page(paginator.num_pages)
     return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings, 'check_sem': check_sem})
 
 
 @login_required(login_url='login')
 def view_degree_program(request, *args, **kwargs):
-    degree_program = DegreeProgram.objects.all()
+    get_degree_program = DegreeProgram.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_degree_program, 10)
+    try:
+        degree_program = paginator.page(page)
+    except PageNotAnInteger:
+        degree_program = paginator.page(1)
+    except EmptyPage:
+        degree_program = paginator.page(paginator.num_pages)
     return render(request, "admin/view_degree_program.html", {'degree_program': degree_program})
 
 
@@ -535,7 +571,16 @@ def edit_degree_program(request, code):
 
 @login_required(login_url='login')
 def view_student(request, *args, **kwargs):
-    student = Student.objects.all()
+    get_student = Student.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_student, 10)
+    try:
+        student = paginator.page(page)
+    except PageNotAnInteger:
+        student = paginator.page(1)
+    except EmptyPage:
+        student = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -548,16 +593,24 @@ def view_student(request, *args, **kwargs):
 @login_required(login_url='login')
 def search_student(request, search):
     all_student = Student.objects.all()
-    student = []
+    get_student = []
     for obj in all_student:
         if search in obj.lastname:
-            student.append(Student(student_number=obj.student_number,
+            get_student.append(Student(student_number=obj.student_number,
                                    lastname=obj.lastname, firstname=obj.firstname,
-                                   middlename=obj.middlename, gender=obj.gender,
-                                   avg_grade=obj.avg_grade, IQ=obj.IQ,
-                                   birthdate=obj.birthdate, hometown=obj.hometown,
-                                   program_code=obj.program_code, year=obj.year,
+                                   middlename=obj.middlename,  department_code=obj.department_code,
+                                   program_code=obj.program_code, academic_year=obj.academic_year,
+                                   sem_id=obj.sem_id, school_name=obj.school_name,
                                    student_email=obj.student_email, role=obj.role))
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_student, 10)
+    try:
+        student = paginator.page(page)
+    except PageNotAnInteger:
+        student = paginator.page(1)
+    except EmptyPage:
+        student = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -569,7 +622,16 @@ def search_student(request, search):
 
 @login_required(login_url='login')
 def view_student_with_load(request, *args, **kwargs):
-    student = Student.objects.all()
+    get_student = Student.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_student, 10)
+    try:
+        student = paginator.page(page)
+    except PageNotAnInteger:
+        student = paginator.page(1)
+    except EmptyPage:
+        student = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -582,16 +644,24 @@ def view_student_with_load(request, *args, **kwargs):
 @login_required(login_url='login')
 def search_student_with_load(request, search):
     all_student = Student.objects.all()
-    student = []
+    get_student = []
     for obj in all_student:
         if search in obj.lastname:
-            student.append(Student(student_number=obj.student_number,
+            get_student.append(Student(student_number=obj.student_number,
                                    lastname=obj.lastname, firstname=obj.firstname,
-                                   middlename=obj.middlename, gender=obj.gender,
-                                   avg_grade=obj.avg_grade, IQ=obj.IQ,
-                                   birthdate=obj.birthdate, hometown=obj.hometown,
-                                   program_code=obj.program_code, year=obj.year,
+                                   middlename=obj.middlename,  department_code=obj.department_code,
+                                   program_code=obj.program_code, academic_year=obj.academic_year,
+                                   sem_id=obj.sem_id, school_name=obj.school_name,
                                    student_email=obj.student_email, role=obj.role))
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(get_student, 10)
+    try:
+        student = paginator.page(page)
+    except PageNotAnInteger:
+        student = paginator.page(1)
+    except EmptyPage:
+        student = paginator.page(paginator.num_pages)
     search_form = SearchForm()
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -623,14 +693,22 @@ def view_student_detail(request, student_number):
 
 @login_required(login_url='login')
 def view_student_load(request, *args, **kwargs):
-    student_load = Studentload.objects.all()
+    get_student_load = Studentload.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(get_student_load, 10)
+    try:
+        student_load = paginator.page(page)
+    except PageNotAnInteger:
+        student_load = paginator.page(1)
+    except EmptyPage:
+        student_load = paginator.page(paginator.num_pages)
     return render(request, "admin/view_student_load.html", {'student_load': student_load})
 
 
 @login_required(login_url='login')
 def upload_faculty(request):
     try:
-        faculty = Faculty.objects.all()
+        get_faculty = Faculty.objects.all()
         if request.method == 'POST':
             FacultyResource()
             dataset = Dataset()
@@ -681,6 +759,15 @@ def upload_faculty(request):
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(get_faculty, 10)
+        try:
+            faculty = paginator.page(page)
+        except PageNotAnInteger:
+            faculty = paginator.page(1)
+        except EmptyPage:
+            faculty = paginator.page(paginator.num_pages)
     except Exception:
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_faculty.html", {"faculty": faculty})
@@ -689,7 +776,7 @@ def upload_faculty(request):
 @login_required(login_url='login')
 def upload_subject_offerings(request):
     try:
-        subject_offerings = SubjectOfferings.objects.all()
+        get_subject_offerings = SubjectOfferings.objects.all()
         list_for_wrong_semester = []
         check_sem = CheckSemForm()
         if request.method == 'POST':
@@ -850,6 +937,15 @@ def upload_subject_offerings(request):
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(get_subject_offerings, 10)
+        try:
+            subject_offerings = paginator.page(page)
+        except PageNotAnInteger:
+            subject_offerings = paginator.page(1)
+        except EmptyPage:
+            subject_offerings = paginator.page(paginator.num_pages)
     except Exception as e:
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings, 'check_sem': check_sem, 'list_for_wrong_semester': list_for_wrong_semester})
@@ -858,7 +954,7 @@ def upload_subject_offerings(request):
 @login_required(login_url='login')
 def upload_student(request):
     try:
-        student = Student.objects.all()
+        get_student = Student.objects.all()
         if request.method == 'POST':
             StudentResource()
             dataset = Dataset()
@@ -913,6 +1009,15 @@ def upload_student(request):
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(get_student, 10)
+        try:
+            student = paginator.page(page)
+        except PageNotAnInteger:
+            student = paginator.page(1)
+        except EmptyPage:
+            student = paginator.page(paginator.num_pages)
     except Exception as e:
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student})
@@ -921,7 +1026,7 @@ def upload_student(request):
 @login_required(login_url='login')
 def upload_student_load(request):
     try:
-        student_load = Studentload.objects.all()
+        get_student_load = Studentload.objects.all()
         if request.method == 'POST':
             StudentloadResource()
             dataset = Dataset()
@@ -971,6 +1076,15 @@ def upload_student_load(request):
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(get_student_load, 10)
+        try:
+            student_load = paginator.page(page)
+        except PageNotAnInteger:
+            student_load = paginator.page(1)
+        except EmptyPage:
+            student_load = paginator.page(paginator.num_pages)
     except Exception as e:
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load})
@@ -1171,9 +1285,16 @@ def detail_referred_student_counselor(request, id):
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
-    qs = Referral.objects.get(id=id)
-    count = len(qs.faculty_id)
-    return render(request, "counselor/detail_referred_student_counselor.html", {"counselorNotif": counselorNotif, 'count': count, "object": qs, "form": counselor_name})
+    qs=[]
+    get_referral = Referral.objects.get(id=id)
+    for obj in get_referral.referral_id:
+            get_details = ReferralDetails.objects.get(id=obj)
+            qs.append(ReferralDetails(subject_referred=get_details.subject_referred,
+                                            reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
+                                            faculty_id=get_details.faculty_id))
+    count = len(get_referral.referral_id)
+    referral_id = get_referral.id
+    return render(request, "counselor/detail_referred_student_counselor.html", {"counselorNotif": counselorNotif,'referral_id':referral_id, 'count': count, "detail": qs, 'get_referral':get_referral, "form": counselor_name})
 
 
 @login_required(login_url='login')
@@ -1613,31 +1734,15 @@ def counselor_notification_detail(request, id):
     notification.is_read_counselor = True
     notification.save()
     detail = []
-    qs = Referral.objects.filter(counselor_id=user)
-    type = "teacher"
-
-    for referedStud in qs:
-        if(referedStud.id == id):
-            if referedStud.subject_referred is not None:
-                type = "student"
-                detail.append(Referral(id=id,
-                                       firstname=referedStud.firstname,
-                                       lastname=referedStud.lastname, student_number=referedStud.student_number,
-                                       degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
-                                       reasons=referedStud.reasons, behavior_problem=referedStud.behavior_problem, date=referedStud.date,
-                                       start_time=referedStud.start_time, end_time=referedStud.end_time,
-                                       status=referedStud.status, feedback=referedStud.feedback))
-                count = len(referedStud.faculty_id)
-            else:
-                detail.append(Referral(id=id,
-                                       firstname=referedStud.firstname,
-                                       lastname=referedStud.lastname, student_number=referedStud.student_number,
-                                       degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
-                                       reasons=referedStud.reasons, behavior_problem=referedStud.behavior_problem, date=referedStud.date,
-                                       start_time=referedStud.start_time, end_time=referedStud.end_time,
-                                       status=referedStud.status, feedback=referedStud.feedback))
-                count = 0
-    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'count': count, "objects": detail, "type": type, "form": counselor_name})
+    get_referral = Referral.objects.get(id=id)
+    for obj in get_referral.referral_id:
+            get_details = ReferralDetails.objects.get(id=obj)
+            detail.append(ReferralDetails(subject_referred=get_details.subject_referred,
+                                            reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
+                                            faculty_id=get_details.faculty_id))
+    count = len(get_referral.referral_id)
+    referral_id = get_referral.id
+    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'count': count,'get_referral':get_referral, "detail": detail, "referral_id": referral_id, "form": counselor_name})
 
 
 @login_required(login_url='login')
@@ -1652,58 +1757,32 @@ def counselor_feedback_student(request, id):
     student = Referral.objects.get(id=id)
     preparedby = Faculty.objects.get(faculty_id=student.counselor_id)
     form1 = CounselorFeedbackForm()
-    print(student.faculty_id)
     if request.method == "POST":
         form1 = CounselorFeedbackForm(request.POST)
         if form1.is_valid():
             form1.save()
             feedback = form1['feedback'].value()
-            feedback_id = feedback_id + 1
-            messages.info(request, 'Success!')
             t = Referral.objects.get(id=id)
             t.status = "done"
             t.feedback = feedback
             t.save()
+            for obj in student.referral_id:
+                    get_detail = ReferralDetails.objects.get(id=obj)
+                    if get_detail.faculty_id is not None:
+                        try:
+                            check = NotificationFeedback.objects.get(extra_id=id)
+                            check = True
+                        except:
+                            check = False
+                        if check==False:
+                            create_feedback(get_detail.faculty_id_id,
+                                            'feedback_teacher', user, id,feedback_id)
+            
+            messages.info(request, 'Success!')
             form1 = CounselorFeedbackForm()
-            for obj in student.faculty_id:
-                create_feedback(obj,
-                            'feedback_teacher', user, feedback_id, id)
-
             return render(request, "counselor/counselor_feedback_student.html", {"counselorNotif": counselorNotif, "info": info,  "info2": preparedby,   "student": student, "object": form1, "form": counselor_name})
 
     return render(request, "counselor/counselor_feedback_student.html", {"counselorNotif": counselorNotif, "info": info, "info2": preparedby, "student": student, "object": form1, "form": counselor_name})
-
-
-@login_required(login_url='login')
-def counselor_feedback(request, id):
-    print('hakdog two si student ang pa schedule')
-    # problem here
-    global feedback_id
-    user = request.session.get('username')
-    counselor_name = Faculty.objects.get(faculty_id=user)
-    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
-    counselorNotif = len(notif)
-    info = Notification.objects.get(id=id)
-    student = Referral.objects.get(id=id)
-    referredby = Faculty.objects.get(faculty_id=student.faculty_id)
-    preparedby = Faculty.objects.get(faculty_id=student.counselor_id)
-    form1 = CounselorFeedbackForm()
-    if request.method == "POST":
-        form1 = CounselorFeedbackForm(request.POST)
-        if form1.is_valid():
-            form1.save()
-            feedback = form1['feedback'].value()
-            messages.info(request, 'Success!')
-            t = Referral.objects.get(id=id)
-            t.status = "done"
-            t.feedback = feedback
-            t.save()
-            form1 = CounselorFeedbackForm()
-            return render(request, "counselor/counselor_feedback.html", {"counselorNotif": counselorNotif,
-                                                                         "info": info,  "info1": referredby, "info2": preparedby,   "student": student, "object": form1,
-                                                                         "form": counselor_name})
-    return render(request, "counselor/counselor_feedback.html", {"counselorNotif": counselorNotif, "info": info,
-                                                                 "info1": referredby, "info2": preparedby, "student": student, "object": form1, "form": counselor_name})
 
 
 @login_required(login_url='login')
@@ -1750,6 +1829,7 @@ def detail_referred_student_with_feedback(request, id):
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
     qs = Referral.objects.get(id=id)
+
     return render(request, "counselor/detail_referred_student_with_feedback.html", {"counselorNotif": counselorNotif, "object": qs, "form": counselor_name})
 
 
@@ -1904,11 +1984,12 @@ def counselor_view_schedule(request, *args, **kwargs):
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
-                        schedule_for_today.append(Referral(student_number=object2. student_number, firstname=object2.firstname,
+                        schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program, subject_referred=object2.subject_referred,
-                                                           reasons=object2.reasons, counselor_id=object2.counselor_id, faculty_id=object2. faculty_id,
-                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, behavior_problem=object2.behavior_problem, choice=choice))
+                                                           degree_program=object2.degree_program, 
+                                                           counselor_id=object2.counselor_id, 
+                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date,
+                                                           choice=choice))
                 for object3 in not_available_sched:
                     if(timeArray[x] == object3.start_time):
                         choice = 'Not Available'
@@ -1976,11 +2057,11 @@ def counselor_view_schedule(request, *args, **kwargs):
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
-                        schedule_for_today.append(Referral(student_number=object2. student_number, firstname=object2.firstname,
+                        schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program, subject_referred=object2.subject_referred,
-                                                           reasons=object2.reasons, counselor_id=object2.counselor_id, faculty_id=object2. faculty_id,
-                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, behavior_problem=object2.behavior_problem, choice=choice))
+                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
+                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
+                                                           choice=choice))
 
     elif(classes_counselor_checker == True and referral_list_byday_checker == False and not_available_sched_checker == True):
         print('3')
@@ -2053,11 +2134,11 @@ def counselor_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    schedule_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
-                                                       lastname=object.lastname, middlename=object.middlename,
-                                                       degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                       reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object2. faculty_id,
-                                                       start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                    schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
+                                                           lastname=object.lastname, middlename=object.middlename,
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           start_time=object.start_time, end_time=object.end_time, date=object.date, 
+                                                           choice=choice))
 
             for object2 in not_available_sched:
                 if(timeArray[x] == object2.start_time):
@@ -2130,11 +2211,11 @@ def counselor_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    schedule_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
-                                                       lastname=object.lastname, middlename=object.middlename,
-                                                       degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                       reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object.faculty_id,
-                                                       start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                    schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
+                                                           lastname=object.lastname, middlename=object.middlename,
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           start_time=object.start_time, end_time=object.end_time, date=object.date, 
+                                                           choice=choice))
 
     elif(classes_counselor_checker == False and referral_list_byday_checker == False and not_available_sched_checker == True):
         print('7')
@@ -2302,11 +2383,11 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
-                        schedule_for_today.append(Referral(student_number=object2. student_number, firstname=object2.firstname,
+                        schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program, subject_referred=object2.subject_referred,
-                                                           reasons=object2.reasons, counselor_id=object2.counselor_id, faculty_id=object2. faculty_id,
-                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, behavior_problem=object2.behavior_problem, choice=choice))
+                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
+                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
+                                                           choice=choice))
                 for object3 in not_available_sched:
                     if(timeArray[x] == object3.start_time):
                         choice = 'Not Available'
@@ -2371,11 +2452,11 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
-                        schedule_for_today.append(Referral(student_number=object2. student_number, firstname=object2.firstname,
+                        schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program, subject_referred=object2.subject_referred,
-                                                           reasons=object2.reasons, counselor_id=object2.counselor_id, faculty_id=object2. faculty_id,
-                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, behavior_problem=object2.behavior_problem, choice=choice))
+                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
+                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
+                                                           choice=choice))
 
     elif(classes_counselor_checker == True and referral_list_byday_checker == False and not_available_sched_checker == True):
         print('3')
@@ -2445,11 +2526,11 @@ def another_counselor_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    schedule_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
-                                                       lastname=object.lastname, middlename=object.middlename,
-                                                       degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                       reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object2. faculty_id,
-                                                       start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                    schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
+                                                           lastname=object.lastname, middlename=object.middlename,
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           start_time=object.start_time, end_time=object.end_time, date=object.date, 
+                                                           choice=choice))
 
             for object2 in not_available_sched:
                 if(timeArray[x] == object2.start_time):
@@ -2519,11 +2600,11 @@ def another_counselor_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    schedule_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
-                                                       lastname=object.lastname, middlename=object.middlename,
-                                                       degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                       reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object.faculty_id,
-                                                       start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                    schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
+                                                           lastname=object.lastname, middlename=object.middlename,
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           start_time=object.start_time, end_time=object.end_time, date=object.date, 
+                                                           choice=choice))
 
     elif(classes_counselor_checker == False and referral_list_byday_checker == False and not_available_sched_checker == True):
         print('7')
@@ -2585,40 +2666,117 @@ def teacher_view_referred_students(request, status):
     notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
     teacherNotif = len(notif)
     referrals = Referral.objects.all()
+    referral_details = ReferralDetails.objects.all()
     qs = []
+    id_list=[]
     if status == 'all' or status == '--':
         for obj in referrals:
-            if user in obj.faculty_id:
-                qs.append(Referral(id=obj.id, firstname=obj.firstname,
-                                   lastname=obj.lastname, student_number=obj.student_number,
-                                   degree_program=obj.degree_program,
-                                   subject_referred=obj.subject_referred,
-                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
-                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
-                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
-                                   status=obj.status))
+            for check in obj.referral_id:
+                print('check',check)
+                get_details = ReferralDetails.objects.get(id = check)
+                if get_details.faculty_id is not None:
+                    print('huuuuyyy',get_details.faculty_id,get_details.faculty_id.faculty_id,obj.id)
+                    if user == get_details.faculty_id.faculty_id:
+                        id_list.append(obj.id)
+        print(id_list)
+        for flag in id_list:
+                referral = Referral.objects.get(id=flag)
+                qs.append(Referral(id=flag,firstname=referral.firstname,
+                                                                lastname=referral.lastname, student_number=referral.student_number,
+                                                                degree_program=referral.degree_program,
+                                                                counselor_id=referral.counselor_id,
+                                                                start_time=referral.start_time, end_time=referral.end_time,
+                                                                date=referral.date,
+                                                                status=referral.status))
     elif (status == 'pending'):
         for obj in referrals:
-            if user in obj.faculty_id and obj.status == 'pending':
-                qs.append(Referral(id=obj.id, firstname=obj.firstname,
-                                   lastname=obj.lastname, student_number=obj.student_number,
-                                   degree_program=obj.degree_program,
-                                   subject_referred=obj.subject_referred,
-                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
-                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
-                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
-                                   status=obj.status))
+            if obj.status == 'pending':
+                for check in obj.referral_id:
+                    get_details = ReferralDetails.objects.get(id = check)
+                    if get_details.faculty_id is not None:
+                        if user == get_details.faculty_id.faculty_id:
+                            id_list.append(obj.id)
+                for flag in id_list:
+                    referral = Referral.objects.get(id=flag)
+                    qs.append(Referral(id=flag,firstname=referral.firstname,
+                                                                    lastname=referral.lastname, student_number=referral.student_number,
+                                                                    degree_program=referral.degree_program,
+                                                                    counselor_id=referral.counselor_id,
+                                                                    start_time=referral.start_time, end_time=referral.end_time,
+                                                                    date=referral.date,
+                                                                    status=referral.status))
+        
     elif (status == 'done'):
         for obj in referrals:
-            if user in obj.faculty_id and obj.status == 'done':
-                qs.append(Referral(id=obj.id, firstname=obj.firstname,
-                                   lastname=obj.lastname, student_number=obj.student_number,
-                                   degree_program=obj.degree_program,
-                                   subject_referred=obj.subject_referred,
-                                   reasons=obj.reasons, behavior_problem=obj.behavior_problem,
-                                   counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
-                                   start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
-                                   status=obj.status))
+            if obj.status == 'done':
+                for check in obj.referral_id:
+                    get_details = ReferralDetails.objects.get(id = check)
+                    if get_details.faculty_id is not None:
+                        if user == get_details.faculty_id.faculty_id:
+                            id_list.append(obj.id)
+                for flag in id_list:
+                    referral = Referral.objects.get(id=flag)
+                    qs.append(Referral(id=flag,firstname=referral.firstname,
+                                                                    lastname=referral.lastname, student_number=referral.student_number,
+                                                                    degree_program=referral.degree_program,
+                                                                    counselor_id=referral.counselor_id,
+                                                                    start_time=referral.start_time, end_time=referral.end_time,
+                                                                    date=referral.date,
+                                                                    status=referral.status))           
+    # if status == 'all' or status == '--':
+    #     print('all')
+    #     for obj in referrals:
+    #         for check in obj.referral_id:
+    #             for obj1 in check:
+    #                 print('obj',obj)
+    #                 get_details = ReferralDetails.objects.get(id = obj1)
+    #                 if get_details.faculty_id is not None:
+    #                     if user == get_details.faculty_id.faculty_id:
+    #                         flag = obj.id
+    #     referral = Referral.objects.get(id=flag)
+    #     qs.append(Referral(id=flag,firstname=referral.firstname,
+    #                                                     lastname=referral.lastname, student_number=referral.student_number,
+    #                                                     degree_program=referral.degree_program,
+    #                                                     counselor_id=referral.counselor_id,
+    #                                                     start_time=referral.start_time, end_time=referral.end_time,
+    #                                                      date=referral.date,
+    #                                                     status=referral.status))
+                
+    # elif (status == 'pending'):
+    #     for obj in referrals:
+    #         if obj.status == 'pending':
+    #             for check in obj.referral_id:
+    #                 for obj1 in check:
+    #                     get_details = ReferralDetails.objects.get(id = obj1)
+    #                     if get_details.faculty_id is not None:
+    #                         if user == get_details.faculty_id.faculty_id:
+    #                             flag = obj.id
+    #             referral = Referral.objects.get(id=flag)
+    #             qs.append(Referral(id=flag,firstname=referral.firstname,
+    #                                                             lastname=referral.lastname, student_number=referral.student_number,
+    #                                                             degree_program=referral.degree_program,
+    #                                                             counselor_id=referral.counselor_id,
+    #                                                             start_time=referral.start_time, end_time=referral.end_time,
+    #                                                             date=referral.date,
+    #                                                             status=referral.status))
+        
+    # elif (status == 'done'):
+    #     for obj in referrals:
+    #         if obj.status == 'done':
+    #             for check in obj.referral_id:
+    #                 for obj1 in check:
+    #                     get_details = ReferralDetails.objects.get(id = obj1)
+    #                     if get_details.faculty_id is not None:
+    #                         if user == get_details.faculty_id.faculty_id:
+    #                             flag = obj.id
+    #             referral = Referral.objects.get(id=flag)
+    #             qs.append(Referral(id=flag,firstname=referral.firstname,
+    #                                                             lastname=referral.lastname, student_number=referral.student_number,
+    #                                                             degree_program=referral.degree_program,
+    #                                                             counselor_id=referral.counselor_id,
+    #                                                             start_time=referral.start_time, end_time=referral.end_time,
+    #                                                             date=referral.date,
+    #                                                             status=referral.status))
     filterform = FilterForm()
     if request.method == "POST":
         filterform = FilterForm(request.POST)
@@ -2635,20 +2793,15 @@ def detail_referred_student(request, id):
     notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
     teacherNotif = len(notif)
     detail = []
-    referrals = Referral.objects.all()
-    for obj in referrals:
-        if user in obj.faculty_id:
-            if(obj.id == id):
-                detail.append(Referral(firstname=obj.firstname,
-                                       lastname=obj.lastname, student_number=obj.student_number,
-                                       degree_program=obj.degree_program,
-                                       subject_referred=obj.subject_referred,
-                                       reasons=obj.reasons, behavior_problem=obj.behavior_problem,
-                                       counselor_id=obj.counselor_id, faculty_id=obj.faculty_id,
-                                       start_time=obj.start_time, end_time=obj.end_time, date=obj.date,
-                                       feedback=obj.feedback,
-                                       status=obj.status))
-    return render(request, "teacher/detail_referred_student.html", {'teacherNotif': teacherNotif, "object_list": detail, "form": teacher_name})
+    referrals = Referral.objects.get(id = id)
+    for obj in referrals.referral_id:
+            get_details = ReferralDetails.objects.get(id=obj)
+            if get_details.faculty_id is not None:
+                if user == get_details.faculty_id.faculty_id:
+                    detail.append(ReferralDetails(subject_referred=get_details.subject_referred,
+                                                    reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
+                                                    faculty_id=get_details.faculty_id))
+    return render(request, "teacher/detail_referred_student.html", {'teacherNotif': teacherNotif, "detail": detail,'referrals':referrals, "form": teacher_name})
 
 
 @login_required(login_url='login')
@@ -2663,11 +2816,7 @@ def referral(request, studentReferredId, offer_no):
     # getting the student being referred
     studentReferred = Student.objects.get(student_number=studentReferredId)
     subject_referred_code = subject_referred.subject_code_id
-    referral_form = ReferralForm(initial={
-        'student_number': studentReferred.student_number,
-        'firstname': studentReferred.firstname,
-        'lastname': studentReferred.lastname,
-        'subject_referred': subject_referred_code})
+    referral_form = ReferralForm(initial={'subject_referred': subject_referred_code})
 
     faculty_load_object = SubjectOfferings.objects.filter(faculty_id=user)
     degree = DegreeProgram.objects.get(
@@ -2675,11 +2824,7 @@ def referral(request, studentReferredId, offer_no):
     degree_program_student_referred = degree.program_code
 
     if request.method == "POST":
-        referral_form = ReferralForm(request.POST, initial={
-            'student_number': studentReferred.student_number,
-            'firstname': studentReferred.firstname,
-            'lastname': studentReferred.lastname,
-            'subject_referred': subject_referred_code})
+        referral_form = ReferralForm(request.POST, initial={ 'subject_referred': subject_referred_code})
         if referral_form.is_valid():
             print('valid')
             today = date.today()
@@ -3165,11 +3310,10 @@ def referral(request, studentReferredId, offer_no):
                     print('time2', time2)
                     if(time1 != '' and time2 != ''):
                         print('9')
+                        subject_referred = referral_form.cleaned_data['subject_referred']
                         reasons = referral_form.cleaned_data['reasons']
                         behavior = referral_form.cleaned_data['behavior_problem']
-                        list_subject_referred = []
-                        list_faculty_id = []
-                        list_reasons = [reasons]
+                        faculty = Faculty.objects.get(faculty_id =user)
                         try:
                             check_if_exist = Referral.objects.get(
                                 student_number=studentReferred.student_number, date=tomorrow, status='pending')
@@ -3177,60 +3321,38 @@ def referral(request, studentReferredId, offer_no):
                         except Exception:
                             flag = False
                         if flag == True:
-                            check_subject = subject_referred.subject_code_id in check_if_exist.subject_referred
-                            check_faculty = user in check_if_exist.faculty_id
-                            for obj1 in check_if_exist.behavior_problem:
-                                for obj2 in behavior:
-                                    if obj1 == obj2:
-                                        check_behavior = True
-                                    else:
-                                        check_behavior = False
-                            if check_subject == False:
-                                list_subject_referred = [
-                                    subject_referred.subject_code_id]
-                                for obj1 in check_if_exist.subject_referred:
-                                    list_subject_referred.append(obj1)
-                                check_if_exist.subject_referred = list_subject_referred
-                                check_if_exist.save()
-                            if check_faculty == False:
-                                list_faculty_id = [user]
-                                for obj1 in check_if_exist.faculty_id:
-                                    list_faculty_id.append(obj1)
-                                check_if_exist.faculty_id = list_faculty_id
-                                check_if_exist.save()
-                            if check_behavior == False:
-                                for obj1 in check_if_exist.behavior_problem:
-                                    behavior.append(obj1)
-                                check_if_exist.behavior_problem = behavior
-                                check_if_exist.save()
-                            for obj1 in check_if_exist.reasons:
-                                list_reasons.append(obj1)
-                            check_if_exist.reasons = list_reasons
+                            studentInfo = ReferralDetails(
+                                                   subject_referred=subject_referred,
+                                                   reasons=reasons,
+                                                   faculty_id=faculty,
+                                                   behavior_problem=behavior)
+                            studentInfo.save() 
+                            get_referral_id = ReferralDetails.objects.last()
+                            referral_list = [get_referral_id.id]
+                            for obj in check_if_exist.referral_id:
+                                referral_list.append(obj)
+                            check_if_exist.referral_id = referral_list
                             check_if_exist.save()
                         else:
-                            list_subject_referred = [
-                                subject_referred.subject_code_id]
-                            list_faculty_id = [user]
-                            studentInfo = Referral(student_number=studentReferred.student_number,
+                            studentInfo = ReferralDetails(
+                                                   subject_referred=subject_referred,
+                                                   reasons=reasons,
+                                                   faculty_id=faculty,
+                                                   behavior_problem=behavior)
+                            studentInfo.save() 
+                            referral_id = ReferralDetails.objects.last()
+                            studentSched = Referral(student_number=studentReferred.student_number,
                                                    firstname=studentReferred.firstname,
                                                    lastname=studentReferred.lastname,
                                                    middlename=studentReferred.middlename,
                                                    degree_program=studentReferred.program_code_id,
-                                                   subject_referred=list_subject_referred,
-                                                   reasons=list_reasons,
                                                    counselor_id=counselor_assigned_id,
-                                                   faculty_id=list_faculty_id,
                                                    start_time=time1, end_time=time2, date=tomorrow,
-                                                   behavior_problem=behavior,
-                                                   choice='Counseling')
-                            studentInfo.save()
+                                                   choice='Counseling',referral_id = [referral_id.id])
+                            studentSched.save()
                             create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
                                 studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
-                        referral_form = ReferralForm(request.POST, initial={
-                            'student_number': studentReferred.student_number,
-                            'firstname': studentReferred.firstname,
-                            'lastname': studentReferred.lastname,
-                            'subject_referred': subject_referred_code})
+                        referral_form = ReferralForm(request.POST, initial={ 'subject_referred': subject_referred_code})
                         messages.info(
                             request, 'Successfully Referred the Student')
     return render(request, "teacher/refer_a_student.html", {'teacherNotif': teacherNotif, "referral_form": referral_form, "form": teacher_name})
@@ -3269,15 +3391,15 @@ def teacher_notification_detail(request, id):
     notification = NotificationFeedback.objects.get(id=id)
     notification.is_read = True
     notification.save()
-    # fback = CounselorFeedback.objects.get(id=notification.extra_id)
-    students = Referral.objects.all()
-    for referedStud in students:
-        if notification.referral_id == referedStud.id:
-            detail.append(Referral(firstname=referedStud.firstname,
-                                   lastname=referedStud.lastname, student_number=referedStud.student_number,
-                                   degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
-                                   feedback=referedStud.feedback))
-    return render(request, "teacher/teacher_notification_detail.html", {'teacherNotif': teacherNotif, "objects": detail, "form": teacher_name})
+    student = Referral.objects.get(id=notification.extra_id)
+    for obj in student.referral_id:
+            get_details = ReferralDetails.objects.get(id=obj)
+            if get_details.faculty_id is not None:
+                if user == get_details.faculty_id.faculty_id:
+                    detail.append(ReferralDetails(subject_referred=get_details.subject_referred,
+                                                    reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
+                                                    faculty_id=get_details.faculty_id))
+    return render(request, "teacher/teacher_notification_detail.html", {'teacherNotif': teacherNotif, "detail": detail,'student':student, "form": teacher_name})
 
 # teacher
 
@@ -3364,21 +3486,14 @@ def student_notification_detail(request, id):
     notification.is_read_student = True
     notification.save()
     detail = []
-    student = Referral.objects.all()
-    for referedStud in student:
-        if (referedStud.id == id):
-            detail.append(Referral(firstname=referedStud.firstname,
-                                   lastname=referedStud.lastname, student_number=referedStud.student_number,
-                                   degree_program=referedStud.degree_program, subject_referred=referedStud.subject_referred,
-                                   reasons=referedStud.reasons, behavior_problem=referedStud.behavior_problem,
-                                   date=referedStud.date, start_time=referedStud.start_time, end_time=referedStud.end_time))
-    return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif, "object_list": detail, "form": student_name})
+    student = Referral.objects.get(id=id)
+    return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif, 'student':student, "form": student_name})
 
 
 @login_required(login_url='login')
 def edit_information(request, *args, **kwargs):
     user = request.session.get('username')
-    student_name = Student.objects.get(student_number=user)
+    student_name = StudentAdditionalInformation.objects.get(student_number=user)
     notif = Notification.objects.filter(extra_id=user, is_read_student=False)
     studentNotif = len(notif)
     infoForm = StudentAdditionalInformationForm(instance=student_name)
@@ -3441,7 +3556,10 @@ def student_view_schedule(request, *args, **kwargs):
     offer = CalendarForm()
     if request.method == "POST":
         offer = CalendarForm(request.POST)
+        print('hello')
+        print(offer.errors)
         if offer.is_valid():
+            print('hi')
             offer.save()
 
     classes_of_student = []
@@ -3513,11 +3631,11 @@ def student_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    sched_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
+                    sched_for_today.append(Referral(student_number=object.student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
-                                                    degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                    reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object. faculty_id,
-                                                    start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                                                    degree_program=object.degree_program, counselor_id=object.counselor_id, 
+                                                    start_time=object.start_time, end_time=object.end_time, date=object.date, 
+                                                    choice=choice))
     else:
         print('no display')
     return render(request, "student/student_view_schedule.html", {"offer": offer, "studentNotif": studentNotif, "today": today, "day_name": day_name, "schedForToday": sched_for_today, "time": alltime, "form": student_name})
@@ -3531,16 +3649,17 @@ def another_student_view_schedule(request, *args, **kwargs):
     student_name = Student.objects.get(student_number=user)
     notif = Notification.objects.filter(extra_id=user, is_read_student=False)
     studentNotif = len(notif)
-    newDate = Calendar.objects.last()
-    today = newDate.pickedDate
-    now = dt.datetime.now()
-    day_name = now.strftime("%a")
-
+    
     offer = CalendarForm()
     if request.method == "POST":
         offer = CalendarForm(request.POST)
         if offer.is_valid():
             offer.save()
+
+    newDate = Calendar.objects.last()
+    today = newDate.pickedDate
+    now = dt.datetime.now()
+    day_name = now.strftime("%a")
 
     classes_of_student = []
     ScheduledReferralbyDayCheck = False
@@ -3613,9 +3732,10 @@ def another_student_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     sched_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
-                                                    degree_program=object.degree_program, subject_referred=object.subject_referred,
-                                                    reasons=object.reasons, counselor_id=object.counselor_id, faculty_id=object. faculty_id,
-                                                    start_time=object.start_time, end_time=object.end_time, date=object.date, behavior_problem=object.behavior_problem, choice=choice))
+                                                    degree_program=object.degree_program, 
+                                                     counselor_id=object.counselor_id, 
+                                                    start_time=object.start_time, end_time=object.end_time, date=object.date,
+                                                    choice=choice))
     else:
         print('no display')
     return render(request, "student/another_student_view_schedule.html", {"offer": offer, "studentNotif": studentNotif, "today": today, "day_name": day_name, "schedForToday": sched_for_today, "time": alltime, "form": student_name})
@@ -4124,23 +4244,28 @@ def student_set_schedule(request, *args, **kwargs):
                         except Exception:
                             flag = False
                         if flag == False:
-                            studentInfo = Referral(student_number=studentReferred.student_number,
+                            studentInfo = ReferralDetails(reasons=reasons)
+                            studentInfo.save() 
+                            referral_id = ReferralDetails.objects.last()
+                            studentSched = Referral(student_number=studentReferred.student_number,
                                                    firstname=studentReferred.firstname,
                                                    lastname=studentReferred.lastname,
                                                    middlename=studentReferred.middlename,
                                                    degree_program=studentReferred.program_code_id,
-                                                   reasons=[reasons],
                                                    counselor_id=counselor_assigned_id,
                                                    start_time=time1, end_time=time2, date=tomorrow,
-                                                   choice='Counseling')
-                            studentInfo.save()
+                                                   choice='Counseling',referral_id = [referral_id.id])
+                            studentSched.save()
                             create_notification(counselor_assigned_id, user, 'manual_referral', extra_id=int(
                                 studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2)
                         else:
-                            list_reasons = [reasons]
-                            for obj1 in check_if_exist.reasons:
-                                list_reasons.append(obj1)
-                            check_if_exist.reasons = list_reasons
+                            studentInfo = ReferralDetails(reasons=reasons)
+                            studentInfo.save() 
+                            get_referral_id = ReferralDetails.objects.last()
+                            referral_list = [get_referral_id.id]
+                            for obj in check_if_exist.referral_id:
+                                referral_list.append(obj)
+                            check_if_exist.referral_id = referral_list
                             check_if_exist.save()
                         schedForm = StudentSetSchedForm()
                         messages.info(
@@ -4148,3 +4273,68 @@ def student_set_schedule(request, *args, **kwargs):
     return render(request, "student/set_schedule.html", {"studentNotif": studentNotif, "schedform": schedForm, "form": student_name})
 
 # student
+
+
+
+# try:
+    #     a = ReferralDetails.objects.get(id = 1)
+    # except:
+    #     print('way sud')
+    # today = date.today()
+    # day_name = today.strftime("%a")
+    # print(day_name[:-1])
+    # Referral.objects.all().delete()
+    # Notification.objects.all().delete()
+    # timeArray = []
+    # newTime = str('2')+':00'
+    # timeArray.append(datetime.strptime(newTime, '%H:%M').time())
+    # newTime = str('2')+':30'
+    # d = datetime.strptime(newTime, "%H:%M").time()
+    # with_ampm = d.strftime("%I:%M %p")
+    # print('with_ampm', with_ampm)
+    # print('d', d)
+    # print('newTime', newTime)
+    # print('timeArray', timeArray)
+    # subject = SubjectOfferings.objects.get(offer_no='60002')
+    # splitDate = subject.school_time.split('-')
+    # check_a = 'hello'
+    # check_b = 'l'
+    # if check_b in check_a:
+    #     print('work')
+    # checkaaa = bool(check_b in check_a)
+    # print(checkaaa)
+    # time = '12:30 pm'
+    # convert_into_time = datetime.strptime(time, '%H:%M %p').time()
+    # convert_into_time_with_ampm = convert_into_time.strftime('%I:%M %p')
+    # print(convert_into_time, type(convert_into_time))
+    # print(convert_into_time_with_ampm, type(convert_into_time_with_ampm))
+    # time1 = '8:30 pm'
+    # time2 = '8:30 pm'
+
+    # print(time2, type(time2))
+    # d = datetime.strptime("22:30", "%H:%M")
+    # with_ampm = d.strftime("%I:%M %p")
+    # print(d.strftime("%I:%M %p"))
+
+    # today = date.today()
+    # day_name = today.strftime("%a")
+    # abbreviation = day_name[0]
+    # print('abbreviation', abbreviation)
+    # print('day_name[0]', day_name[0])
+    # today = date.today()
+    # day_name = today.strftime("%a")
+    # abbreviation = day_name[0:2]
+    # print(abbreviation)
+    # print(day_name[0:2])
+    # a = '10124534534534534454'
+    # ap = []
+    # get = []
+    # value = ChessBoard.objects.get(id=2)
+    # print(value.board)
+    # for obj in value.board:
+    #     get.append(obj)
+    # get.append(a)
+    # print(get)
+    # value.board = get
+    # value.save()
+    # print(value.board)

@@ -505,8 +505,8 @@
 
       @media (min-width: 56rem) {
         .cards_item {
-          width: 91vw;
-          height: 65vh;
+          width: 90vw;
+          height: 70vh;
         }
       }
 
@@ -568,7 +568,7 @@ margin-left: 100px; */
   display:flex; 
   flex-direction: row; 
   margin-top: 10vh;
-  gap: 2vw;
+  gap: 1vw;
 }
 
   /* /////////// NEW CARD /////////// */
@@ -604,7 +604,7 @@ margin-left: 100px; */
     background-position: right;
     background-size: 80px;
     flex: 1;
-    height: 30vh;
+    height: 40vh;
     width: 14.5vw;
 
 
@@ -617,7 +617,7 @@ margin-left: 100px; */
     background-position: right;
     background-size: 80px;
     flex: 1;
-    height: 30vh;
+    height: 40vh;
     width: 14.5vw;
 
     
@@ -630,7 +630,7 @@ margin-left: 100px; */
     background-position: right;
     background-size: 80px;
     flex: 1;
-    height: 30vh;
+    height: 40vh;
     width: 14.5vw;
 }
 
@@ -672,7 +672,7 @@ margin-left: 100px; */
             <div class="nav__items">
               <a href="{% url 'counselor_notifications' %}" class="nav__link">
                 <i class='bx bx-bell nav__icon'></i>
-                <span class="nav__name">Notifications {{counselorNotif}} </span>
+                <span class="nav__name">Notifications {{counselorNotif}}</span>
               </a>
               <div class="nav__dropdown">
                 <a href="#refer" class="nav__link">
@@ -729,7 +729,7 @@ margin-left: 100px; */
               <div class="col-md-4">
                 <div class="card card-1">
                   <h3 style="color: #e0b44c;">List of Referrals</h3>
-                  <p style="color: #e0b44c;">Display list of reffered students</p>
+                  <p style="color: #e0b44c;">Display list of referred students</p>
                 </div>
               </div>
             </a>
@@ -737,7 +737,7 @@ margin-left: 100px; */
               <div class="col-md-4">
                 <div class="card card-1">
                   <h3 style="color: #e0b44c;">List of Pending Referrals</h3>
-                  <p style="color: #e0b44c;">Fix</p>
+                  <p style="color: #e0b44c;">The list of students that are referred by the Teacher</p>
                 </div>
               </div>
             </a>
@@ -745,7 +745,7 @@ margin-left: 100px; */
               <div class="col-md-4">
                 <div class="card card-3">
                   <h3 style="color: #e0b44c;">Set Schedule</h3>
-                  <p style="color: #e0b44c;">Fix</p>
+                  <p style="color: #e0b44c;">The Counselor will set a schedule if he/she is not available on a certain day.</p>
                 </div>
               </div>
             </a>
@@ -753,7 +753,7 @@ margin-left: 100px; */
               <div class="col-md-4">
                 <div class="card card-1">
                   <h3 style="color: #e0b44c;">Schedules</h3>
-                  <p style="color: #e0b44c;">Fix.</p>
+                  <p style="color: #e0b44c;">Displays the list of the Counselor's schedule </p>
                 </div>
               </div>
             </a>
@@ -761,13 +761,14 @@ margin-left: 100px; */
               <div class="col-md-4">
                 <div class="card card-3">
                   <h3 style="color: #e0b44c;">Feedbacks</h3>
-                  <p style="color: #e0b44c;">Fix.</p>
+                  <p style="color: #e0b44c;">The counselor can view previous and recent feedbacks.</p>
                 </div>
               </div>
             </a>
           </div>
           <br>
-        </div> 
+        </div>
+        <br>
         {% endblock %}
       </section>
     </div>

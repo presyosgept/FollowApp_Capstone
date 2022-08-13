@@ -544,28 +544,18 @@
   <br>
   <br>
   <!-- <div class="homeCard"> -->
-  <form class="reffer" method="POST" action=""> {% csrf_token %} <br>
-    <h3 style="font-weight: bold; text-align: center; font-size: 25px;" class="txtColor">&nbsp; &nbsp; <i> To proceed with Referring a student, kindly input the following details.</i>
-    </h3> &nbsp; <div class="parent_message"> {% for message in messages %} <p class="message">
+    <div class="parent_message"> {% for message in messages %} <p class="message">
         <b>{{message}} !</b>
       </p> {% endfor %} </div>
+      <br>
+  <form class="reffer" method="POST" action=""> {% csrf_token %} <br>
+    <h3 style="font-weight: bold; text-align: center; font-size: 25px;" class="txtColor">&nbsp; &nbsp; <i> To proceed with Referring a student, kindly input the following details.</i>
+    </h3> &nbsp; 
   <div style="float: left;">
       <div class="parent_form">
-          <div class="first_form_column">
-            <div class="">
-              <p class="pText">
-                <b class="bText"></b>{{referral_form.firstname}} &nbsp;First Name
-              </p>
-              <p class="pText">
-                <b class="bText"></b>{{referral_form.lastname}} &nbsp;Last Name
-              </p>
-            </div>
           </div>
           <div class="second_form_column">
             <div class="">
-              <p class="pText">
-                <b class="bText"></b>{{referral_form.student_number}} &nbsp;Student ID
-              </p>
               <p class="pText">
                 <b class="bText"></b>{{referral_form.subject_referred}} &nbsp;Subject Reffered
               </p>

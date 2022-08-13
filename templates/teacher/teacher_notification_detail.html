@@ -258,7 +258,7 @@
   }
 
   .rowText {
-    font-size: 25px;
+    font-size: 27px;
     margin: auto;
   }
 
@@ -417,7 +417,7 @@
     margin-left: 50px;
     line-height: 3rem;
   }
-</style> {% for object in objects %} <div class="fac">
+</style> <div class="fac">
   <button type="submit" class="buttonF">Feedback of Referral</button>
 </div>
 <br>
@@ -426,31 +426,35 @@
 <div class="schedule_appointment">
   <div class="schedule_title">
     <h3>
-      <i>Feedback of the Referred Student</i>
+      Feedback of the Referred Student
     </h3>
   </div>
   <br>
-  <br>
   <div class="schedule_information">
     <div>
-      <h3 class="students_info">Students Name: &nbsp; </b>{{object.lastname}}, {{object.firstname}}
+      <h3 class="students_info">Students Name: &nbsp; </b>{{student.lastname}}, {{student.firstname}}
       </h3>
-      <h3 class="students_info">Degree Program: &nbsp; </b>{{object.degree_program}}
+      <h3 class="students_info">Degree Program: &nbsp; </b>{{student.degree_program}}
       </h3>
+            <h3 class="students_info">Subject/s Referred: &nbsp;    
+               {% for obj in detail %} 
+       <b><li style="font-size: 22px;">{{obj.subject_referred}}</li></b>
+        {% endfor %}
     </div>
     <br>
-    <br>
-    <p class="rowText"> The feedback in <b>{{object.subject_referred}}</b> Subject is already assessed. <br>
-      <br>
-      <br>
-      <i>Feedback stated below:</i>
-      <br>
+    <p class="rowText">
+        <!-- <h3>Subject/s Referred</h3>
+      {% for obj in detail %} 
+       <b><li style="font-size: 22px;">{{obj.subject_referred}}</li></b>
+        {% endfor %}
+        <br> -->
+  <i style="font-size: 25px;">Feedback stated below:</i>
       <br>
     <div id="box">
       <li class="Pbox" style="text-align: justify; margin-left:8px;">
-        <b>{{object.feedback}}</b>
+        <b>{{student.feedback}}</b>
       </li>
     </div>
     </p>
   </div>
-</div> {% endfor %} {% endblock %}
+</div> {% endblock %}

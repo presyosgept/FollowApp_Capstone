@@ -245,6 +245,26 @@
     font-weight: bold;
     font-size: 19px;
   }
+    .pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -326,7 +346,33 @@
       </tr>
     </tbody> {% endfor %}
   </table>
-
-
  {% endif %} 
+
+ 
+{% if student %} 
+ <div class="pagination">
+    {% if student.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if student.number|add:'-9' > 1 %}
+    <a href="?page={{ student.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in student.paginator.page_range %}
+    {% if student.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > student.number|add:'-10' and i < student.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if student.paginator.num_pages > student.number|add:'9' %}
+    <a href="?page={{ student.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if student.has_next %}
+      <a href="?page={{ student.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+{% endif %}
 {% endblock %}

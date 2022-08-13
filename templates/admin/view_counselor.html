@@ -237,6 +237,28 @@
     font-weight: bold;
     font-size: 19px;
   }
+  
+  .pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -254,7 +276,7 @@
   <table class="fl-table">
     <thead>
       <tr>
-        <th  style="font-size: 17px;">Faculty ID</th>
+        <th  style="font-size: 17px;">counselor ID</th>
         <th  style="font-size: 17px;">Last Name</th>
         <th  style="font-size: 17px;">First Name</th>
         <th  style="font-size: 17px;">Middle Name</th>
@@ -289,8 +311,56 @@
       </tr>
     </tbody> {% endfor %}
   </table>
-
-
-
  {% endif %} 
+
+
+{% if counselor %} 
+  <div class="pagination">
+    {% if counselor.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if counselor.number|add:'-9' > 1 %}
+    <a href="?page={{ counselor.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in counselor.paginator.page_range %}
+    {% if counselor.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > counselor.number|add:'-10' and i < counselor.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if counselor.paginator.num_pages > counselor.number|add:'9' %}
+    <a href="?page={{ counselor.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if counselor.has_next %}
+      <a href="?page={{ counselor.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+{% endif %}
+ <!-- <div class="pagination">
+  {% if counselor.has_other_pages %}
+
+    {% if counselor.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+
+    {% for i in counselor.paginator.page_range %}
+
+      {% if counselor.number == i %}
+      <a class='active' href="?page={{ i }}">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+      {% endif %}
+
+    {% endfor %}
+
+    {% if counselor.has_next %}
+      <a href="?page={{ counselor.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+  
+  {% endif %}
+ </div> -->
 {% endblock %}

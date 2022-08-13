@@ -1,6 +1,6 @@
 from multiselectfield import MultiSelectFormField
 from django.forms.widgets import CheckboxSelectMultiple
-from .models import Calendar, CounselorFeedback, Referral, SetScheduleCounselor, StudentAdditionalInformation, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
+from .models import Calendar, CounselorFeedback, Referral, ReferralDetails, SetScheduleCounselor, StudentAdditionalInformation, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import User
@@ -166,10 +166,7 @@ class FilterForm(forms.Form):
 class ReferralForm(forms.Form):
     reasons = forms.CharField(widget=forms.Textarea)
     behavior_problem = MultiSelectFormField(
-        widget=forms.CheckboxSelectMultiple, choices=Referral.BEHAVIOR_PROBLEM)
-    student_number = forms.CharField()
-    firstname = forms.CharField()
-    lastname = forms.CharField()
+        widget=forms.CheckboxSelectMultiple, choices=ReferralDetails.BEHAVIOR_PROBLEM)
     subject_referred = forms.CharField()
 
 TIME = (('--', '--'),

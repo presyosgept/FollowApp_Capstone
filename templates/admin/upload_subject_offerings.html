@@ -248,6 +248,29 @@
     width: 8vw;
     height: 3vh;
   }
+
+  
+  .pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -277,7 +300,7 @@
 
   
 {% if list_for_wrong_semester %} 
-Check the sme kay sayop
+  Wrong Sem Uploaded
   {% for obj in list_for_wrong_semester %} 
     {{obj.offer_no}}
   {% endfor %}
@@ -302,7 +325,7 @@ Check the sme kay sayop
         <th  style="font-size: 15px;">Semester ID</th>
         <th  style="font-size: 15px;">Academic Year</th>
         <th  style="font-size: 15px;">Department Code</th>
-        <th  style="font-size: 15px;">Faculty ID</th>
+        <th  style="font-size: 15px;">subject_offerings ID</th>
       </tr>
     </thead>  {% for obj in subject_offerings %} 
     <tbody>
@@ -339,4 +362,32 @@ Check the sme kay sayop
   </table>
 
  {% endif %} 
+
+
+ {% if subject_offerings %} 
+       <div class="pagination">
+    {% if subject_offerings.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if subject_offerings.number|add:'-9' > 1 %}
+    <a href="?page={{ subject_offerings.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in subject_offerings.paginator.page_range %}
+    {% if subject_offerings.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > subject_offerings.number|add:'-10' and i < subject_offerings.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if subject_offerings.paginator.num_pages > subject_offerings.number|add:'9' %}
+    <a href="?page={{ subject_offerings.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if subject_offerings.has_next %}
+      <a href="?page={{ subject_offerings.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+ {% endif %}
 {% endblock %}

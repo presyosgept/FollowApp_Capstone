@@ -250,6 +250,28 @@
     margin-left: 2vw;
    
   }
+    
+  .pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -295,20 +317,72 @@
           </a>
         </td>
         <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.lastname}}</b>
+           <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
+           <b>{{obj.lastname}}</b></a>
         </td>
         <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.firstname}}</b>
+            <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
+             <b>{{obj.firstname}}</b>
+          </a>
         </td>
          <td  style="text-align: left; font-size: 15px;">
-           <b>{{obj.middlename}}</b>
+            <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
+             <b>{{obj.middlename}}</b>
+          </a>
         </td>
         
       </tr>
     </tbody> {% endfor %}
   </table>
-
-
-
  {% endif %} 
+
+ {% if faculty %} 
+  <div class="pagination">
+    {% if faculty.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if faculty.number|add:'-9' > 1 %}
+    <a href="?page={{ faculty.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in faculty.paginator.page_range %}
+    {% if faculty.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > faculty.number|add:'-10' and i < faculty.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if faculty.paginator.num_pages > faculty.number|add:'9' %}
+    <a href="?page={{ faculty.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if faculty.has_next %}
+      <a href="?page={{ faculty.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+{% endif %}
+<!-- <div class="pagination">
+  {% if faculty.has_other_pages %}
+
+    {% if faculty.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+
+    {% for i in faculty.paginator.page_range %}
+
+      {% if faculty.number == i %}
+      <a class='active' href="?page={{ i }}">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+      {% endif %}
+
+    {% endfor %}
+
+    {% if faculty.has_next %}
+      <a href="?page={{ faculty.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+  
+  {% endif %}
+ </div> -->
 {% endblock %}

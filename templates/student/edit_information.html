@@ -115,6 +115,14 @@
     font-size: 18px;
   }
 
+    #id_middlename {
+    width: 400px;
+    height: 35px;
+    color: #3A3B3C;
+    /* border-radius: 20px; */
+    text-align: start;
+    font-size: 18px;
+  }
   #id_student_email {
     width: 400px;
     height: 35px;
@@ -123,16 +131,8 @@
     font-size: 18px;
   }
 
-  #id_year {
-    width: 200px;
-    height: 30px;
-    text-align: center;
-    color: #3A3B3C;
-    /* border-radius: 20px; */
-    font-size: 18px;
-  }
 
-  #id_studnumber {
+  #id_student_number {
     width: 400px;
     height: 35px;
     color: #3A3B3C;
@@ -309,9 +309,6 @@
          <p class="pText">
           <b class="bText">Middle Name: &nbsp;</b>{{info.middlename}}
         </p>
-        <p class="pText">
-          <b class="bText">Student Number: &nbsp;</b>{{info.student_number}}
-        </p>
         <br>
         <br>
         <h3 style="font-size: 22.5px;">*Required</h3>
@@ -351,8 +348,7 @@
     <div class="column">
       <div class="row1">
         <p class="pText">
-          <b class="bText">Year Level: <br>
-          </b>{{info.year}}
+          <b class="bText">Student Number: &nbsp;</b>{{info.student_number}}
         </p>
         <p class="pText">
           <b class="bText">Student Email: &nbsp;</b>{{info.student_email}}

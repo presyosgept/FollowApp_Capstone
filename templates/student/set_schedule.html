@@ -1,4 +1,6 @@
-{% extends "student/home.html" %} {% block title %} Schedule {% endblock %} {% block content %} <style>
+{% extends "student/home.html" %} {% block title %} Schedule {% endblock %} {% block content %} 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dancing Script">
+<style>
   form.cleanForm {
     min-width: auto;
     margin-left: 20px;
@@ -46,9 +48,10 @@
   }
 
   #id_reasons {
+    font-size: 22px;
     margin-left: auto;
     margin-right: auto;
-    width: 55vw;
+    width: 70vw;
     height: 37vh;
     overflow-y: scroll;
   }
@@ -104,7 +107,7 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     font-weight: 600;
-    color: #fff;
+    color: #000;
     background-color: #d8c090;
     border: none;
     border-radius: 8px;
@@ -146,8 +149,8 @@
   }
 
   .button:hover {
-    background-color: #95B9C7;
-    box-shadow: 0px 15px 20px #C9C0BB;
+    background-color: #e0b44c;
+    /* box-shadow: 0px 15px 20px #C9C0BB; */
     color: #fff;
     transform: translateY(-7px);
   }
@@ -161,8 +164,8 @@
     text-transform: uppercase;
     letter-spacing: 2.5px;
     font-weight: 500;
-    color: #fff;
-    background-color: #3c3c5c;
+    color: #000;
+    background-color: #e0b44c;
     border: none;
     border-radius: 10px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -174,10 +177,10 @@
   .card1 {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
-    width: 80%;
-    height: 730px;
+    width: 90vw;
+    height: 105vh;
     border-radius: 5px;
-    background-color: var(--container-color);
+    background-color: #304434;
     float: center;
     margin-top: 10px;
     margin-bottom: 35px;
@@ -189,10 +192,31 @@
 
   .schedule-intro {
     font-size: 18px;
+    color: #fff;
   }
 
-  #id_reasons {
-    font-size: 22px;
+  .schedule-box{
+    /* display: flex;
+    flex-direction: column; */
+    font-family:"Dancing Script", sans-serif;
+    /* background-color: #e0b44c;
+    border: 2px solid #304434; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+    transition: 0.3s;
+    width: 23vw;
+    height: 25vh;
+    border-radius: 10px;
+    float: center;
+    margin: auto;
+    /* line-height: 40px; */
+    /* margin-bottom: 5vh; */
+
+  }
+  .schedule-text{
+    font-size: 25px;
+  }
+  .set-box{
+    margin-bottom: 2vh;
   }
 </style>
 <div class="fac">
@@ -208,23 +232,33 @@
     <br>
     <div class="row">
       <!-- <div class="students_information"><p class="pText"><b class="bText">Student Number: &nbsp;</b>  {{schedform.studnumber}}</p><p class="pText"><b class="bText" >Student's Last Name: &nbsp;</b> {{schedform.lastname}}</p><p class="pText"><b class="bText" >Student's First Name: &nbsp;</b> {{schedform.firstname}}</p></div> -->
-      <div class="schedule-intro"> Do you feel like sharing but doesn’t know where and whom to open up? Know that there are people who are always willing to listen to your problems. <br>Do not be afraid to open up because your COUNSELORS are just behind you. <br>
+      <div class="schedule-intro">
+        <div class="schedule-text">
+          Do you feel like sharing but doesn’t know where and whom to open up? Know that there are people who are always willing <br> to listen to your problems. <br>Do not be afraid to open up because your COUNSELORS are just behind you. 
+        </div>
+<div class="schedule-box">
+  <p style="font-size: 40px; color: #fff;">
+    <label>
+      <b>
+        Set your schedule for free Counseling
         <br>
-        <b>SET YOUR SCHEDULE FOR FREE COUNSELING</b>
-        <br>
-        <b>ALWAYS REMEMBER, YOU ARE HEARD.</b>
+        Always Remember, You Are Heard!
+      </b>
+    </label>
+  </p>
       </div>
       <br>
-      <form method="POST" action=""> {% csrf_token %} <i>
-          <h4 style="font-size: 18px; color: #4C4646; float: left; margin-left: 9.6em;">Input the Reasons below to Set a Schedule for Referral:</h4>
+      <form method="POST" action=""> {% csrf_token %} 
+        <i>
+        <div class="set-box">
+         <h4 style="font-size: 25px; color: #fff; margin-left: 3vw;">Input the Reasons below to Set a Schedule for Referral:</h4>
         </i>
         {{schedform.reasons}}
-        <br>
-        <br>
-        <div class="wrap">
-          <button type="submit" class="button">
+        <div style="margin-top: 1vh;">
+                    <button type="submit" class="button">
             <b>Submit</b>
           </button>
+        </div>
         </div>
       </form>
     </div>

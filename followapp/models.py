@@ -5,54 +5,6 @@ from viewflow.fields import CompositeKey
 from compositefk.fields import CompositeForeignKey, LocalFieldValue
 
 
-class Referral(models.Model):
-    student_number = models.CharField(max_length=220)
-    firstname = models.CharField(max_length=220, blank=True, null=True)
-    lastname = models.CharField(max_length=220, blank=True, null=True)
-    middlename = models.CharField(max_length=220, blank=True, null=True)
-    degree_program = models.CharField(max_length=220, blank=True, null=True)
-    subject_referred = ArrayField(
-        ArrayField(
-            models.CharField(max_length=225)
-        ), blank=True, null=True
-    )
-    reasons = ArrayField(
-        ArrayField(
-            models.CharField(max_length=10000)
-        ), blank=True, null=True
-    )
-    counselor_id = models.CharField(max_length=220, blank=True, null=True)
-    faculty_id = ArrayField(
-        ArrayField(
-            models.CharField(max_length=225, blank=True, null=True)
-        ), blank=True, null=True
-    )
-    start_time = models.TimeField(blank=True, null=True)
-    end_time = models.TimeField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
-    status = models.CharField(
-        max_length=220, default='pending')
-    BEHAVIOR_PROBLEM = (('CHEATING', 'CHEATING'),
-                        ('TARDINESS', 'TARDINESS'), ('DISRESPECTFUL', 'DISRESPECTFUL'),
-                        ('BAD ATTITUDE', 'BAD ATTITUDE'), ('OTHERS', 'OTHERS'))
-    behavior_problem = MultiSelectField(
-        max_length=220, choices=BEHAVIOR_PROBLEM, blank=True, null=True)
-    feedback = models.CharField(max_length=10000, blank=True, null=True)
-    choice = models.CharField(max_length=220, blank=True, null=True)
-
-    class Meta:
-        verbose_name_plural = "Referral"
-
-
-class Subject(models.Model):
-    subject_code = models.CharField(max_length=225, primary_key=True)
-    subject_title = models.CharField(max_length=220)
-    units = models.CharField(max_length=220)
-
-    class Meta:
-        verbose_name_plural = "Subject"
-
-
 class School(models.Model):
     school_code = models.CharField(max_length=220)
     school_name = models.CharField(max_length=220)
@@ -62,7 +14,6 @@ class School(models.Model):
 
     def __str__(self):
         return self.school_code
-
 
 class Department(models.Model):
     department_code = models.CharField(max_length=25, primary_key=True)
@@ -89,6 +40,47 @@ class Faculty(models.Model):
 
     class Meta:
         verbose_name_plural = "Faculty"
+class Referral(models.Model):
+    student_number = models.CharField(max_length=220)
+    firstname = models.CharField(max_length=220, blank=True, null=True)
+    lastname = models.CharField(max_length=220, blank=True, null=True)
+    middlename = models.CharField(max_length=220, blank=True, null=True)
+    degree_program = models.CharField(max_length=220, blank=True, null=True)
+    counselor_id = models.CharField(max_length=220, blank=True, null=True)
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    status = models.CharField(
+        max_length=220, default='pending')
+    feedback = models.CharField(max_length=10000, blank=True, null=True)
+    choice = models.CharField(max_length=220, blank=True, null=True)
+    referral_id = ArrayField(
+        ArrayField(
+            models.CharField(max_length=225, blank=True, null=True)
+        ), blank=True, null=True
+    )
+    class Meta:
+        verbose_name_plural = "Referral"
+
+class ReferralDetails(models.Model):
+    subject_referred = models.CharField(max_length=220, blank=True, null=True)
+    reasons = models.CharField(max_length=100000, blank=True, null=True)
+    faculty_id = models.ForeignKey(
+        Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    BEHAVIOR_PROBLEM = (('CHEATING', 'CHEATING'),
+                        ('TARDINESS', 'TARDINESS'), ('DISRESPECTFUL', 'DISRESPECTFUL'),
+                        ('BAD ATTITUDE', 'BAD ATTITUDE'), ('OTHERS', 'OTHERS'))
+    behavior_problem = MultiSelectField(
+        max_length=220, choices=BEHAVIOR_PROBLEM, blank=True, null=True)
+    class Meta:
+        verbose_name_plural = "ReferralDetails"
+class Subject(models.Model):
+    subject_code = models.CharField(max_length=225, primary_key=True)
+    subject_title = models.CharField(max_length=220)
+    units = models.CharField(max_length=220)
+
+    class Meta:
+        verbose_name_plural = "Subject"
 
 
 class Counselor(models.Model):

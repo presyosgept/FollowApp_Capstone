@@ -247,6 +247,27 @@
     width: 11vw;
     height: 4vh;
   }
+
+  .pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -271,7 +292,8 @@
         <th  style="font-size: 17px;">Units</th>
         <th  style="font-size: 17px;">Action</th>
       </tr>
-    </thead>  {% for obj in subject %} <tbody>
+    </thead>  {% for obj in subject %} 
+    <tbody>
       <tr>
         <td  style="text-align: left; font-size: 16px;">
           <b>{{obj.subject_code}}</b>
@@ -287,9 +309,61 @@
 
         </td> 
       </tr>
-    </tbody> {% endfor %}
+    </tbody> 
+    {% endfor %}
 
-</div> 
 
  {% endif %}  
+
+ 
+  {% if subject %} 
+ 
+ <div class="pagination">
+    {% if subject.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if subject.number|add:'-9' > 1 %}
+    <a href="?page={{ subject.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in subject.paginator.page_range %}
+    {% if subject.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > subject.number|add:'-10' and i < subject.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if subject.paginator.num_pages > subject.number|add:'9' %}
+    <a href="?page={{ subject.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if subject.has_next %}
+      <a href="?page={{ subject.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+{% endif %}
+<!-- <div class="pagination">
+  {% if subject.has_other_pages %}
+
+    {% if subject.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+
+    {% for i in subject.paginator.page_range %}
+
+      {% if subject.number == i %}
+      <a class='active' href="?page={{ i }}">{{ i }}</a>
+      {% else %}
+        <a href="?page={{ i }}">{{ i }}</a>
+      {% endif %}
+
+    {% endfor %}
+
+    {% if subject.has_next %}
+      <a href="?page={{ subject.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+  
+  {% endif %}
+ </div> -->
 {% endblock %}

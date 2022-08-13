@@ -20,6 +20,10 @@
                     {{object.choice}} -- {{object.subject_code.subject_code}} 
               {% elif object.choice|stringformat:"s" == "Counseling" %} 
                   {{object.choice}} 
+                  <a style="color: black;" href="{% url 'detail_referred_student_counselor' object.id %}">
+                    <b style="color: black;">view more info
+                    </b>
+                  </a>
               {% elif object.choice|stringformat:"s" == "Not Available" %} 
                   {{object.choice}} 
               {% endif %}
@@ -29,6 +33,10 @@
                     {{object.choice}} -- {{object.subject_code.subject_code}} 
               {% elif object.choice|stringformat:"s" == "Counseling" %} 
                   {{object.choice}} 
+                  <a style="color: black;" href="{% url 'detail_referred_student_counselor' object.id %}">
+                    <b style="color: black;">view more info
+                    </b>
+                  </a>
               {% elif object.choice|stringformat:"s" == "Not Available" %} 
                   {{object.choice}} 
               {% endif %}

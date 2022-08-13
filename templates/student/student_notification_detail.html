@@ -266,6 +266,7 @@ display: flex;
   .rowText {
     font-size: 23px;
     margin: 50px;
+    color: #fff;
   }
 
   .image {
@@ -343,6 +344,7 @@ display: flex;
   }
 
   .card1 {
+    color: #fff;
     margin: 0 auto;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -350,8 +352,9 @@ display: flex;
     border-radius: 5px;
     flex-direction: column;
     overflow: hidden;
-    background-color: whitesmoke;
+    background-color: #304434;
     margin-top: 8vh;
+    margin-bottom: 3vh;
   }
 
   @media screen and (max-width: 320px) {
@@ -481,7 +484,38 @@ display: flex;
 <div class="fac">
   <button type="submit" class="buttonF">Full Details</button>
 </div>
-<div class="parent_div"> {% for object in object_list %} {% if object.subject_referred %} {% if object.behavior_problem %}
+<div class="parent_div"> 
+   <div class="card1">
+    <form action="#" class="cleanForm" method="POST">
+      <br>
+      <div>
+        <h3 style="text-align: justify; margin-left:8px; font-size: 24px;">
+          <i>Schedule of Appointment</i>
+        </h3>
+        <p class="rowText"> You have a scheduled appointment on <b>{{student.date}}</b> 
+            that will start at <b>{{student.start_time}}</b> and will end at <b>{{student.end_time}}</b>
+          <br>
+          <br>
+          <i>For Call, kindy tap the Call Button</i>
+          <br>
+          <i class='bx bx-calendar-check nav__icon'></i>
+        </p>
+      </div>
+    </form>
+    <div style="margin-top: 2vh;">
+      <a class="call_style" href="">
+        <button class="btn login_btn">Call</button>
+      </a>
+    </div>
+  </div>
+  </div>
+
+          
+
+
+
+
+<!-- <div class="parent_div"> {% for object in object_list %} {% if object.subject_referred %} {% if object.behavior_problem %}
    <div class="card1">
     <form action="#" class="cleanForm" method="POST">
       <br>
@@ -545,4 +579,7 @@ display: flex;
       </a>
     </div>
   </div>
-</div> {% endif %} {% endfor %} </div> {% endblock %}
+</div> {% endif %} {% endfor %} </div>  -->
+
+
+{% endblock %}

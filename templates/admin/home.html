@@ -29,6 +29,7 @@
         --card-color: #F9F6FD;
         --main1-color: #d8c090;
         --dropdown: #fff;
+        --list-data: #e0b44c;
         --header-color: #304434;
         /*========== Font and typography ==========*/
         --body-font: 'Poppins', sans-serif;
@@ -480,8 +481,8 @@
 
       @media (min-width: 56rem) {
         .cards_item {
-          width: 85vw;
-          height: 70vh;
+          width: 88vw;
+          height: 80vh;
         }
       }
 /* 
@@ -601,6 +602,32 @@ margin-left: 100px;
   margin-top: 10vh;
   gap: 2vw;
 }
+.list-upload-data:hover{
+  color: var(--list-data);
+  opacity: 1;
+}
+
+
+.upload__data_list{
+  color: var(--first-color);
+}
+.upload__data_list:hover {
+        color: var(--list-data);
+}
+
+.view__data_list{
+  color: var(--first-color);
+}
+.view__data_list:hover {
+        color: var(--list-data);
+}
+
+.viewload__data_list{
+  color: var(--first-color);
+}
+.viewload__data_list:hover {
+        color: var(--list-data);
+}
     </style>
     <title>Follow App Admin</title>
   </head>
@@ -705,33 +732,77 @@ margin-left: 100px;
             <div class="box-text">Admin Box Menu</div>
           </div>
           <div class="cards">
-          
-            <div class="col-md-4">
-              <div class="card card-1">
-                <h3 style="color: #e0b44c;">Admin</h3>
-                <p style="color: #e0b44c;">Learn how to easily customize and modify your app’s design to fit your
-                  brand across all mobile platform styles.</p>
-              </div>
-            </div>
+    
             <div class="col-md-4">
               <div class="card card-3">
                 <h3 style="color: #e0b44c;">Upload Data</h3>
-                <p style="color: #e0b44c;">Learn how to easily customize and modify your app’s design to fit your
-                  brand across all mobile platform styles.</p>
+                <p style="color: #e0b44c;">The Administrator can upload the list of following datas:
+                  <div>
+                    <a class="upload__data_list" href="{% url 'upload_subject_offerings' %}">
+                      <li>Subject Offerings</li>
+                    </a>
+                   <a class="upload__data_list" href="{% url 'upload_faculty' %}">
+                    <li>Faculty</li>
+                   </a>
+                   <a class="upload__data_list" href="{% url 'upload_student' %}">
+                    <li>Student</li>
+                   </a>
+                   <a class="upload__data_list" href="{% url 'upload_student_load' %}">
+                    <li>Student Load</li>
+                   </a>
+                  </div>
+                </p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="card card-1">
                 <h3 style="color: #e0b44c;">View Datas</h3>
-                <p style="color: #e0b44c;">Learn how to easily customize and modify your app’s design to fit your
-                  brand across all mobile platform styles.</p>
+                <p style="color: #e0b44c;">The following uploaded data can be viewed, searched for, and edited by the Administrator:
+                  <div>
+                   <a class="view__data_list" href="{% url 'view_subject' %}">
+                    <li>Subject</li>
+                   </a>
+                    <a class="view__data_list" href="{% url 'view_school' %}">
+                      <li>School</li>
+                    </a>
+                   <a class="view__data_list"href="{% url 'view_department' %}" >
+                    <li>Department</li>
+                   </a>
+                   <a class="view__data_list" href="{% url 'view_faculty' %}">
+                    <li>Faculty</li>
+                   </a>
+                    <a class="view__data_list" href="{% url 'view_counselor' %}">
+                      <li>Counselor</li>
+                    </a>
+                    <a class="view__data_list" href="{% url 'view_subject_offerings' %}">
+                      <li>Subject Offerings</li>
+                    </a>
+                    <a class="view__data_list" href="{% url 'view_degree_program' %}">
+                      <li>Degree Program</li>
+                    </a>
+                   <a class="view__data_list" href="{% url 'view_student' %}">
+                    <li>Student</li>
+                   </a>
+                  <a class="view__data_list" href="{% url 'view_student_load' %}">
+                    <li>Student Load</li>
+                  </a>
+                  </div>
+                </p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="card card-3">
                 <h3 style="color: #e0b44c;">View Load Data</h3>
-                <p style="color: #e0b44c;">Learn how to easily customize and modify your app’s design to fit your
-                  brand across all mobile platform styles.</p>
+                <p style="color: #e0b44c;">The data that was uploaded through the system is accessible to the Administrator. <br>
+                  To view the information, search for and click on a specific item of data.</p>
+                <div>
+                  <a class="viewload__data_list" href="{% url 'view_faculty_with_load' %}">
+                    <li>Faculty</li>
+                  </a>
+                 <a class="viewload__data_list" href="{% url 'view_student_with_load' %}">
+                  <li>Student</li>
+                 </a>
+                </div>
               </div>
             </div>
           </div>
