@@ -1,4 +1,384 @@
 {% extends "counselor/home.html" %} {% block content %}
+<style>
+  tr {
+    color: #504A4B;
+    font-size: 16px;
+    font-weight: normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+  }
+
+  tr:hover td {
+    /* background: #304434;
+    color: #e0b44c; */
+    /* border-top: 1px solid #e0b44c; */
+  }
+
+  tr:first-child {
+    border-top: none;
+  }
+
+  tr:last-child {
+    border-bottom: none;
+  }
+
+  tr:nth-child(odd) td {
+    /* background: #304434;; */
+    color: #000;
+  }
+
+  tr:nth-child(odd):hover td {
+    /* background: transparent; */
+    /* color: #e0b44c; */
+  }
+
+  tr:last-child td:first-child {
+    border-bottom-left-radius: 3px;
+  }
+
+  tr:last-child td:last-child {
+    border-bottom-right-radius: 3px;
+  }
+
+  td {
+    /* background: #304434; */
+    color: #000;
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 300;
+    font-size: 18px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);;
+  }
+
+  td:last-child {
+    border-right: 0px;
+  }
+
+  th.text-left {
+    text-align: left;
+  }
+
+  th.text-center {
+    text-align: center;
+  }
+
+  th.text-right {
+    text-align: right;
+  }
+
+  td.text-left {
+    text-align: center;
+  }
+
+  td.text-center {
+    text-align: center;
+  }
+
+  td.text-right {
+    text-align: right;
+  }
+
+  .facDay {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+
+  .buttonDay {
+    width: 320px;
+    height: 55px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+    margin-left: 10px;
+  }
+
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  #id_pickedDate {
+    width: 250px;
+    height: 35px;
+    color: #3A3B3C;
+  }
+
+  .button {
+    margin: 0 auto;
+    width: 6vw;
+    height: 4vh;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #e0b44c;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button:hover {
+    background-color: #e0b44c;
+    box-shadow: 0px 15px 20px #C9C0BB;
+    color: #fff;
+  }
+
+  /* Table Styles */
+  .table-wrapper {
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  }
+
+  .fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    /* background-color: #304434; */
+    overflow-y: scroll;
+  }
+
+  .fl-table td,
+  .fl-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .fl-table td {
+    /* border-right: 1px solid red; */
+    font-size: 12px;
+  }
+
+  /* //pang linya collor */
+  .fl-table thead th {
+    color: #000;
+    /* background: #e0b44c; */
+    font-size: 18px;
+  }
+
+  .fl-table thead th:nth-child(odd) {
+    color: #000;
+    /* background: #e0b44c; */
+  }
+
+  .fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+
+  /* Responsive */
+  @media (max-width: 767px) {
+    .fl-table {
+      display: block;
+      width: 100%;
+    }
+
+    .table-wrapper:before {
+      content: "Scroll horizontally >";
+      display: block;
+      text-align: right;
+      font-size: 11px;
+      color: white;
+      padding: 0 0 10px;
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+      display: block;
+    }
+
+    .fl-table thead th:last-child {
+      border-bottom: none;
+    }
+
+    .fl-table thead {
+      float: left;
+    }
+
+    .fl-table tbody {
+      width: auto;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+      padding: 20px .625em .625em .625em;
+      height: 60px;
+      vertical-align: middle;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 120px;
+      font-size: 13px;
+      text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+      text-align: left;
+      border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+      display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+      background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+      background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+      background: #F8F8F8;
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+      border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .center_title {
+    text-align: center;
+    margin-right: 20px;
+    font-size: 16px;
+  }
+
+/* ///////////////////////////////////// NEW TABLE //////////////////// */
+
+.spacing-table {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 15px;
+  border-collapse: separate;
+  table-layout: fixed;
+  width: 80%;
+  border-spacing: 0 5px; /* this is the ultimate fix */
+  margin-left: 12vw;
+  border-radius: 5px;
+background-color: whitesmoke;
+ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+}
+.spacing-table th {
+
+  border-bottom: 1px solid #C1C3D1;
+
+  text-align: left;
+  padding: 5px 15px;
+}
+.spacing-table td {
+  /* border-width: 3px 0; */
+  /* width: 40%;
+  border-color: darkred;
+  border-style: solid;
+  background-color: red;
+  color: white; */
+  padding: 5px 15px;
+   border-bottom: 1px solid #C1C3D1;
+}
+.spacing-table td:first-child {
+  /* border-left-width: 3px;
+  border-radius: 5px 0 0 5px; */
+   border-bottom: 1px solid #C1C3D1;
+}
+.spacing-table td:last-child {
+  /* border-right-width: 3px;
+  border-radius: 0 5px 5px 0; */
+   border-bottom: 1px solid #C1C3D1;
+}
+.spacing-table thead {
+  display: table;
+  table-layout: fixed;
+  width: 90%;
+  
+}
+.spacing-table tbody {
+  display: table;
+  table-layout: fixed;
+  width: 80%;
+  border-spacing: 0 10px;
+}
+
+td, th {
+   
+}
+.invisible {
+    border: none;
+    background-color:transparent;
+}
+.leftHeader {
+  font-size: 22px;
+    font-weight: bold;
+    /* background-color:lightgray; */
+}
+.td-style{
+  width: 15vw; height: 12vh;
+                
+  background-color: yellowgreen;
+   border-radius: 12px;
+                
+   border-collapse:separate; 
+border-spacing:5em;
+ box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+}
+.table_head{
+  font-size: 20px;
+}
+
+</style>
 <form method="POST" action="{% url 'another_counselor_view_schedule' %}"> {% csrf_token %} <div class="center_title">
     <p>
       <i>
@@ -12,37 +392,41 @@
   </div>
 </form> <br>
 
-   {% for obj in time %} 
-       <br>{{obj.time1}} - {{obj.time2}} 
-        {% for object in schedForToday %} 
-          {% if obj.time1|safe == object.start_time|safe or obj.time2|safe == object.start_time|safe  %}
-              {% if object.choice|stringformat:"s" == "Class" %}
-                    {{object.choice}} -- {{object.subject_code.subject_code}} 
-              {% elif object.choice|stringformat:"s" == "Counseling" %} 
-                  {{object.choice}} 
-                  <a style="color: black;" href="{% url 'detail_referred_student_counselor' object.id %}">
-                    <b style="color: black;">view more info
-                    </b>
-                  </a>
-              {% elif object.choice|stringformat:"s" == "Not Available" %} 
-                  {{object.choice}} 
-              {% endif %}
-          {% endif %}
-          {% if obj.time1|safe == object.end_time|safe or obj.time2|safe == object.end_time|safe  %}
-              {% if object.choice|stringformat:"s" == "Class" %}
-                    {{object.choice}} -- {{object.subject_code.subject_code}} 
-              {% elif object.choice|stringformat:"s" == "Counseling" %} 
-                  {{object.choice}} 
-                  <a style="color: black;" href="{% url 'detail_referred_student_counselor' object.id %}">
-                    <b style="color: black;">view more info
-                    </b>
-                  </a>
-              {% elif object.choice|stringformat:"s" == "Not Available" %} 
-                  {{object.choice}} 
-              {% endif %}
-          {% endif %}
-    {% endfor %} {% endfor %}
-   
+<table class="spacing-table">
+    <thead>
+       <tr>
+            <th class="invisible"></th>
+        <th class="table_head">Activities and Details</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        {% for obj in time %}
+            <tr>
+                <td class="leftHeader" style="font-size: 20px;">{{obj.time1}} <br> {{obj.time2}}</td>
+                
+                {% for object in schedForToday %} 
+             {% if obj.time1|safe == object.start_time|safe or obj.time2|safe == object.start_time|safe or obj.time1|safe == object.end_time|safe or obj.time2|safe == object.end_time|safe %}
+                          {% if object.choice|stringformat:"s" == "Class" %} 
+                          <td class="td-style"><b>{{object.choice}} -- {{object.subject_code.subject_code}} </b></td>
+                          {% elif object.choice|stringformat:"s" == "Counseling" %} 
+                          <td class="td-style">
+                      
+                              <a style="color: #fff;" href="{% url 'detail_referred_student_counselor' object.id %}">
+                                <b style="color: #fff;">  <b>{{object.choice}} </b>
+                                </b>
+                              </a>
+                            </td> 
+                            {% elif object.choice|stringformat:"s" == "Not Available" %} 
+                            <td class="td-style"><b>{{object.choice}}</b> </td>
+                            {% endif %}
+                        {% endif %}
+
+            {% endfor %} {% endfor %}
+            </tr>
+    <tbody>
+  </table>
+
 
    {% endblock %}
 

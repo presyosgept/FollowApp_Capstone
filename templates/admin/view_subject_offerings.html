@@ -250,7 +250,9 @@
  
   }
 .pagination {
-  display: inline-block;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .pagination a {
@@ -284,7 +286,10 @@
    
 <div class="semester">     
       <div>
-     <p style="font-size: 18px; font-weight: bold;">Semester: {{check_sem.sem}}</p>
+     <p style="font-size: 18px; font-weight: bold;">Semester: {{check_sem.active_sem}}</p>
+     </div>
+      <div>
+     <p style="font-size: 18px; font-weight: bold;">Academic Year: {{check_sem.active_year}}</p>
      </div>
 <div style="margin-top: 3vh;">
      <button type="submit" class="button">

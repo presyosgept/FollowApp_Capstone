@@ -251,7 +251,9 @@
 
   
   .pagination {
-  display: inline-block;
+   align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .pagination a {
@@ -269,8 +271,69 @@
 
 .pagination a:hover:not(.active) {
   background-color: #d8c090;}
+  .data-sample{
+      font-size: 18px;
+      margin-bottom: 2vh;
+      display: flex;
+      flex-direction: column;
+  }
+  .display{
+      flex-direction: row;
+      margin-top: 2vh;
+  }
+  .eg-table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    margin-bottom: 3vh;
+    /* box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2); */
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+     width: 80vw;
+    background-color: white;
+    overflow-y: scroll;
+  }
+  .eg-table td,
+  .eg-table th {
+    text-align: center;
+    padding: 8px;
+  }
 
+  .eg-table td {
+    border-right: 1px solid #fff;
+    font-size: 12px;
+  }
 
+  .eg-table thead th {
+    color: #000;
+    background: #e0b44c;
+  }
+
+  .eg-table thead th:nth-child(odd) {
+    color: #000;
+    background: #e0b44c;
+  }
+
+  .eg-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+    tr:hover {
+      background-color: #ddd;
+    }
+    th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+.wrong-sem{
+  text-align: left; 
+  font-size: 13px;
+  color: red;
+  font-weight: bold;
+}
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -284,6 +347,56 @@
     </p>
   </button> {% endfor %} </div>
 <br>
+<div class="data-sample">
+  <b style="font-size: 20px;">The data should have the following data type:</b>      
+ <table class="eg-table">
+  <thead>
+    <tr>
+      <th  style="font-size: 15px;">Offer Number</th>
+      <th  style="font-size: 15px;">Subject Code</th>
+      <th  style="font-size: 15px;">Subject Title </th>
+       <th  style="font-size: 15px;">School Days</th>
+      <th  style="font-size: 15px;">Start Time</th>
+      <th  style="font-size: 15px;">Semester ID</th>
+      <th  style="font-size: 15px;">Academic Year</th>
+      <th  style="font-size: 15px;">Department Code</th>
+      <th  style="font-size: 15px;">Faculty ID</th>
+    </tr>
+  </thead> 
+  <tbody>
+    <tr>
+      <td style="text-align: center; font-size: 13px;">
+        <b>(09090)</b>
+      </td>
+      <td  style="text-align: left; font-size: 13px;">
+         <b>(GE SUBJECT)</b>
+      </td>
+     <td  style="text-align: left; font-size: 13px;">
+         <b>(Subject Title)</b>
+      </td>
+         <td  style="text-align: left; font-size: 13px;">
+         <b>(MTWTHFSS)</b>
+      </td>
+       <td  style="text-align: left; font-size: 13px;">
+         <b>(00:00 am - 00:00 pm)</b>
+      </td>
+        <td  style="text-align: center; font-size: 13px;">
+         <b>(1st)</b>
+      </td>
+        <td  style="text-align: center; font-size: 13px;">
+         <b>(2028)</b>
+      </td>
+       <td  style="text-align: left; font-size: 13px;">
+         <b>(SSP)</b>
+      </td>
+        <td  style="text-align: center; font-size: 13px;">
+         <b>(2099)</b>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} 
     <div class="semester-card">
               <div style="margin-left: 2vw; margin-top: 1vh;">
@@ -299,13 +412,6 @@
   </form>
 
   
-{% if list_for_wrong_semester %} 
-  Wrong Sem Uploaded
-  {% for obj in list_for_wrong_semester %} 
-    {{obj.offer_no}}
-  {% endfor %}
-
- {% endif %} 
 
 {% if not subject_offerings %} 
     <div class="no-data">
@@ -325,16 +431,17 @@
         <th  style="font-size: 15px;">Semester ID</th>
         <th  style="font-size: 15px;">Academic Year</th>
         <th  style="font-size: 15px;">Department Code</th>
-        <th  style="font-size: 15px;">subject_offerings ID</th>
+        <th  style="font-size: 15px;">Faculty ID</th>
       </tr>
     </thead>  {% for obj in subject_offerings %} 
+    {% if sem_choice == obj.sem_id  %} 
     <tbody>
       <tr>
         <td style="text-align: center; font-size: 13px;">
           <b>{{obj.offer_no}}</b>
         </td>
         <td  style="text-align: left; font-size: 13px;">
-           <b>{{obj.subject_code_id}}</b>
+           <b>{{obj.subject_code}}</b>
         </td>
        <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.subject_title}}</b>
@@ -352,13 +459,47 @@
            <b>{{obj.academic_year}}</b>
         </td>
          <td  style="text-align: left; font-size: 13px;">
-           <b>{{obj.department_code_id}}</b>
+           <b>{{obj.department_code}}</b>
         </td>
           <td  style="text-align: center; font-size: 13px;">
-           <b>{{obj.faculty_id_id}}</b>
+           <b>{{obj.faculty_id}}</b>
         </td>
       </tr>
-    </tbody> {% endfor %}
+    </tbody>
+    {% else %}
+     <tbody>
+      <tr>
+        <td class="wrong-sem">
+          {{obj.offer_no}}
+        </td>
+        <td class="wrong-sem">
+          {{obj.subject_code}}
+        </td>
+       <td class="wrong-sem">
+          {{obj.subject_title}}
+        </td>
+           <td class="wrong-sem">
+         {{obj.school_days}}
+        </td>
+         <td  class="wrong-sem">
+         {{obj.school_time}}
+        </td>
+          <td class="wrong-sem">
+           {{obj.sem_id}}
+        </td>
+          <td class="wrong-sem">
+          {{obj.academic_year}}
+        </td>
+         <td  class="wrong-sem">
+          {{obj.department_code}}
+        </td>
+          <td class="wrong-sem">
+          {{obj.faculty_id}}
+        </td>
+      </tr>
+    </tbody>
+     {% endif %} 
+     {% endfor %}
   </table>
 
  {% endif %} 

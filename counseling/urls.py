@@ -29,6 +29,7 @@ from followapp.views import(
 
     # admin
     admin_home_view,
+    set_active_year,
     upload_faculty,
     upload_subject_offerings,
     upload_student,
@@ -120,7 +121,8 @@ urlpatterns = [
     path('verification_code/', verification_code, name="verification_code"),
 
     # admin
-    path('head/', admin_home_view, name="admin_home_view"),
+    path('head/', admin_home_view, name="admin_home_view"), 
+     path('admin/set_active_year', set_active_year, name="set_active_year"),
     path('admin/upload_faculty', upload_faculty, name="upload_faculty"),
     path('admin/upload_subject_offerings',
          upload_subject_offerings, name="upload_subject_offerings"),

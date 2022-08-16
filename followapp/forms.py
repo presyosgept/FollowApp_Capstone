@@ -11,6 +11,25 @@ DateInput = partial(forms.DateInput, {'class': 'datepicker'})
 
 from django.utils import timezone
 
+
+SEM_CHOICES = [
+    ('--', '--'),
+    ('1st', '1st'),
+    ('2nd', '2nd'),
+    ('Summer', 'Summer'),
+]
+
+
+class SetActiveForm(forms.Form):
+    active_sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
+    active_year = forms.CharField()
+
+
+class CheckSemForm(forms.Form):
+    sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
+    
+
+
 class CalendarForm(forms.ModelForm):
     pickedDate=forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
     class Meta:
@@ -55,6 +74,15 @@ class AssignCounselorForm(forms.Form):
     for obj in qs:
         name = obj.lastname + ', ' + obj.firstname
         qs_code.append([obj.faculty_id, name])
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        qs = Faculty.objects.filter(role = 'Counselor')
+        qs_code = []
+        for obj in qs:
+            name = obj.lastname + ', ' + obj.firstname
+            qs_code.append([obj.faculty_id, name])
+        self.fields["faculty"] = forms.CharField(widget=forms.Select(choices=qs_code))
+    
     faculty = forms.CharField(widget=forms.Select(choices=qs_code))
 
 
@@ -106,16 +134,7 @@ class EditSubjectForm(forms.Form):
     units = forms.CharField(widget=forms.Select(choices=UNITS_CHOICES))
 
 
-SEM_CHOICES = [
-    ('--', '--'),
-    ('1st', '1st'),
-    ('2nd', '2nd'),
-    ('Summer', 'Summer'),
-]
 
-
-class CheckSemForm(forms.Form):
-    sem = forms.CharField(widget=forms.Select(choices=SEM_CHOICES))
 # Edit Data In admin
 
 

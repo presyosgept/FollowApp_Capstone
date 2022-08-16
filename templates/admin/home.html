@@ -482,7 +482,7 @@
       @media (min-width: 56rem) {
         .cards_item {
           width: 88vw;
-          height: 80vh;
+          height: 85vh;
         }
       }
 /* 
@@ -628,6 +628,11 @@ margin-left: 100px;
 .viewload__data_list:hover {
         color: var(--list-data);
 }
+.active-sem{
+  font-size: 16px; 
+  color: #304434; 
+  font-weight: bold
+}
     </style>
     <title>Follow App Admin</title>
   </head>
@@ -663,6 +668,10 @@ margin-left: 100px;
           <a href="{% url 'admin_home_view' %}" class="nav__link nav__logo">
             <span class="nav__logo-name">ADMIN</span>
           </a>
+           <p  class="active-sem">Academic Year:<b style="color: #000; margin-left: 0.5vw;">
+            {{Active_Year}}</b></p>
+             <p class="active-sem">Semester:<b style="color: #000; margin-left: 0.5vw;">
+            {{Active_Sem}}</b></p>
           <div class="nav__list">
             <div class="nav__items">
               <div class="nav__dropdown">
@@ -714,13 +723,15 @@ margin-left: 100px;
                   </div>
                 </div>
               </div>
+                <a href="{% url 'set_active_year' %}" class="nav__link">
+                <i class='bx bx-bell nav__icon'></i>
+                <span class="nav__name">Activate Data</span>
+              </a>
+              </div>
             </div>
           </div>
           <br>
-          <a href="{% url 'logout' %}" class="nav__link nav__logout">
-            <i class='bx bx-log-out nav__icon'></i>
-            <span class="nav__name">Sign Out</span>
-          </a>
+       
       </nav>
     </div>
     <!--========== CONTENTS NOTIFICATION ==========-->

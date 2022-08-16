@@ -245,7 +245,9 @@
     font-size: 19px;
   }
      .pagination {
-  display: inline-block;
+    align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .pagination a {
@@ -264,10 +266,62 @@
 .pagination a:hover:not(.active) {
   background-color: #d8c090;}
 
+  .display{
+      flex-direction: row;
+      margin-top: 2vh;
+  }
+  .eg-table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    margin-bottom: 3vh;
+    /* box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2); */
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+     width: 80vw;
+    background-color: white;
+    overflow-y: scroll;
+  }
+  .eg-table td,
+  .eg-table th {
+    text-align: center;
+    padding: 8px;
+  }
+
+  .eg-table td {
+    border-right: 1px solid #fff;
+    font-size: 12px;
+  }
+
+  .eg-table thead th {
+    color: #000;
+    background: #e0b44c;
+  }
+
+  .eg-table thead th:nth-child(odd) {
+    color: #000;
+    background: #e0b44c;
+  }
+
+  .eg-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+    tr:hover {
+      background-color: #ddd;
+    }
+    th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
-    <b>Upload student_load Load</b>
+    <b>Upload Student Load</b>
   </button>
 </div>
 <br>
@@ -278,6 +332,34 @@
     </p>
   </button> {% endfor %} </div>
 <br>
+<div class="data-sample">
+  <b style="font-size: 20px;">The data should have the following data type:</b>      
+ <table class="eg-table">
+  <thead>
+    <tr>
+        <th  style="font-size: 17px;">Student Load Number</th>
+        <th  style="font-size: 17px;">Offer No</th>
+        <th  style="font-size: 17px;">Semester ID</th>
+        <th  style="font-size: 17px;">Academic Year</th>
+    </tr>
+  </thead> 
+  <tbody>
+    <tr>
+      <td style="text-align: center; font-size: 13px;">
+        <b>(2018011813)</b>
+      </td>
+      <td  style="text-align: center; font-size: 13px;">
+         <b>(60198)</b>
+      </td>
+     <td  style="text-align: center; font-size: 13px;">
+         <b>(1st)</b>
+      </td>
+         <td  style="text-align: center; font-size: 13px;">
+         <b>(2022)</b>
+      </td>
+    </tr>
+  </tbody>
+</table>
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} 
     <div class="semester-card">
   <div style="margin-left: 2vw; margin-top: 1vh;">
@@ -299,7 +381,7 @@
   <table class="fl-table">
     <thead>
       <tr>
-        <th  style="font-size: 17px;">student_load Number</th>
+        <th  style="font-size: 17px;">Student Load Number</th>
         <th  style="font-size: 17px;">Offer No</th>
         <th  style="font-size: 17px;">Semester ID</th>
         <th  style="font-size: 17px;">Academic Year</th>
@@ -307,10 +389,10 @@
     </thead> {% for obj in student_load %} <tbody>
       <tr>
         <td  style="text-align: center; font-size: 15px;">
-          <b>{{obj.student_number_id}}</b>
+          <b>{{obj.student_number}}</b>
         </td>
         <td style="text-align: center; font-size: 15px;">
-           <b>{{obj.offer_no.offer_no}}</b>
+           <b>{{obj.offer_no}}</b>
         </td>
          <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.sem_id}}</b>

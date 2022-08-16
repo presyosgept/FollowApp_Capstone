@@ -39,7 +39,7 @@ from .models import NewTime, Calendar, Subject, School, Department, Faculty, Cou
 from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, ReferralDetails, Notification, SetScheduleCounselor, NotificationFeedback
 from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import SetActiveForm,StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
 
 # global variables
 
@@ -48,8 +48,8 @@ count = 0
 count1 = 0
 formm = AccountsForm()
 feedback_id = 0
-global sem
-global sy
+Active_Year = '2022'
+Active_Sem = '1st'
 global dep
 global school
 global filterStartDate
@@ -288,12 +288,30 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 @login_required(login_url='login')
-def admin_home_view(request, *args, **kwargs):
-    return render(request, "admin/home.html", {})
+def admin_home_view(request, *args, **kwargs): 
+    global Active_Year
+    global Active_Sem     
+    return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem})
+
+@login_required(login_url='login')
+def set_active_year(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
+    active_form = SetActiveForm(initial={'active_year': '2022'})
+    if request.method == "POST":
+        active_form = SetActiveForm(request.POST,initial={'active_year': '2022'})
+        if active_form.is_valid():
+            choice_active_sem = active_form['active_sem'].value()
+            choice_active_year = active_form['active_year'].value()
+            Active_Sem = choice_active_sem
+            Active_Year = choice_active_year
+    return render(request, "admin/set_active_year.html", {'active_form':active_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_subject(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_subject = Subject.objects.all()
     page = request.GET.get('page', 1)
 
@@ -304,11 +322,13 @@ def view_subject(request, *args, **kwargs):
         subject = paginator.page(1)
     except EmptyPage:
         subject = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_subject.html", {"subject": subject})
+    return render(request, "admin/view_subject.html", {"subject": subject,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def edit_subject(request, code):
+    global Active_Year
+    global Active_Sem
     subject = Subject.objects.get(subject_code=code)
     edit_form = EditSubjectForm()
     if request.method == "POST":
@@ -319,11 +339,13 @@ def edit_subject(request, code):
             edit.units = new_units
             edit.save()
             subject = Subject.objects.get(subject_code=code)
-    return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form})
+    return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_school(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_school = School.objects.all()
     page = request.GET.get('page', 1)
 
@@ -334,11 +356,13 @@ def view_school(request, *args, **kwargs):
         school = paginator.page(1)
     except EmptyPage:
         school = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_school.html", {"school": school})
+    return render(request, "admin/view_school.html", {"school": school,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def edit_school(request, name):
+    global Active_Year
+    global Active_Sem
     school = School.objects.get(school_name=name)
     edit_form = EditSchoolForm(instance=school)
     if request.method == "POST":
@@ -348,11 +372,13 @@ def edit_school(request, name):
             edit = School.objects.get(school_name=name)
             edit.school_code = new_school_code
             edit.save()
-    return render(request, "admin/edit_school.html", {'school': school, 'edit_form': edit_form})
+    return render(request, "admin/edit_school.html", {'school': school, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_department(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_department = Department.objects.all()
     page = request.GET.get('page', 1)
 
@@ -363,11 +389,13 @@ def view_department(request, *args, **kwargs):
         department = paginator.page(1)
     except EmptyPage:
         department = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_department.html", {'department': department})
+    return render(request, "admin/view_department.html", {'department': department,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def edit_department(request, code):
+    global Active_Year
+    global Active_Sem
     department = Department.objects.get(department_code=code)
     edit_form = EditDepartmentForm(instance=department)
     if request.method == "POST":
@@ -381,11 +409,13 @@ def edit_department(request, code):
             edit.department_name = new_department_name
             edit.school_code = get_school_code
             edit.save()
-    return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form})
+    return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_faculty(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_faculty = Faculty.objects.all()
     page = request.GET.get('page', 1)
 
@@ -402,11 +432,13 @@ def view_faculty(request, *args, **kwargs):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_faculty', search=search_choice)
-    return render(request, "admin/view_faculty.html", {'faculty': faculty, 'search_form': search_form})
+    return render(request, "admin/view_faculty.html", {'faculty': faculty, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def search_faculty(request, search):
+    global Active_Year
+    global Active_Sem
     all_faculty = Faculty.objects.all()
     get_faculty = []
     for obj in all_faculty:
@@ -429,11 +461,13 @@ def search_faculty(request, search):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_faculty', search=search_choice)
-    return render(request, "admin/search_faculty.html", {"faculty": faculty, 'search_form': search_form})
+    return render(request, "admin/search_faculty.html", {"faculty": faculty, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_faculty_with_load(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_faculty = Faculty.objects.all()
     page = request.GET.get('page', 1)
 
@@ -450,11 +484,13 @@ def view_faculty_with_load(request, *args, **kwargs):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_faculty_with_load', search=search_choice)
-    return render(request, "admin/view_faculty_with_load.html", {'faculty': faculty, 'search_form': search_form})
+    return render(request, "admin/view_faculty_with_load.html", {'faculty': faculty, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def search_faculty_with_load(request, search):
+    global Active_Year
+    global Active_Sem
     all_faculty = Faculty.objects.all()
     get_faculty = []
     for obj in all_faculty:
@@ -477,12 +513,14 @@ def search_faculty_with_load(request, search):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_faculty_with_load', search=search_choice)
-    return render(request, "admin/search_faculty_with_load.html", {"faculty": faculty, 'search_form': search_form})
+    return render(request, "admin/search_faculty_with_load.html", {"faculty": faculty, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_faculty_detail(request, faculty_id):
-    subject_offerings = SubjectOfferings.objects.all()
+    global Active_Year
+    global Active_Sem
+    subject_offerings = SubjectOfferings.objects.filter(sem_id=Active_Sem,academic_year=Active_Year)
     get_faculty = Faculty.objects.get(faculty_id=faculty_id)
     get_subject_offerings = []
     for obj in subject_offerings:
@@ -493,11 +531,13 @@ def view_faculty_detail(request, faculty_id):
                 subject_title=obj.subject_title,
                 school_days=obj.school_days,
                 school_time=obj.school_time))
-    return render(request, "admin/view_faculty_detail.html", {'get_subject_offerings': get_subject_offerings, 'get_faculty': get_faculty})
+    return render(request, "admin/view_faculty_detail.html", {'get_subject_offerings': get_subject_offerings, 'get_faculty': get_faculty,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_counselor(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_counselor = Faculty.objects.filter(role='Counselor')
     page = request.GET.get('page', 1)
 
@@ -508,22 +548,25 @@ def view_counselor(request, *args, **kwargs):
         counselor = paginator.page(1)
     except EmptyPage:
         counselor = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_counselor.html", {'counselor': counselor})
+    return render(request, "admin/view_counselor.html", {'counselor': counselor,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_subject_offerings(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_subject_offerings = SubjectOfferings.objects.all()
-    check_sem = CheckSemForm()
+    check_sem = SetActiveForm(initial={'active_year': '2022'})
     if request.method == 'POST':
-        check_sem = CheckSemForm(request.POST)
+        check_sem = SetActiveForm(request.POST,initial={'active_year': '2022'})
         if check_sem.is_valid():
-            sem_choice = check_sem['sem'].value()
+            sem_choice = check_sem['active_sem'].value()
+            sem_year = check_sem['active_year'].value()
             if sem_choice == '--':
-                get_subject_offerings = SubjectOfferings.objects.all()
+                get_subject_offerings = SubjectOfferings.objects.filter(academic_year=sem_year)
             else:
                 get_subject_offerings = SubjectOfferings.objects.filter(
-                    sem_id=sem_choice)
+                    sem_id=sem_choice,academic_year=sem_year)
     
     page = request.GET.get('page', 1)
     paginator = Paginator(get_subject_offerings, 10)
@@ -533,11 +576,13 @@ def view_subject_offerings(request, *args, **kwargs):
         subject_offerings = paginator.page(1)
     except EmptyPage:
         subject_offerings = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings, 'check_sem': check_sem})
+    return render(request, "admin/view_subject_offerings.html", {'subject_offerings': subject_offerings, 'check_sem': check_sem,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_degree_program(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_degree_program = DegreeProgram.objects.all()
     page = request.GET.get('page', 1)
 
@@ -548,11 +593,13 @@ def view_degree_program(request, *args, **kwargs):
         degree_program = paginator.page(1)
     except EmptyPage:
         degree_program = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_degree_program.html", {'degree_program': degree_program})
+    return render(request, "admin/view_degree_program.html", {'degree_program': degree_program,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def edit_degree_program(request, code):
+    global Active_Year
+    global Active_Sem
     degree_program = DegreeProgram.objects.get(program_code=code)
     edit_form = EditDegreeProgramForm(instance=degree_program)
     if request.method == "POST":
@@ -566,11 +613,13 @@ def edit_degree_program(request, code):
             edit.program_name = new_program_name
             edit.school_code = get_school
             edit.save()
-    return render(request, "admin/edit_degree_program.html", {'degree_program': degree_program, 'edit_form': edit_form})
+    return render(request, "admin/edit_degree_program.html", {'degree_program': degree_program, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_student(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_student = Student.objects.all()
     page = request.GET.get('page', 1)
 
@@ -587,11 +636,13 @@ def view_student(request, *args, **kwargs):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_student', search=search_choice)
-    return render(request, "admin/view_student.html", {'student': student, 'search_form': search_form})
+    return render(request, "admin/view_student.html", {'student': student, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def search_student(request, search):
+    global Active_Year
+    global Active_Sem
     all_student = Student.objects.all()
     get_student = []
     for obj in all_student:
@@ -617,11 +668,13 @@ def search_student(request, search):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_student', search=search_choice)
-    return render(request, "admin/search_student.html", {"student": student, 'search_form': search_form})
+    return render(request, "admin/search_student.html", {"student": student, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_student_with_load(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_student = Student.objects.all()
     page = request.GET.get('page', 1)
 
@@ -638,11 +691,13 @@ def view_student_with_load(request, *args, **kwargs):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_student_with_load', search=search_choice)
-    return render(request, "admin/view_student_with_load.html", {'student': student, 'search_form': search_form})
+    return render(request, "admin/view_student_with_load.html", {'student': student, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def search_student_with_load(request, search):
+    global Active_Year
+    global Active_Sem
     all_student = Student.objects.all()
     get_student = []
     for obj in all_student:
@@ -668,12 +723,14 @@ def search_student_with_load(request, search):
         if search_form.is_valid():
             search_choice = search_form['search'].value()
             return redirect('search_student_with_load', search=search_choice)
-    return render(request, "admin/search_student_with_load.html", {"student": student, 'search_form': search_form})
+    return render(request, "admin/search_student_with_load.html", {"student": student, 'search_form': search_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def view_student_detail(request, student_number):
-    subject_offerings = SubjectOfferings.objects.all()
+    global Active_Year
+    global Active_Sem
+    subject_offerings = SubjectOfferings.objects.filter(sem_id=Active_Sem,academic_year=Active_Year)
     get_student_load = Studentload.objects.filter(
         student_number=student_number)
     get_student = Student.objects.get(student_number=student_number)
@@ -688,11 +745,13 @@ def view_student_detail(request, student_number):
                     subject_title=obj.subject_title,
                     school_days=obj.school_days,
                     school_time=obj.school_time))
-    return render(request, "admin/view_student_detail.html", {'get_subject_offerings': get_subject_offerings, 'get_student': get_student,'get_degree_name':get_degree_name})
+    return render(request, "admin/view_student_detail.html", {'get_subject_offerings': get_subject_offerings, 'Active_Year':Active_Year,'Active_Sem':Active_Sem,'get_student': get_student,'get_degree_name':get_degree_name})
 
 
 @login_required(login_url='login')
 def view_student_load(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem
     get_student_load = Studentload.objects.all()
     page = request.GET.get('page', 1)
     paginator = Paginator(get_student_load, 10)
@@ -702,11 +761,14 @@ def view_student_load(request, *args, **kwargs):
         student_load = paginator.page(1)
     except EmptyPage:
         student_load = paginator.page(paginator.num_pages)
-    return render(request, "admin/view_student_load.html", {'student_load': student_load})
+    return render(request, "admin/view_student_load.html", {'student_load': student_load,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def upload_faculty(request):
+    global Active_Year
+    global Active_Sem
+    new_faculty_list=[]
     try:
         get_faculty = Faculty.objects.all()
         if request.method == 'POST':
@@ -721,12 +783,15 @@ def upload_faculty(request):
 
             if(col == 7):
                 for data in imported_data:
+                    new_faculty_list.append({'faculty_id': str(data[0]), 'lastname': data[1],
+                                               'firstname': data[2], 'middlename': data[3], 'email': data[4],
+                                               'role': data[5],'department_code':data[6]})
                     check_faculty = Faculty.objects.all()
                     flag_faculty = 0
                     flag_depa = 0
                     check_depa = Department.objects.all()
                     for obj in check_depa:
-                        if obj.department_code == data[5]:
+                        if obj.department_code == data[6]:
                             flag_depa = 1
                     if flag_depa == 0:
                         depa = Department(department_code=data[6])
@@ -749,19 +814,24 @@ def upload_faculty(request):
                         )
                         value.save()
                     else:
+                        depa = Department.objects.get(
+                            department_code=str(data[6]))
                         check = Faculty.objects.get(faculty_id=id)
                         check.lastname = data[1]
                         check.firstname = data[2]
                         check.middlename = data[3]
                         check.email = data[4]
                         check.role = data[5]
+                        check.department_code = depa
                         check.save()
+                        
+                        
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
         page = request.GET.get('page', 1)
 
-        paginator = Paginator(get_faculty, 10)
+        paginator = Paginator(new_faculty_list, 10)
         try:
             faculty = paginator.page(page)
         except PageNotAnInteger:
@@ -769,15 +839,19 @@ def upload_faculty(request):
         except EmptyPage:
             faculty = paginator.page(paginator.num_pages)
     except Exception:
+        faculty=[]
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_faculty.html", {"faculty": faculty})
+    return render(request, "admin/upload_faculty.html", {"faculty": faculty,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def upload_subject_offerings(request):
+    global Active_Year
+    global Active_Sem
+    new_subject_offerings_list=[]
+    sem_choice = '1st'
     try:
         get_subject_offerings = SubjectOfferings.objects.all()
-        list_for_wrong_semester = []
         check_sem = CheckSemForm()
         if request.method == 'POST':
             check_sem = CheckSemForm(request.POST)
@@ -870,6 +944,12 @@ def upload_subject_offerings(request):
                         subject.save()
 
                 for data in imported_data:
+                    new_subject_offerings_list.append({'offer_no': str(data[0]),
+                             'subject_code': str(data[1]),
+                                               'school_days':str(data[3]), 'department_code':str(data[7]), 
+                                               'subject_title': data[2], 'faculty_id':str(data[8]),
+                                               'school_time': str(data[4]), 'sem_id': str(data[5]), 
+                                               'academic_year': str(data[6])})
                     check_subjectOfferings = SubjectOfferings.objects.all()
                     is_subjectOfferings = bool(check_subjectOfferings)
                     get_subject_code = Subject.objects.get(
@@ -896,9 +976,6 @@ def upload_subject_offerings(request):
                                 check_if_exist.academic_year = str(data[6])
                                 check_if_exist.faculty_id = get_faculty_id
                                 check_if_exist.save()
-                            else:
-                                list_for_wrong_semester.append(
-                                    SubjectOfferings(offer_no=str(data[0])))
                         else:
                             if sem_choice == str(data[5]):
                                 value = SubjectOfferings(
@@ -913,9 +990,6 @@ def upload_subject_offerings(request):
                                     faculty_id=get_faculty_id
                                 )
                                 value.save()
-                            else:
-                                list_for_wrong_semester.append(
-                                    SubjectOfferings(offer_no=str(data[0])))
                     else:
                         if sem_choice == str(data[5]):
                             value = SubjectOfferings(
@@ -930,16 +1004,13 @@ def upload_subject_offerings(request):
                                 faculty_id=get_faculty_id
                             )
                             value.save()
-                        else:
-                            list_for_wrong_semester.append(
-                                SubjectOfferings(offer_no=str(data[0])))
 
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
         page = request.GET.get('page', 1)
 
-        paginator = Paginator(get_subject_offerings, 10)
+        paginator = Paginator(new_subject_offerings_list, 10)
         try:
             subject_offerings = paginator.page(page)
         except PageNotAnInteger:
@@ -947,12 +1018,16 @@ def upload_subject_offerings(request):
         except EmptyPage:
             subject_offerings = paginator.page(paginator.num_pages)
     except Exception as e:
+        subject_offerings=[]
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_subject_offerings.html", {"subject_offerings": subject_offerings, 'check_sem': check_sem, 'list_for_wrong_semester': list_for_wrong_semester})
+    return render(request, "admin/upload_subject_offerings.html", {'sem_choice':sem_choice,"subject_offerings": subject_offerings, 'check_sem': check_sem, 'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def upload_student(request):
+    global Active_Year
+    global Active_Sem
+    new_student_list=[]
     try:
         get_student = Student.objects.all()
         if request.method == 'POST':
@@ -1006,12 +1081,18 @@ def upload_student(request):
                         role=data[10]
                     )
                     value.save()
+                    new_student_list.append({'student_number': str(data[0]), 'lastname': data[1],
+                                               'firstname': data[2], 'middlename': data[3], 'school_name': str(data[4]),
+                                               'program_code':str(data[6]),'department_code':str(data[5]),
+                                                'academic_year': str(data[7]),'sem_id':data[8],
+                                                 'role': data[10],'student_email':data[9]})
+                        
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
         page = request.GET.get('page', 1)
 
-        paginator = Paginator(get_student, 10)
+        paginator = Paginator(new_student_list, 10)
         try:
             student = paginator.page(page)
         except PageNotAnInteger:
@@ -1019,12 +1100,16 @@ def upload_student(request):
         except EmptyPage:
             student = paginator.page(paginator.num_pages)
     except Exception as e:
+        student=[]
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_student.html", {"student": student})
+    return render(request, "admin/upload_student.html", {"student": student,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
 def upload_student_load(request):
+    global Active_Year
+    global Active_Sem
+    new_student_load_list = []
     try:
         get_student_load = Studentload.objects.all()
         if request.method == 'POST':
@@ -1040,6 +1125,8 @@ def upload_student_load(request):
 
             if(col == 4):
                 for data in imported_data:
+                    new_student_load_list.append({'student_number': str(data[0]), 
+                        'offer_no': str(data[1]), 'sem_id':str(data[2]),'academic_year': str(data[3])})
                     check_student_load = Studentload.objects.all()
                     is_student_load = bool(check_student_load)
                     get_student_number = Student.objects.get(
@@ -1073,12 +1160,13 @@ def upload_student_load(request):
                             sem_id=str(data[2]),
                             academic_year=str(data[3]))
                         value.save()
+                        
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
         page = request.GET.get('page', 1)
 
-        paginator = Paginator(get_student_load, 10)
+        paginator = Paginator(new_student_load_list, 10)
         try:
             student_load = paginator.page(page)
         except PageNotAnInteger:
@@ -1086,8 +1174,10 @@ def upload_student_load(request):
         except EmptyPage:
             student_load = paginator.page(paginator.num_pages)
     except Exception as e:
+        print('eeee',e)
+        student_load = []
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_student_load.html", {"student_load": student_load})
+    return render(request, "admin/upload_student_load.html", {"student_load": student_load,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 # admin
 
 
@@ -1259,6 +1349,7 @@ def counselor_home_view(request, *args, **kwargs):
     return render(request, "counselor/home.html", {"counselorNotif": counselorNotif, "form": counselor_name})
 
 
+
 @login_required(login_url='login')
 def view_referred_students(request):
     user = request.session.get('username')
@@ -1281,6 +1372,7 @@ def view_pending_referred_students(request):
 
 @login_required(login_url='login')
 def detail_referred_student_counselor(request, id):
+    print('hoy')
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
@@ -1294,7 +1386,7 @@ def detail_referred_student_counselor(request, id):
                                             faculty_id=get_details.faculty_id))
     count = len(get_referral.referral_id)
     referral_id = get_referral.id
-    return render(request, "counselor/detail_referred_student_counselor.html", {"counselorNotif": counselorNotif,'referral_id':referral_id, 'count': count, "detail": qs, 'get_referral':get_referral, "form": counselor_name})
+    return render(request, "counselor/detail_referred_student_counselor.html", {"counselorNotif": counselorNotif,'referral_id':referral_id, 'get_referral':get_referral, 'count': count, "detail": qs, 'get_referral':get_referral, "form": counselor_name})
 
 
 @login_required(login_url='login')

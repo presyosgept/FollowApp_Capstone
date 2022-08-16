@@ -413,11 +413,7 @@
                  </div>
                  {% else %}
                 <div class="student-info">
-                <div style="font-size: 23px; display: flex; flex-direction: row;">
-                <div><h3 style="font-size: 23px;">Referred By:</h3></div>
-                  <div style="font-size: 23px;"> <b style="color: #000; margin-left: 1vw;">{{object.faculty_id.firstname}} {{object.faculty_id.lastname}}</b></div>
-                  </div>
-                  <br>
+                <p><h3 style="font-size: 23px;">Referred By: <b style="color: #000; margin-left: 0.5vw;">{{object.faculty_id.firstname}} {{object.faculty_id.lastname}}</b></h3></p>
                 <div style="font-size: 18px;" ><h3 style="font-size: 23px;">Behavioral Problem: </h3><b style="color: #000; margin-left: 1vw;"><li>{{object.behavior_problem}}</li></b></div>
                 <div class="feedback-stated">
             <h3><i>Teacher's Reason for Appointment:</i></h3>
