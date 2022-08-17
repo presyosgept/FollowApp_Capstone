@@ -319,11 +319,20 @@
          {% if object.choice|stringformat:"s" == "Class" %} 
         <td class="text-center" style="font-size: 18px; background-color: #659EC7; color: #fff;"><b>{{object.choice}} - {{object.subject_code.subject_code}}</b></td>
         {% elif object.choice|stringformat:"s" == "Counseling" %}
-        <td class="text-center" style="background-color: #387C44;">
-          <a href="{% url 'detail_referred_student_counselor' object.id %}" style="color: #fff; font-size: 16px;">
-            <b>{{object.choice}}</b>
-          </a>
-        </td>
+             {% if object.status == 'done' %}
+                            <td class="text-center" >
+                              <a href="{% url 'detail_referred_student_counselor' object.id %}" style="color: black; font-size: 16px;">
+                                <b>{{object.choice}}</b>
+                              </a>
+                      </td>
+            {% else %}
+                           <td class="text-center" style="background-color: green;">
+                              <a href="{% url 'detail_referred_student_counselor' object.id %}" style="color: #fff; font-size: 16px;">
+                                <b>{{object.choice}}</b>
+                              </a>
+                      </td>
+            
+            {% endif %} 
         {% elif object.choice|stringformat:"s" == "Not Available" %}
         <td class="text-center" style="font-size: 16px; background-color: #F75D59; color: #fff;" ><b>{{object.choice}}</b></td>
         {% else %} {% endif %} {% else %} {% endif %} {% endif %} {% endfor %} {% endfor %}

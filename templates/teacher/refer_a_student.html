@@ -230,13 +230,14 @@
   
   
   } */
-    #id_behavior_problem {
+      #id_behavior_problem {
       vertical-align: baseline;
-      width: 8vw;
-      text-align: center;
-      font-size: 17.5px;
+      display: inline-block;
+      width: auto;
+      text-align: left;
+      font-size: 20px;
+      line-height: 1.5em;
     }
-  
     .left {
       float: left;
       margin-right: px;
@@ -448,13 +449,7 @@
       font-size: 18px;
     }
   
-    #id_subject_referred {
-      width: 400px;
-      height: 38px;
-      color: #3A3B3C;
-      border-radius: 5px;
-      font-size: 18px;
-    }
+
   
     .column {
       width: 20vw;
@@ -487,7 +482,6 @@
     }
   
     .parent_checkbox {
-
        margin-left: 2vw;
       /* flex-direction: column;
       column-gap: 2rem;
@@ -518,8 +512,12 @@
       margin-left: auto;
     }
     #id_subject_referred{
-      width: 10vw;
+      width: 12vw;
       height: 2.5vw;
+            color: #3A3B3C;
+      border-radius: 5px;
+      font-size: 18px;
+
     }
   </style>
   <div class="fac">
@@ -531,7 +529,7 @@
         <b>{{message}} !</b>
       </p> {% endfor %} </div>
       <br>
-  <form class="reffer" method="POST" action=""> {% csrf_token %} <br>
+  <form class="reffer" method="POST" action=""> {% csrf_token %}
     <h3 style="font-weight: bold; text-align: center; font-size: 25px;" class="txtColor">&nbsp; &nbsp; <i> To proceed with Referring a student, kindly input the following details.</i>
     </h3> 
     <br>
@@ -540,9 +538,10 @@
           </div>                         
            <div style="display: flex; flex-direction: row; margin-left: 2vw;">
                       <p class="pText">
-            <b class="bText"></b>
-            <i>Subject Reffered:</i>
-            <div style="margin-top: 2vh; margin-left: 0.5vw;">
+            <b class="bText">
+            Subject Reffered:
+            </b>
+            <div style="margin-top: 3vh; margin-left: 0.5vw;">
               {{referral_form.subject_referred}}
             </div>
           </p>
@@ -550,12 +549,13 @@
                   <!-- <div style="font-size: 23px;"> <b style="color: #000; margin-left: 1vw;">{{referral_form.subject_referred}}</b></div> -->
                   </div>
         <div class="parent_checkbox">
-          <p class="pText">
-            <b class="bText"></b>
-            <i>Select a Behavioral Problem:</i>
+          <p  class="pText">
+                       <b class="bText">
+            Select a Behavioral Problem:
+            </b>
           </p>
-          <p class="pText">
-            <b class="bText"></b>{{referral_form.behavior_problem}}
+          <p >
+            {{referral_form.behavior_problem}}
           </p>
         </div>
         
@@ -563,9 +563,9 @@
 
 
         <div class="parent_input">
-          <i>
+
             <p class="input_text">Input&nbsp;Additional&nbsp;Information:</p>
-          </i>
+
           {{referral_form.reasons}}
           <br>
           <br>

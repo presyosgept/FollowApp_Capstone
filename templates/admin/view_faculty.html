@@ -1,4 +1,4 @@
-{% extends "admin/home.html" %} {% block title %} Upload Semester {% endblock %} {% block content %}
+{% extends "admin/home.html" %} {% block title %} Upload Semester {% endblock %} {% block content %} 
 <style>
   .semester-card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -23,8 +23,8 @@
 
   .button {
     margin: 0 auto;
-    width: 4vw;
-    height: 30px;
+    width: 4.5vw;
+    height: 5vh;
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
     text-transform: uppercase;
@@ -231,27 +231,6 @@
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-
-  
-
-  .button {
-    margin: 0 auto;
-    width: 4.5vw;
-    height: 5.5vh;
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 2.5px;
-    font-weight: 500;
-    color: #fff;
-    background-color: #304434;
-    border: none;
-    border-radius: 6px;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease 0s;
-    cursor: pointer;
-    outline: none;
-  }
     .no-data{
     text-align: center;
     margin-top: 3vh;
@@ -259,6 +238,12 @@
     font-size: 19px;
   }
   .search-parent{
+    display: flex;
+    flex-direction: row;
+    gap: 1vw;
+    font-size: 19px;
+  }
+    .search-parent{
     display: flex;
     flex-direction: row;
     gap: 12px;
@@ -274,12 +259,13 @@
   }
   
   .pagination {
- margin-top: 50vh;
- background-color: red;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .pagination a {
-  color: blagcgreenk;
+  color: black;
   float: left;
   padding: 8px 16px;
   text-decoration: none;
@@ -303,11 +289,10 @@
 </div>
 <br>
 <form method="POST"> {% csrf_token %} 
-
   <div class="search-parent">
         <div>
         <!-- <b>Search Faculty Last Name&nbsp; {{search_form.search}}</b> -->
-        <input  type="text" placeholder="Search Faculty Last Name" style="font-size: 19px;"  {{search_form.search}}
+        <input  type="text" placeholder="Search Faculty Last Name"  style="font-size: 19px;" {{search_form.search}}
          </div>
   <div>
    <button type="submit" class="button">
@@ -335,32 +320,45 @@
         <th  style="font-size: 17px;">Department Code</th>
       </tr>
     </thead>  {% for obj in faculty %} <tbody>
-      <tr>
-        <td style="text-align: center; font-size: 16px;">
-            
-             <b>{{obj.faculty_id}}</b>
-         
-        </td>
-        <td  style="text-align: left; font-size: 16px;">
-           <b>{{obj.lastname}}</b>
-        </td>
-        <td  style="text-align: left; font-size: 16px;">
-           <b>{{obj.firstname}}</b>
-        </td>
-         <td  style="text-align: left; font-size: 16px;">
-           <b>{{obj.middlename}}</b>
-        </td>
-          <td  style="text-align: left; font-size: 16px;">
-           <b>{{obj.department_code_id}}</b>
-        </td>
-        
-      </tr>
+  <tr>
+    <td style="text-align: center; font-size: 16px;">
+        <a href="{% url 'view_faculty_detail' obj.faculty_id %}" 
+        style="color: #4C4646;">
+         <b>{{obj.faculty_id}}</b>
+      </a>
+    </td>
+    <td style="text-align: left;  font-size: 16px;">
+        <a href="{% url 'view_faculty_detail' obj.faculty_id %}" 
+        style="color: #4C4646;">
+         <b>{{obj.lastname}}</b>
+      </a>
+    </td>
+    <td style="text-align: left; font-size: 16px;">
+        <a href="{% url 'view_faculty_detail' obj.faculty_id %}" 
+        style="color: #4C4646;">
+         <b>{{obj.firstname}}</b>
+      </a>
+    </td>
+    <td style="text-align: left; font-size: 16px;">
+        <a href="{% url 'view_faculty_detail' obj.faculty_id %}" 
+        style="color: #4C4646;">
+         <b>{{obj.middlename}}</b>
+      </a>
+    </td>
+    <td style="text-align: left; font-size: 16px;">
+        <a href="{% url 'view_faculty_detail' obj.faculty_id %}" 
+        style="color: #4C4646;">
+         <b>{{obj.department_code_id}}</b>
+      </a>
+    </td>
+    
+  </tr>
     </tbody> {% endfor %}
   </table>
  {% endif %} 
 
-  {% if faculty %} 
- <div class="pagination">
+ {% if faculty %} 
+  <div class="pagination">
     {% if faculty.has_previous %}
       <a href="?page=1">&laquo;</a>
     {% endif %}
@@ -384,9 +382,8 @@
       <a href="?page={{ faculty.paginator.num_pages }}">&raquo;</a>
     {% endif %}
 </div >
-{% endif %}
-<!--  
-<div class="pagination">
+    {% endif %}
+<!-- <div class="pagination">
   {% if faculty.has_other_pages %}
 
     {% if faculty.has_previous %}
@@ -409,6 +406,5 @@
   
   {% endif %}
  </div> -->
-
 
 {% endblock %}

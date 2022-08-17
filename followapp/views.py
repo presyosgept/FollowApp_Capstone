@@ -76,7 +76,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = 'c54dd055578f839f75d4e7e5f502a019'
+                auth_token = '2b5813f003934b172e7f429e802e5704'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -102,7 +102,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = 'c54dd055578f839f75d4e7e5f502a019'
+                    auth_token = '2b5813f003934b172e7f429e802e5704'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -224,15 +224,14 @@ def loginPage(request):
                         flag = 0
                     if flag == 1:
                         request.session['username'] = username
-                        get_students = StudentAdditionalInformation.objects.all()
-                        check = bool(get_students)
-                        if check:
+                        try:
                             stud = StudentAdditionalInformation.objects.get(
-                                student_number=username)
-                            if stud.status == 'undone':
-                                return redirect('student_add_information')
-                            else:
-                                return redirect('student_home_view')
+                                    student_number=username)
+                            check = True
+                        except:
+                            check = False
+                        if check:
+                            return redirect('student_home_view')
                         else:
                             return redirect('student_add_information')
 
@@ -312,7 +311,7 @@ def set_active_year(request, *args, **kwargs):
 def view_subject(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_subject = Subject.objects.all()
+    get_subject = Subject.objects.all().order_by('subject_code')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_subject, 10)
@@ -339,6 +338,7 @@ def edit_subject(request, code):
             edit.units = new_units
             edit.save()
             subject = Subject.objects.get(subject_code=code)
+            return redirect('view_subject')
     return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
@@ -346,7 +346,7 @@ def edit_subject(request, code):
 def view_school(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_school = School.objects.all()
+    get_school = School.objects.all().order_by('school_code')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_school, 10)
@@ -372,6 +372,7 @@ def edit_school(request, name):
             edit = School.objects.get(school_name=name)
             edit.school_code = new_school_code
             edit.save()
+            return redirect('view_school')
     return render(request, "admin/edit_school.html", {'school': school, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
@@ -379,7 +380,7 @@ def edit_school(request, name):
 def view_department(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_department = Department.objects.all()
+    get_department = Department.objects.all().order_by('department_code')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_department, 10)
@@ -409,6 +410,7 @@ def edit_department(request, code):
             edit.department_name = new_department_name
             edit.school_code = get_school_code
             edit.save()
+            return redirect('view_department')
     return render(request, "admin/edit_department.html", {'department': department, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
@@ -583,7 +585,7 @@ def view_subject_offerings(request, *args, **kwargs):
 def view_degree_program(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_degree_program = DegreeProgram.objects.all()
+    get_degree_program = DegreeProgram.objects.all().order_by('program_code')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_degree_program, 10)
@@ -613,6 +615,7 @@ def edit_degree_program(request, code):
             edit.program_name = new_program_name
             edit.school_code = get_school
             edit.save()
+            return redirect('view_degree_program')
     return render(request, "admin/edit_degree_program.html", {'degree_program': degree_program, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
@@ -763,12 +766,16 @@ def view_student_load(request, *args, **kwargs):
         student_load = paginator.page(paginator.num_pages)
     return render(request, "admin/view_student_load.html", {'student_load': student_load,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
+new_faculty_list = []
+new_subject_offerings_list=[]
+new_student_list=[]
+new_student_load_list = []
 
 @login_required(login_url='login')
 def upload_faculty(request):
     global Active_Year
     global Active_Sem
-    new_faculty_list=[]
+    global new_faculty_list
     try:
         get_faculty = Faculty.objects.all()
         if request.method == 'POST':
@@ -848,7 +855,7 @@ def upload_faculty(request):
 def upload_subject_offerings(request):
     global Active_Year
     global Active_Sem
-    new_subject_offerings_list=[]
+    global new_subject_offerings_list
     sem_choice = '1st'
     sem_year='2022'
     try:
@@ -1034,7 +1041,7 @@ def upload_subject_offerings(request):
 def upload_student(request):
     global Active_Year
     global Active_Sem
-    new_student_list=[]
+    global new_student_list
     try:
         get_student = Student.objects.all()
         if request.method == 'POST':
@@ -1116,7 +1123,7 @@ def upload_student(request):
 def upload_student_load(request):
     global Active_Year
     global Active_Sem
-    new_student_load_list = []
+    global new_student_load_list
     try:
         get_student_load = Studentload.objects.all()
         if request.method == 'POST':
@@ -1200,7 +1207,7 @@ def director_home_view(request, *args, **kwargs):
 def list_degree_program(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
-    degree_program = DegreeProgram.objects.all()
+    degree_program = DegreeProgram.objects.all().order_by('program_code')
     return render(request, "director/list_degree_program.html", {"form": director_name, 'degree_program': degree_program})
 
 
@@ -1226,7 +1233,7 @@ def assign_counselor(request, code):
 def per_degree_program(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
-    degree_program = DegreeProgram.objects.all()
+    degree_program = DegreeProgram.objects.all().order_by('program_code')
     return render(request, "director/per_degree_program.html", {"form": director_name, 'degree_program': degree_program})
 
 
@@ -1285,7 +1292,7 @@ def view_stat_by_degree_program_with_date(request, degree):
 def per_counselor(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
-    counselor = Faculty.objects.filter(role='Counselor')
+    counselor = Faculty.objects.filter(role='Counselor').order_by('lastname')
     return render(request, "director/per_counselor.html", {"form": director_name, 'counselor': counselor})
 
 
@@ -1520,13 +1527,13 @@ def counselor_set_schedule(request, *args, **kwargs):
                                 messages.info(request, 'Success')
                             else:  # else checker2
                                 messages.info(
-                                    request, 'Not Available Time1')
+                                    request, 'Not Available Time')
                         else:  # else checker1
                             messages.info(
-                                request, 'Not Available Time2')
+                                request, 'Not Available Time')
                     else:  # else checker
                         messages.info(
-                            request, 'Not Available Time3')
+                            request, 'Not Available Time')
 
                 if(referral_by_datenotAvailable_checker == True and classes_of_counselor_checker == True and not_available_sched_checker == False):
                     print('2')
@@ -1856,11 +1863,12 @@ def counselor_feedback_student(request, id):
     student = Referral.objects.get(id=id)
     preparedby = Faculty.objects.get(faculty_id=student.counselor_id)
     form1 = CounselorFeedbackForm()
+    teachers=[]
     if request.method == "POST":
         form1 = CounselorFeedbackForm(request.POST)
         if form1.is_valid():
             form1.save()
-            feedback = form1['feedback'].value()
+            feedback = form1['remarks'].value()
             t = Referral.objects.get(id=id)
             t.status = "done"
             t.feedback = feedback
@@ -1874,8 +1882,9 @@ def counselor_feedback_student(request, id):
                         except:
                             check = False
                         if check==False:
-                            create_feedback(get_detail.faculty_id_id,
-                                            'feedback_teacher', user, id,feedback_id)
+                            teachers.append(get_detail.faculty_id_id)
+            for obj in teachers:
+                create_feedback(obj,'feedback_teacher', user, id, feedback_id)
             
             messages.info(request, 'Success!')
             form1 = CounselorFeedbackForm()
@@ -2089,6 +2098,7 @@ def counselor_view_schedule(request, *args, **kwargs):
                                                            lastname=object2.lastname, middlename=object2.middlename,
                                                            degree_program=object2.degree_program, 
                                                            counselor_id=object2.counselor_id, 
+                                                           status = object2.status,
                                                            start_time=object2.start_time, end_time=object2.end_time, date=object2.date,
                                                            choice=choice))
                 for object3 in not_available_sched:
@@ -2160,7 +2170,7 @@ def counselor_view_schedule(request, *args, **kwargs):
                         choice = 'Counseling'
                         schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
+                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, status = object2.status,
                                                            start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
                                                            choice=choice))
 
@@ -2237,7 +2247,7 @@ def counselor_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
                                                            lastname=object.lastname, middlename=object.middlename,
-                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, status = object.status,
                                                            start_time=object.start_time, end_time=object.end_time, date=object.date, 
                                                            choice=choice))
 
@@ -2314,7 +2324,7 @@ def counselor_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
                                                            lastname=object.lastname, middlename=object.middlename,
-                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, status = object.status,
                                                            start_time=object.start_time, end_time=object.end_time, date=object.date, 
                                                            choice=choice))
 
@@ -2489,7 +2499,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                         schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
                                                            degree_program=object2.degree_program, 
-                                                           counselor_id=object2.counselor_id, 
+                                                           counselor_id=object2.counselor_id, status = object2.status,
                                                            start_time=object2.start_time, end_time=object2.end_time, date=object2.date,
                                                            choice=choice))
                 for object3 in not_available_sched:
@@ -2561,7 +2571,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                         choice = 'Counseling'
                         schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
+                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, status = object2.status,
                                                            start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
                                                            choice=choice))
 
@@ -2638,7 +2648,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
                                                            lastname=object.lastname, middlename=object.middlename,
-                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, status = object.status,
                                                            start_time=object.start_time, end_time=object.end_time, date=object.date, 
                                                            choice=choice))
 
@@ -2715,7 +2725,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     schedule_for_today.append(Referral(id=object.id,student_number=object.student_number, firstname=object.firstname,
                                                            lastname=object.lastname, middlename=object.middlename,
-                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, 
+                                                           degree_program=object.degree_program,counselor_id=object.counselor_id, status = object.status,
                                                            start_time=object.start_time, end_time=object.end_time, date=object.date, 
                                                            choice=choice))
 
@@ -2749,7 +2759,7 @@ def teacher_home_view(request, *args, **kwargs):
     notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
     teacherNotif = len(notif)
     subjects = SubjectOfferings.objects.filter(
-        faculty_id=teacher_name.faculty_id, sem_id = Active_Sem, academic_year = Active_Year)
+        faculty_id=teacher_name.faculty_id, sem_id = Active_Sem, academic_year = Active_Year).order_by('offer_no')
     return render(request, "teacher/home.html",  {'teacherNotif': teacherNotif, "form": teacher_name, 'subjects': subjects})
 
 
@@ -3830,7 +3840,7 @@ def student_view_schedule(request, *args, **kwargs):
                     choice = 'Counseling'
                     sched_for_today.append(Referral(id= object.id,student_number=object.student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
-                                                    degree_program=object.degree_program, counselor_id=object.counselor_id, 
+                                                    degree_program=object.degree_program, counselor_id=object.counselor_id, status=object.status, 
                                                     start_time=object.start_time, end_time=object.end_time, date=object.date, 
                                                     choice=choice))
     else:
@@ -3934,7 +3944,7 @@ def another_student_view_schedule(request, *args, **kwargs):
                     sched_for_today.append(Referral(id=object.id,student_number=object. student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
                                                     degree_program=object.degree_program, 
-                                                     counselor_id=object.counselor_id, 
+                                                     counselor_id=object.counselor_id, status=object.status, 
                                                     start_time=object.start_time, end_time=object.end_time, date=object.date,
                                                     choice=choice))
     else:

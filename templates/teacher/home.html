@@ -436,6 +436,7 @@
       }
 
       .card {
+        /* height: 80vh; */
         background-color: white;
         border-radius: 0.25rem;
         box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
@@ -451,7 +452,7 @@
 
       .card_title {
         color: #ffffff;
-        font-size: 1.1rem;
+        font-size: 12px;
         font-weight: 700;
         letter-spacing: 1px;
         text-transform: capitalize;
@@ -642,7 +643,8 @@
       </center> {% endif %} <div class="subject_title">
         <h2>My Subjects</h2>
       </div>
-      <div class="cards"> {% for object in subjects %} <div class="cards_item">
+      <div class="cards"> {% for object in subjects %} 
+        <div class="cards_item">
           <a href="{% url 'student_list_enrolled' object.offer_no %}">
             <div class="card">
               <div class="card_image">

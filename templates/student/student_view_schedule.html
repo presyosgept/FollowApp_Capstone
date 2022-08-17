@@ -316,11 +316,20 @@
             {% if obj.time1|safe > object.start_time|safe or obj.time1|safe == object.start_time|safe  %} 
             {% if obj.time2|safe  < object.end_time|safe or obj.time2|safe  == object.end_time|safe  %}
               {% if object.choice|stringformat:"s" == "Counseling" %}
-              <td class="text-center" style="background-color: #387C44;">
+
+                {% if object.status == 'done' %}
+              <td class="text-center">
+                <a href="{% url 'student_notification_detail' object.id %}" style="color: black; font-size: 16px;">
+                  <b>{{object.choice}}</b>
+                </a>
+              </td>
+              {% else %}
+                      <td class="text-center" style="background-color: #387C44;">
                 <a href="{% url 'student_notification_detail' object.id %}" style="color: #fff; font-size: 16px;">
                   <b>{{object.choice}}</b>
                 </a>
               </td>
+               {% endif %}
                       {% endif %}
       {% endif %} {% endif %} {% endfor %} {% endfor %}
       </tr>

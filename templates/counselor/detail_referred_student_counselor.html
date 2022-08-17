@@ -323,9 +323,6 @@
     } */
     }
   
-    .wrap {
- 
-    }
   
     .button {
       margin-top: 4vh;
@@ -411,17 +408,30 @@
             </div>
                      </div>
                  {% for object in detail %}
-                 <div>
-                <div class="feedback-stated">
-            <h3><i>Teacher's Reason for Referral:</i></h3>
-        </div>
-        <div id="box">
-          <li class="Pbox" style="text-align: justify; margin-left:8px;">
-            <b>{{object.reasons}}</b>
-          </li>
-        </div>
-                 </div>
+                 {% if object.faculty_id %} 
+                          <div>
+                          <div class="feedback-stated">
+                      <h3><i>Teacher's Reason for Referral:</i></h3>
+                  </div>
+                  <div id="box">
+                    <li class="Pbox" style="text-align: justify; margin-left:8px;">
+                      <b>{{object.reasons}}</b>
+                    </li>
+                  </div>
+                          </div>
                  <div style="font-size: 18px;" ><h3 style="font-size: 23px;">Behavioral Problem: </h3><b style="color: #000; margin-left: 1vw;"><li>{{object.behavior_problem}}</li></b></div>
+                 {% else %}
+                   <div>
+                          <div class="feedback-stated">
+                      <h3><i>Student's Reason for Referral:</i></h3>
+                  </div>
+                  <div id="box">
+                    <li class="Pbox" style="text-align: justify; margin-left:8px;">
+                      <b>{{object.reasons}}</b>
+                    </li>
+                  </div>
+                          </div>
+                 {% endif %}
                  {% endfor %}
 
                  {% else %}
@@ -430,9 +440,19 @@
                  The Session starts at <b>{{get_referral.start_time}}</b> and ends at <b> {{get_referral.end_time}}</b>
                   on <b>{{get_referral.date}}</b>
                   {% for object in detail %}
+                         {% if object.faculty_id %} 
+                          <p>
+                  <h3 style="font-size: 23px;">Referred By: <b style="color: #000; margin-left: 0.5vw;">
+                    {{object.faculty_id.firstname}} {{object.faculty_id.lastname}}</b></h3></p>
+                     <p>
+                  <h3 style="font-size: 23px;">Subject Referred: <b style="color: #000; margin-left: 0.5vw;">
+                    {{object.subject_referred}}</b></h3></p>
+                   <div style="font-size: 18px; margin-top:5px;" >
+                    <h3 style="font-size: 23px;">Behavioral Problem</h3>
+                    <b style="color: #000; margin-left: 1vw;"><li>{{object.behavior_problem}}</li></b></div>
                   <div>
                  <div class="feedback-stated">
-             <h3><i>Student's Reason for Referral:</i></h3>
+             <h3><i>Teachers's Reason for Referral:</i></h3>
          </div>
          <div id="box">
            <li class="Pbox" style="text-align: justify; margin-left:8px;">
@@ -440,9 +460,24 @@
            </li>
          </div>
                   </div>
-                  <div style="font-size: 18px;" ><h3 style="font-size: 23px;">Behavioral Problem: </h3><b style="color: #000; margin-left: 1vw;"><li>{{object.behavior_problem}}</li></b></div>
+                         {% else %}
+                            <div>
+                 <div class="feedback-stated">
+             <h3><i>
+              Student's Reason for Referral:</i></h3>
+         </div>
+         <div id="box">
+           <li class="Pbox" style="text-align: justify; margin-left:8px;">
+             <b>{{object.reasons}}</b>
+           </li>
+         </div>
+                  </div>
+                         {% endif %}
+
+                  
+                 
                   {% endfor %}
-     <div class="wrap" >
+     <div >
          <center>
             <a href="{% url 'counselor_feedback_student' referral_id %}">
              <button class="button" style="font-weight: 800;  color: #fff;">
