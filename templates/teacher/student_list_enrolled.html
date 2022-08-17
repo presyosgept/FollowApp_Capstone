@@ -2,23 +2,6 @@
 <style>
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 
-  div.table-title {
-    display: block;
-    margin: auto;
-    max-width: 600px;
-    padding: 5px;
-    width: 100%;
-  }
-
-  .table-title h3 {
-    color: #fafafa;
-    font-size: 30px;
-    font-weight: 400;
-    font-style: normal;
-    font-family: "Roboto", helvetica, arial, sans-serif;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-    text-transform: uppercase;
-  }
 
   /*** Table Styles **/
   .table-fill {
@@ -36,18 +19,22 @@
   }
 
   th {
-    border-bottom: 4px solid #9ea7af;
-    border-right: 1px solid #343a45;
-    font-size: 23px;
+        /* border-left: 2px solid #304434;
+    border-bottom: 2px solid #304434;
+    border-right: 2px solid #304434;
+    border-top: 2px solid #304434; */
+    
+    background-color:#304434;
+    font-size: 22px;
     font-weight: 100;
-    padding: 19px;
+    padding: 5.5px;
     text-align: left;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 1px rgba(50, 43, 43, 0.1);
     vertical-align: middle;
   }
 
   th:first-child {
-    border-top-left-radius: 3px;
+    border-top-left-radius: 3px
   }
 
   th:last-child {
@@ -100,7 +87,7 @@
     font-weight: 300;
     font-size: 16px;
     text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid #C1C3D1;
+    border-right: 1px solid #304434;;
   }
 
   td:last-child {
@@ -109,10 +96,12 @@
 
   th.text-left {
     text-align: left;
+    color: #304434;
   }
 
   th.text-center {
     text-align: center;
+    color: #fff;
   }
 
   th.text-right {
@@ -121,10 +110,12 @@
 
   td.text-left {
     text-align: left;
+    color: #304434;
   }
 
   td.text-center {
     text-align: center;
+    color: #304434;
   }
 
   td.text-right {
@@ -176,15 +167,88 @@
     cursor: pointer;
     outline: none;
   }
+
+    .pagination {
+   align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 5vh;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
+.button-search{
+      margin: 0 auto;
+    width: 4.5vw;
+    height: 5vh;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #304434;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+    .search-parent{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    font-size: 19px;
+
+  }
+  #id_search{
+    width: 38vw;
+    height: 5.5vh;
+    border-radius: 4px;
+    margin-left: 1vw;
+   
+  }
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">List of Students </button>
 </div>
-<br>
+<br> <br> <br>
+<form method="POST"> {% csrf_token %} 
+
+  <div class="search-parent">
+        <div>
+        <!-- <b>Search Faculty Last Name&nbsp; {{search_form.search}}</b> -->
+        <input  type="text" placeholder="Search Student Last Name" style="font-size: 19px;"  {{search_form.search}}
+         </div>
+  <div>
+   <button type="submit" class="button-search">
+   <div style="size: 15px; margin-left: 1vw;">
+     <i class='bx bx-search nav__icon'></i>
+   </div>
+   </button>
+  </div>
+  </div>
+</form>
 <br>
 <div style="padding: 2px;"></div>
 <br>
-<br>
+
 <table class="table-fill">
   <thead>
     <tr>
@@ -195,7 +259,7 @@
   </thead> {% for object in list %} <tbody class="table-hover">
     <tr>
       <td class="text-left">{{object.student_number}}</td>
-      <td class="text-left">{{object.firstname}}, &nbsp; {{object.lastname}}</td>
+      <td class="text-left">{{object.lastname}}, &nbsp; {{object.firstname}}</td>
       <td class="text-center">
         <a href="{% url 'referral' object.student_number offer_no %}">
           <button type="submit" class="button">Refer Student</button>
@@ -203,7 +267,36 @@
       </td>
     </tr>
   </tbody> {% endfor %}
-</table> {% if not list %} <center>
+  </table> 
+
+  {% if list %} 
+  <div class="pagination">
+    {% if list.has_previous %}
+      <a href="?page=1">&laquo;</a>
+    {% endif %}
+{% if list.number|add:'-9' > 1 %}
+    <a href="?page={{ list.number|add:'-10' }}">&hellip;</a>
+{% endif %}
+
+{% for i in list.paginator.page_range %}
+    {% if list.number == i %}
+        <a class='active' href="?page={{ i }}">{{ i }}</a>
+    {% elif i > list.number|add:'-10' and i < list.number|add:'10' %}
+        <a href="?page={{ i }}">{{ i }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if list.paginator.num_pages > list.number|add:'9' %}
+    <a href="?page={{ list.number|add:'10' }}">&hellip;</a>
+{% endif %}
+
+ {% if list.has_next %}
+      <a href="?page={{ list.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+</div >
+{% endif %}
+
+{% if not list %} <center>
   <p style="font-size: 20px;">
     <b>No Students Enrolled</b>
   </p>

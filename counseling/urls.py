@@ -97,6 +97,7 @@ from followapp.views import(
     referral,
     teacher_notifications,
     teacher_notification_detail,
+    search_student_enroll,
 
     # student
     student_home_view,
@@ -238,8 +239,8 @@ urlpatterns = [
          teacher_notifications, name="teacher_notifications"),
     path('teacher/teacher_notification_detail/?P:<int:id>', teacher_notification_detail,
          name='teacher_notification_detail'),
-
-
+path('admin/search_student_enroll/<str:search>/<str:offer_no>',
+         search_student_enroll, name="search_student_enroll"),
 
     # student
     path('student/', student_home_view, name="student_home_view"),

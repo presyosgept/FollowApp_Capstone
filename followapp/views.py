@@ -416,7 +416,7 @@ def edit_department(request, code):
 def view_faculty(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_faculty = Faculty.objects.all()
+    get_faculty = Faculty.objects.all().order_by('lastname')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_faculty, 10)
@@ -439,10 +439,10 @@ def view_faculty(request, *args, **kwargs):
 def search_faculty(request, search):
     global Active_Year
     global Active_Sem
-    all_faculty = Faculty.objects.all()
+    all_faculty = Faculty.objects.all().order_by('lastname')
     get_faculty = []
     for obj in all_faculty:
-        if search in obj.lastname:
+        if search.lower() in obj.lastname.lower():
             get_faculty.append(Faculty(faculty_id=obj.faculty_id,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,
@@ -468,7 +468,7 @@ def search_faculty(request, search):
 def view_faculty_with_load(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_faculty = Faculty.objects.all()
+    get_faculty = Faculty.objects.all().order_by('lastname')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_faculty, 10)
@@ -491,10 +491,10 @@ def view_faculty_with_load(request, *args, **kwargs):
 def search_faculty_with_load(request, search):
     global Active_Year
     global Active_Sem
-    all_faculty = Faculty.objects.all()
+    all_faculty = Faculty.objects.all().order_by('lastname')
     get_faculty = []
     for obj in all_faculty:
-        if search in obj.lastname:
+        if search.lower() in obj.lastname.lower():
             get_faculty.append(Faculty(faculty_id=obj.faculty_id,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,
@@ -538,7 +538,7 @@ def view_faculty_detail(request, faculty_id):
 def view_counselor(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_counselor = Faculty.objects.filter(role='Counselor')
+    get_counselor = Faculty.objects.filter(role='Counselor').order_by('lastname')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_counselor, 10)
@@ -555,7 +555,7 @@ def view_counselor(request, *args, **kwargs):
 def view_subject_offerings(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_subject_offerings = SubjectOfferings.objects.all()
+    get_subject_offerings = SubjectOfferings.objects.all().order_by('offer_no')
     check_sem = SetActiveForm(initial={'active_year': '2022'})
     if request.method == 'POST':
         check_sem = SetActiveForm(request.POST,initial={'active_year': '2022'})
@@ -563,10 +563,10 @@ def view_subject_offerings(request, *args, **kwargs):
             sem_choice = check_sem['active_sem'].value()
             sem_year = check_sem['active_year'].value()
             if sem_choice == '--':
-                get_subject_offerings = SubjectOfferings.objects.filter(academic_year=sem_year)
+                get_subject_offerings = SubjectOfferings.objects.filter(academic_year=sem_year).order_by('offer_no')
             else:
                 get_subject_offerings = SubjectOfferings.objects.filter(
-                    sem_id=sem_choice,academic_year=sem_year)
+                    sem_id=sem_choice,academic_year=sem_year).order_by('offer_no')
     
     page = request.GET.get('page', 1)
     paginator = Paginator(get_subject_offerings, 10)
@@ -620,7 +620,7 @@ def edit_degree_program(request, code):
 def view_student(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_student = Student.objects.all()
+    get_student = Student.objects.all().order_by('lastname')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_student, 10)
@@ -643,10 +643,10 @@ def view_student(request, *args, **kwargs):
 def search_student(request, search):
     global Active_Year
     global Active_Sem
-    all_student = Student.objects.all()
+    all_student = Student.objects.all().order_by('lastname')
     get_student = []
     for obj in all_student:
-        if search in obj.lastname:
+        if search.lower() in obj.lastname.lower():
             get_student.append(Student(student_number=obj.student_number,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,  department_code=obj.department_code,
@@ -675,7 +675,7 @@ def search_student(request, search):
 def view_student_with_load(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_student = Student.objects.all()
+    get_student = Student.objects.all().order_by('lastname')
     page = request.GET.get('page', 1)
 
     paginator = Paginator(get_student, 10)
@@ -698,10 +698,10 @@ def view_student_with_load(request, *args, **kwargs):
 def search_student_with_load(request, search):
     global Active_Year
     global Active_Sem
-    all_student = Student.objects.all()
+    all_student = Student.objects.all().order_by('lastname')
     get_student = []
     for obj in all_student:
-        if search in obj.lastname:
+        if search.lower() in obj.lastname.lower():
             get_student.append(Student(student_number=obj.student_number,
                                    lastname=obj.lastname, firstname=obj.firstname,
                                    middlename=obj.middlename,  department_code=obj.department_code,
@@ -732,7 +732,7 @@ def view_student_detail(request, student_number):
     global Active_Sem
     subject_offerings = SubjectOfferings.objects.filter(sem_id=Active_Sem,academic_year=Active_Year)
     get_student_load = Studentload.objects.filter(
-        student_number=student_number)
+        student_number=student_number,sem_id=Active_Sem,academic_year=Active_Year)
     get_student = Student.objects.get(student_number=student_number)
     get_degree_name = DegreeProgram.objects.get(program_code = get_student.program_code_id)
     get_subject_offerings = []
@@ -752,7 +752,7 @@ def view_student_detail(request, student_number):
 def view_student_load(request, *args, **kwargs):
     global Active_Year
     global Active_Sem
-    get_student_load = Studentload.objects.all()
+    get_student_load = Studentload.objects.filter(sem_id=Active_Sem, academic_year=Active_Year)
     page = request.GET.get('page', 1)
     paginator = Paginator(get_student_load, 10)
     try:
@@ -850,13 +850,20 @@ def upload_subject_offerings(request):
     global Active_Sem
     new_subject_offerings_list=[]
     sem_choice = '1st'
+    sem_year='2022'
     try:
         get_subject_offerings = SubjectOfferings.objects.all()
-        check_sem = CheckSemForm()
-        if request.method == 'POST':
-            check_sem = CheckSemForm(request.POST)
+        check_sem = SetActiveForm(initial={'active_year': '2022'})
+        if request.method == "POST":
+            check_sem = SetActiveForm(request.POST,initial={'active_year': '2022'})
             if check_sem.is_valid():
-                sem_choice = check_sem['sem'].value()
+                sem_choice = check_sem['active_sem'].value()
+                sem_year = check_sem['active_year'].value()
+            # check_sem = CheckSemForm()
+            # if request.method == 'POST':
+            #     check_sem = CheckSemForm(request.POST)
+            #     if check_sem.is_valid():
+            #         sem_choice = check_sem['sem'].value()
             SubjectOfferingsResource()
             dataset = Dataset()
             new_sem = request.FILES['myfile']
@@ -962,12 +969,12 @@ def upload_subject_offerings(request):
                     if is_subjectOfferings:
                         try:
                             check_if_exist = SubjectOfferings.objects.get(
-                                offer_no=str(data[0]), sem_id=str(data[5]))
+                                offer_no=str(data[0]), sem_id=str(data[5]),academic_year = str(data[6]))
                             check_exist = bool(check_if_exist)
                         except Exception:
                             check_exist = False
                         if check_exist:
-                            if sem_choice == check_if_exist.sem_id:
+                            if sem_choice == check_if_exist.sem_id and sem_year == check_if_exist.academic_year:
                                 check_if_exist.offer_no = str(data[0])
                                 check_if_exist.subject_code = get_subject_code
                                 check_if_exist.subject_title = data[2]
@@ -977,7 +984,7 @@ def upload_subject_offerings(request):
                                 check_if_exist.faculty_id = get_faculty_id
                                 check_if_exist.save()
                         else:
-                            if sem_choice == str(data[5]):
+                            if sem_choice == str(data[5]) and sem_year == str(data[6]):
                                 value = SubjectOfferings(
                                     offer_no=str(data[0]),
                                     subject_code=get_subject_code,
@@ -991,7 +998,7 @@ def upload_subject_offerings(request):
                                 )
                                 value.save()
                     else:
-                        if sem_choice == str(data[5]):
+                        if sem_choice == str(data[5]) and sem_year == str(data[6]):
                             value = SubjectOfferings(
                                 offer_no=str(data[0]),
                                 subject_code=get_subject_code,
@@ -1020,7 +1027,7 @@ def upload_subject_offerings(request):
     except Exception as e:
         subject_offerings=[]
         messages.info(request, 'Please Choose File')
-    return render(request, "admin/upload_subject_offerings.html", {'sem_choice':sem_choice,"subject_offerings": subject_offerings, 'check_sem': check_sem, 'Active_Year':Active_Year,'Active_Sem':Active_Sem})
+    return render(request, "admin/upload_subject_offerings.html", {'sem_choice':sem_choice,'sem_year':sem_year,"subject_offerings": subject_offerings, 'check_sem': check_sem, 'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
@@ -1832,9 +1839,9 @@ def counselor_notification_detail(request, id):
             detail.append(ReferralDetails(subject_referred=get_details.subject_referred,
                                             reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
                                             faculty_id=get_details.faculty_id))
-    count = len(get_referral.referral_id)
+    
     referral_id = get_referral.id
-    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'count': count,'get_referral':get_referral, "detail": detail, "referral_id": referral_id, "form": counselor_name})
+    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'get_referral':get_referral, "detail": detail, "referral_id": referral_id, "form": counselor_name})
 
 
 @login_required(login_url='login')
@@ -1927,6 +1934,8 @@ def detail_referred_student_with_feedback(request, id):
 
 @login_required(login_url='login')
 def counselor_view_schedule(request, *args, **kwargs):
+    global Active_Sem
+    global Active_Year
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
@@ -1948,7 +1957,7 @@ def counselor_view_schedule(request, *args, **kwargs):
     ScheduledReferralbyDayCheck = False
 
     classes_of_counselor_list = SubjectOfferings.objects.filter(
-        faculty_id=user)
+        faculty_id=user,sem_id = Active_Sem , academic_year=Active_Year)
     classes_of_counselor_list_checker = bool(classes_of_counselor_list)
 
     if(classes_of_counselor_list_checker == True):
@@ -2328,6 +2337,8 @@ def counselor_view_schedule(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def another_counselor_view_schedule(request, *args, **kwargs):
+    global Active_Sem
+    global Active_Year
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
@@ -2342,17 +2353,14 @@ def another_counselor_view_schedule(request, *args, **kwargs):
     count = 0
     newDate = Calendar.objects.last()
     today = newDate.pickedDate
-    now = dt.datetime.now()
-    day_name = now.strftime("%a")
+    day_name = today.strftime("%a")
     classes_of_counselor = []
-    classes_of_counselor_checl = False
-
-    ScheduledReferralbyDayCheck = False
 
     classes_of_counselor_list = SubjectOfferings.objects.filter(
-        faculty_id=user)
+        faculty_id=user,sem_id = Active_Sem , academic_year=Active_Year)
     classes_of_counselor_list_checker = bool(classes_of_counselor_list)
 
+    print('classes_of_counselor_list_checker',classes_of_counselor_list_checker)
     if(classes_of_counselor_list_checker == True):
         for object in classes_of_counselor_list:
             if day_name == 'Thu':
@@ -2396,7 +2404,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
     start = datetime.strptime('7:00:00', '%H:%M:%S').time()
     end = datetime.strptime('18:00:00', '%H:%M:%S').time()
     check = datetime.strptime('00:00:00', '%H:%M:%S').time()
-
+    
     initialtime = 7
     id = 0
     for x in range(12):
@@ -2467,18 +2475,22 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                 # sud ni sha sa for object same sa all
                 if(timeArray[x] == cc_start_convert):
                     choice = 'Class'
-                    schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                               subject_title=object.subject_title, school_days=object.school_days,
-                                                               school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                               department_code=object.department_code, faculty_id=object.faculty_id))
+                    schedule_for_today.append({'offer_no': object.offer_no, 'subject_code': object.subject_code,
+                                               'school_days': object.school_days, 'department_code': object.department_code, 'subject_title': object.subject_title,
+                                               'start_time': cc_start_convert, 'end_time': cc_end_convert, 'choice': 'Class'})
+                    # schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                    #                                            subject_title=object.subject_title, school_days=object.school_days,
+                    #                                            school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                    #                                            department_code=object.department_code, faculty_id=object.faculty_id))
 
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
                         schedule_for_today.append(Referral(id=object2.id,student_number=object2.student_number, firstname=object2.firstname,
                                                            lastname=object2.lastname, middlename=object2.middlename,
-                                                           degree_program=object2.degree_program,counselor_id=object2.counselor_id, 
-                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date, 
+                                                           degree_program=object2.degree_program, 
+                                                           counselor_id=object2.counselor_id, 
+                                                           start_time=object2.start_time, end_time=object2.end_time, date=object2.date,
                                                            choice=choice))
                 for object3 in not_available_sched:
                     if(timeArray[x] == object3.start_time):
@@ -2537,10 +2549,13 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                     cc_end, '%H:%M').time()
                 if(timeArray[x] == cc_start_convert):
                     choice = 'Class'
-                    schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                               subject_title=object.subject_title, school_days=object.school_days,
-                                                               school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                               department_code=object.department_code, faculty_id=object.faculty_id))
+                    schedule_for_today.append({'offer_no': object.offer_no, 'subject_code': object.subject_code,
+                                               'school_days': object.school_days, 'department_code': object.department_code, 'subject_title': object.subject_title,
+                                               'start_time': cc_start_convert, 'end_time': cc_end_convert, 'choice': 'Class'})
+                    # schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                    #                                            subject_title=object.subject_title, school_days=object.school_days,
+                    #                                            school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                    #                                            department_code=object.department_code, faculty_id=object.faculty_id))
                 for object2 in referral_list_byday:
                     if(timeArray[x] == object2.start_time):
                         choice = 'Counseling'
@@ -2601,10 +2616,13 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                     cc_end, '%H:%M').time()
                 if(timeArray[x] == cc_start_convert):
                     choice = 'Class'
-                    schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                               subject_title=object.subject_title, school_days=object.school_days,
-                                                               school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                               department_code=object.department_code, faculty_id=object.faculty_id))
+                    schedule_for_today.append({'offer_no': object.offer_no, 'subject_code': object.subject_code,
+                                               'school_days': object.school_days, 'department_code': object.department_code, 'subject_title': object.subject_title,
+                                               'start_time': cc_start_convert, 'end_time': cc_end_convert, 'choice': 'Class'})
+                    # schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                    #                                            subject_title=object.subject_title, school_days=object.school_days,
+                    #                                            school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                    #                                            department_code=object.department_code, faculty_id=object.faculty_id))
 
                 for object2 in not_available_sched:
                     if(timeArray[x] == object2.start_time):
@@ -2681,10 +2699,13 @@ def another_counselor_view_schedule(request, *args, **kwargs):
                     cc_end, '%H:%M').time()
                 if(timeArray[x] == cc_start_convert):
                     choice = 'Class'
-                    schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
-                                                               subject_title=object.subject_title, school_days=object.school_days,
-                                                               school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
-                                                               department_code=object.department_code, faculty_id=object.faculty_id))
+                    schedule_for_today.append({'offer_no': object.offer_no, 'subject_code': object.subject_code,
+                                               'school_days': object.school_days, 'department_code': object.department_code, 'subject_title': object.subject_title,
+                                               'start_time': cc_start_convert, 'end_time': cc_end_convert, 'choice': 'Class'})
+                    # schedule_for_today.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                    #                                            subject_title=object.subject_title, school_days=object.school_days,
+                    #                                            school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                    #                                            department_code=object.department_code, faculty_id=object.faculty_id))
 
     elif(classes_counselor_checker == False and referral_list_byday_checker == True and not_available_sched_checker == False):
         print('6')
@@ -2711,8 +2732,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
         print('no data to show')
 
     counselor_name = Faculty.objects.get(faculty_id=user)
-
-    return render(request, "counselor/another_counselor_view_schedule.html", {"offer": offer, "counselorNotif": counselorNotif, "today": today, "day_name": day_name, "schedForToday": schedule_for_today, "time": alltime, "form": counselor_name})
+    return render(request, "counselor/counselor_view_schedule.html", {"offer": offer, "counselorNotif": counselorNotif, "today": today, "day_name": day_name, "schedForToday": schedule_for_today, "time": alltime, "form": counselor_name})
 
 
 # counselor
@@ -2722,33 +2742,112 @@ def another_counselor_view_schedule(request, *args, **kwargs):
 
 @login_required(login_url='login')
 def teacher_home_view(request, *args, **kwargs):
+    global Active_Sem
+    global Active_Year
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
     notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
     teacherNotif = len(notif)
     subjects = SubjectOfferings.objects.filter(
-        faculty_id=teacher_name.faculty_id)
+        faculty_id=teacher_name.faculty_id, sem_id = Active_Sem, academic_year = Active_Year)
     return render(request, "teacher/home.html",  {'teacherNotif': teacherNotif, "form": teacher_name, 'subjects': subjects})
 
 
 @login_required(login_url='login')
 def student_list_enrolled(request, offer_no):
+    global Active_Sem
+    global Active_Year
     user = request.session.get('username')
     teacher_name = Faculty.objects.get(faculty_id=user)
     notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
     teacherNotif = len(notif)
-    get_offerings = SubjectOfferings.objects.get(offer_no=offer_no)
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student_enroll', search=search_choice, offer_no=offer_no)
+    get_offerings = SubjectOfferings.objects.get(offer_no=offer_no, sem_id = Active_Sem, academic_year=Active_Year)
     studentload = Studentload.objects.filter(offer_no=get_offerings)
-    students = Student.objects.all()
-    list = []
+    students = Student.objects.all().order_by('lastname')
+    student_list = []
     for obj in students:
         for obj1 in studentload:
             if obj.student_number == obj1.student_number.student_number:
-                list.append(Student(student_number=obj.student_number,
+                student_list.append(Student(student_number=obj.student_number,
                                     lastname=obj.lastname, firstname=obj.firstname,
                                     middlename=obj.middlename, program_code=obj.program_code))
+    page = request.GET.get('page', 1)
 
-    return render(request, "teacher/student_list_enrolled.html",  {'teacherNotif': teacherNotif, "form": teacher_name, 'list': list, 'offer_no': offer_no})
+    paginator = Paginator(student_list, 10)
+    try:
+        list = paginator.page(page)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    
+    return render(request, "teacher/student_list_enrolled.html",  {'teacherNotif': teacherNotif, 'search_form':search_form,"form": teacher_name, 'list': list, 'offer_no': offer_no})
+
+
+@login_required(login_url='login')
+def search_student_enroll(request, search,offer_no):
+    global Active_Sem
+    global Active_Year
+    user = request.session.get('username')
+    teacher_name = Faculty.objects.get(faculty_id=user)
+    notif = NotificationFeedback.objects.filter(to_user = user , is_read=False)
+    teacherNotif = len(notif)
+    search_form = SearchForm()
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_choice = search_form['search'].value()
+            return redirect('search_student_enroll', search=search_choice, offer_no=offer_no)
+    get_offerings = SubjectOfferings.objects.get(offer_no=offer_no, sem_id = Active_Sem, academic_year=Active_Year)
+    studentload = Studentload.objects.filter(offer_no=get_offerings)
+    students = Student.objects.all().order_by('lastname')
+    student_list = []
+    new_student_list = []
+    for obj in students:
+        for obj1 in studentload:
+            if obj.student_number == obj1.student_number.student_number:
+                student_list.append(Student(student_number=obj.student_number,
+                                    lastname=obj.lastname, firstname=obj.firstname,
+                                    middlename=obj.middlename, program_code=obj.program_code))
+    for check in student_list:
+        if search.lower() in check.lastname.lower():
+            new_student_list.append(Student(student_number=check.student_number,
+                                                lastname=check.lastname, firstname=check.firstname,
+                                                middlename=check.middlename, program_code=check.program_code))
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(new_student_list, 10)
+    try:
+        list = paginator.page(page)
+    except PageNotAnInteger:
+        list = paginator.page(1)
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)
+    
+    return render(request, "teacher/student_list_enrolled.html",  {'teacherNotif': teacherNotif, 'search_form':search_form,"form": teacher_name, 'list': list, 'offer_no': offer_no})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @login_required(login_url='login')
@@ -3635,6 +3734,8 @@ def student_history(request):
 
 @login_required
 def student_view_schedule(request, *args, **kwargs):
+    global Active_Sem
+    global Active_Year
     global count1
     count1 = 0
     user = request.session.get('username')
@@ -3657,13 +3758,17 @@ def student_view_schedule(request, *args, **kwargs):
     classes_of_student = []
     ScheduledReferralbyDayCheck = False
 
-    classes_of_student_list = Studentload.objects.filter(student_number=user)
+    classes_of_student_list = Studentload.objects.filter(student_number=user ,sem_id = Active_Sem, academic_year=Active_Year)
     classes_of_student_list_checker = bool(classes_of_student_list)
 
     if(classes_of_student_list_checker == True):
         for object in classes_of_student_list:
-            get_school_days = SubjectOfferings.objects.get(
-                offer_no=object.offer_no.offer_no)
+            print('object.offer_no.offer_no',object.offer_no.offer_no)
+            try:
+                get_school_days = SubjectOfferings.objects.get(
+                    offer_no=object.offer_no.offer_no, sem_id = Active_Sem, academic_year=Active_Year)
+            except:
+                check=False
             if day_name == 'Thu':
                 check = bool(
                     day_name[:-1].upper() in get_school_days.school_days)
@@ -3723,7 +3828,7 @@ def student_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    sched_for_today.append(Referral(student_number=object.student_number, firstname=object.firstname,
+                    sched_for_today.append(Referral(id= object.id,student_number=object.student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
                                                     degree_program=object.degree_program, counselor_id=object.counselor_id, 
                                                     start_time=object.start_time, end_time=object.end_time, date=object.date, 
@@ -3736,6 +3841,8 @@ def student_view_schedule(request, *args, **kwargs):
 @login_required
 def another_student_view_schedule(request, *args, **kwargs):
     global count1
+    global Active_Sem
+    global Active_Year
     count1 = 0
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
@@ -3750,8 +3857,7 @@ def another_student_view_schedule(request, *args, **kwargs):
 
     newDate = Calendar.objects.last()
     today = newDate.pickedDate
-    now = dt.datetime.now()
-    day_name = now.strftime("%a")
+    day_name = today.strftime("%a")
 
     classes_of_student = []
     ScheduledReferralbyDayCheck = False
@@ -3761,8 +3867,11 @@ def another_student_view_schedule(request, *args, **kwargs):
 
     if(classes_of_student_list_checker == True):
         for object in classes_of_student_list:
-            get_school_days = SubjectOfferings.objects.get(
-                offer_no=object.offer_no.offer_no)
+            try:
+                get_school_days = SubjectOfferings.objects.get(
+                    offer_no=object.offer_no.offer_no, sem_id = Active_Sem, academic_year=Active_Year)
+            except:
+                check=False
             if day_name == 'Thu':
                 check = bool(
                     day_name[:-1].upper() in get_school_days.school_days)
@@ -3822,7 +3931,7 @@ def another_student_view_schedule(request, *args, **kwargs):
             for object in referral_list_byday:
                 if(timeArray[x] == object.start_time):
                     choice = 'Counseling'
-                    sched_for_today.append(Referral(student_number=object. student_number, firstname=object.firstname,
+                    sched_for_today.append(Referral(id=object.id,student_number=object. student_number, firstname=object.firstname,
                                                     lastname=object.lastname, middlename=object.middlename,
                                                     degree_program=object.degree_program, 
                                                      counselor_id=object.counselor_id, 
@@ -3830,7 +3939,7 @@ def another_student_view_schedule(request, *args, **kwargs):
                                                     choice=choice))
     else:
         print('no display')
-    return render(request, "student/another_student_view_schedule.html", {"offer": offer, "studentNotif": studentNotif, "today": today, "day_name": day_name, "schedForToday": sched_for_today, "time": alltime, "form": student_name})
+    return render(request, "student/student_view_schedule.html", {"offer": offer, "studentNotif": studentNotif, "today": today, "day_name": day_name, "schedForToday": sched_for_today, "time": alltime, "form": student_name})
 
 
 @login_required(login_url='login')

@@ -395,7 +395,7 @@
     <br>
     <div class="schedule_information">
       <p class="rowText"> 
-                               <b>{{get_referral.lastname}}, {{get_referral.firstname}}</b> has an appointment.
+                               <b>{{get_referral.lastname}}, {{get_referral.firstname}}</b> has an appointment. 
                 The Session starts at <b>{{get_referral.start_time}}</b> and ends at <b> {{get_referral.end_time}}</b>
                  on <b>{{get_referral.date}}</b>
 
@@ -403,7 +403,7 @@
                  {% if not object.subject_referred %}
                  <div>
                 <div class="feedback-stated">
-            <h3><i>Student's Reason for Appointment:</i></h3>
+            <h3><i>Student's Reason for Referral:</i></h3>
         </div>
         <div id="box">
           <li class="Pbox" style="text-align: justify; margin-left:8px;">
@@ -416,7 +416,7 @@
                 <p><h3 style="font-size: 23px;">Referred By: <b style="color: #000; margin-left: 0.5vw;">{{object.faculty_id.firstname}} {{object.faculty_id.lastname}}</b></h3></p>
                 <div style="font-size: 18px;" ><h3 style="font-size: 23px;">Behavioral Problem: </h3><b style="color: #000; margin-left: 1vw;"><li>{{object.behavior_problem}}</li></b></div>
                 <div class="feedback-stated">
-            <h3><i>Teacher's Reason for Appointment:</i></h3>
+            <h3><i>Teacher's Reason for Referral:</i></h3>
         </div>
         <div id="box">
           <li class="Pbox" style="text-align: justify; margin-left:8px;">

@@ -316,21 +316,21 @@
       </tr>
     </thead>  {% for obj in faculty %} <tbody>
       <tr>
-        <td style="font-size: 15px;">
+        <td style="font-size: 16px;">
            <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
              <b>{{obj.faculty_id}}</b>
           </a>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 16px;">
            <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
            <b>{{obj.lastname}}</b></a>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  style="text-align: left; font-size: 16px;">
             <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
              <b>{{obj.firstname}}</b>
           </a>
         </td>
-         <td  style="text-align: left; font-size: 15px;">
+         <td  style="text-align: left; font-size: 16px;">
             <a href="{% url 'view_faculty_detail' obj.faculty_id %}">
              <b>{{obj.middlename}}</b>
           </a>
