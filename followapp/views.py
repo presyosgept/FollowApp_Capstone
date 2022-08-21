@@ -76,7 +76,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = '2b5813f003934b172e7f429e802e5704'
+                auth_token = '2a5f464fff622255106942d8ed62e56f'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -102,7 +102,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = '2b5813f003934b172e7f429e802e5704'
+                    auth_token = '2a5f464fff622255106942d8ed62e56f'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
