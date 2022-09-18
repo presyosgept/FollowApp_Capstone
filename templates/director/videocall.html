@@ -1,0 +1,55 @@
+{% block content %}
+
+<!DOCTYPE html>
+<head>
+
+    <title>Video Conf</title>
+</head>
+
+<body>
+  hello world <br>
+    <div id="hello" style="    display: block;
+    width: 100%;
+    height: 100vh"></div> 
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+        var domain = "meet.jit.si";
+
+        var options = {
+            roomName: "counseling session sizt",
+            width: '100%',
+            height: '100%',
+            parentNode: document.querySelector('#hello'),
+            lang:'en'
+        }
+        var api = new JitsiMeetExternalAPI(domain, options);
+        
+        let participants = [];
+        api.addEventListener('participantJoined', (data) => {
+            // data includes id and displayName
+            console.log("HAKDOG1");
+            participants.push(data);
+            // console.log(participants);
+        });
+
+        api.addEventListener('participantLeft', ({ id }) => {
+            // const participant = participants.find(p => p.id === id);
+            // console.log("HAKDOG2");
+            // // You can use participant.displayName here
+            
+            // participants = participants.filter(p => p.id !== id);
+            // console.log(participants);
+            api.dispose();
+        });
+ console.log("HAKDOG3");
+        api.executeCommand('subject', 'New Room 2');
+         console.log("HAKDOG4");
+        
+        
+    </script>
+</body>
+</html>
+    
+     {% endblock %}
+
+

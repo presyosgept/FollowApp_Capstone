@@ -77,7 +77,6 @@ class ReferralDetails(models.Model):
 class Subject(models.Model):
     subject_code = models.CharField(max_length=225, primary_key=True)
     subject_title = models.CharField(max_length=220)
-    units = models.CharField(max_length=220)
 
     class Meta:
         verbose_name_plural = "Subject"
@@ -109,6 +108,7 @@ class SubjectOfferings(models.Model):
     academic_year = models.CharField(max_length=225)
     department_code = models.ForeignKey(
         Department, on_delete=models.CASCADE, null=True, blank=True)
+    department_name = models.CharField(max_length=220, null=True, blank=True)
     faculty_id = models.ForeignKey(
         Faculty, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -136,6 +136,7 @@ class Student(models.Model):
         Department, on_delete=models.CASCADE, null=True, blank=True)
     program_code = models.ForeignKey(
         DegreeProgram, on_delete=models.CASCADE, null=True, blank=True)
+    program_name = models.CharField(max_length=220, null=True, blank=True)
     academic_year = models.CharField(max_length=225)
     sem_id = models.CharField(max_length=220)
     student_email = models.EmailField(max_length=254)

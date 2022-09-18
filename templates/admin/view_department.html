@@ -283,16 +283,22 @@
         <th  style="font-size: 17px;">Department Code</th>
         <th  style="font-size: 17px;">Department Name</th>
         <th  style="font-size: 17px;">School Code</th>
-         <th  style="font-size: 17px;">Action</th>
+         <!-- <th  style="font-size: 17px;">Action</th> -->
       </tr>
     </thead> {% for obj in department %} <tbody>
       <tr>
         <td  style="text-align: left; font-size: 16px;">
           <b>{{obj.department_code}}</b>
         </td>
-        <td style="text-align: left; font-size: 16px;">
+         {% if obj.department_name == 'None'  %} 
+         <td style="text-align: center; font-size: 16px;">
+          
+        </td>
+        {% else %}
+                <td style="text-align: center; font-size: 16px;">
            <b>{{obj.department_name}}</b>
         </td>
+         {% endif %}
          {% if obj.school_code == None %} 
          <td style="text-align: center; font-size: 16px;">
         </td>
@@ -302,10 +308,10 @@
            <b>{{obj.school_code}}</b>
         </td>
          {% endif %}
-      <td  style="text-align: center;">
+      <!-- <td  style="text-align: center;">
             <a style="color: black;" href="{% url 'edit_department' obj.department_code %}"><button class="button" style="font-weight: bold; font-size: 11px;">Edit</button></a>
 
-        </td> 
+        </td>  -->
 
       </tr>
     </tbody> {% endfor %}

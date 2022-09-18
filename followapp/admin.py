@@ -17,7 +17,7 @@ admin.site.register(Subject)
 
 
 class SubjectAdmin(ImportExportModelAdmin):
-    list_display = ('subject_code', 'subject_title', 'units')
+    list_display = ('subject_code', 'subject_title')
 
 
 admin.site.register(School)
@@ -54,7 +54,7 @@ admin.site.register(SubjectOfferings)
 
 class SubjectOfferingsAdmin(ImportExportModelAdmin):
     list_display = ('offer_no', 'subject_code', 'subject_title', 'school_days',
-                    'school_time', 'sem_id', 'academic_year', 'department_code', 'faculty_id')
+                    'school_time', 'sem_id', 'academic_year', 'department_code','department_name', 'faculty_id')
 
 
 admin.site.register(DegreeProgram)
@@ -70,7 +70,7 @@ admin.site.register(Student)
 
 class StudentAdmin(ImportExportModelAdmin):
     list_display = ('student_number', 'lastname', 'firstname', 'middlename',
-                    'department_code', 'school_name', 'program_code', 'academic_year', 'sem_id', 'student_email', 'role')
+                    'department_code', 'school_name', 'program_code','program_name', 'academic_year', 'sem_id', 'student_email', 'role')
 
 
 admin.site.register(Studentload)

@@ -360,6 +360,7 @@
       <th  style="font-size: 15px;">Semester ID</th>
       <th  style="font-size: 15px;">Academic Year</th>
       <th  style="font-size: 15px;">Department Code</th>
+      <th  style="font-size: 15px;">Department Name</th>
       <th  style="font-size: 15px;">Faculty ID</th>
     </tr>
   </thead> 
@@ -369,10 +370,10 @@
         <b>(09090)</b>
       </td>
       <td  style="text-align: left; font-size: 13px;">
-         <b>(GE SUBJECT)</b>
+         <b>(English Proficiency Level 1)</b>
       </td>
      <td  style="text-align: left; font-size: 13px;">
-         <b>(Subject Title)</b>
+         <b>(EP 1)</b>
       </td>
          <td  style="text-align: left; font-size: 13px;">
          <b>(MTWTHFSS)</b>
@@ -387,7 +388,10 @@
          <b>(2028)</b>
       </td>
        <td  style="text-align: left; font-size: 13px;">
-         <b>(SSP)</b>
+         <b>(LANGLIT)</b>
+      </td>
+       <td  style="text-align: left; font-size: 13px;">
+         <b>(Language Literature)</b>
       </td>
         <td  style="text-align: center; font-size: 13px;">
          <b>(2099)</b>
@@ -434,6 +438,7 @@
         <th  style="font-size: 15px;">Semester ID</th>
         <th  style="font-size: 15px;">Academic Year</th>
         <th  style="font-size: 15px;">Department Code</th>
+          <th  style="font-size: 15px;">Department Name</th>
         <th  style="font-size: 15px;">Faculty ID</th>
       </tr>
     </thead>  {% for obj in subject_offerings %} 
@@ -463,6 +468,9 @@
         </td>
          <td  style="text-align: left; font-size: 13px;">
            <b>{{obj.department_code}}</b>
+        </td>
+         <td  style="text-align: left; font-size: 13px;">
+           <b>{{obj.department_name}}</b>
         </td>
           <td  style="text-align: center; font-size: 13px;">
            <b>{{obj.faculty_id}}</b>
@@ -495,6 +503,9 @@
         </td>
          <td  class="wrong-sem">
           {{obj.department_code}}
+        </td>
+         <td  class="wrong-sem">
+          {{obj.department_name}}
         </td>
           <td class="wrong-sem">
           {{obj.faculty_id}}

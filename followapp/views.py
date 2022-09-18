@@ -39,7 +39,7 @@ from .models import NewTime, Calendar, Subject, School, Department, Faculty, Cou
 from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, ReferralDetails, Notification, SetScheduleCounselor, NotificationFeedback
 from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
 
-from .forms import SetActiveForm,StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm, EditSubjectForm
+from .forms import SetActiveForm,StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm
 
 # global variables
 
@@ -284,13 +284,111 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+import jwt
+import requests
+import json
+from time import time
+from django_zoom_meetings import ZoomMeetings
+from zoomus import ZoomClient
+  
+# Enter your API key and your API secret
+API_KEY = 'D9WVD2H2RoWyREa0wAbHLA'
+API_SEC = 'qLb39rYza1n3miJgaiQRpaGGsSeFnyxzhOD2'
+  
+# create a function to generate a token
+# using the pyjwt library
+  
+  
+def generateToken():
+    token = jwt.encode(
+  
+        # Create a payload of the token containing
+        # API Key & expiration time
+        {'iss': API_KEY, 'exp': time() + 5000},
+  
+        # Secret used to generate token signature
+        API_SEC,
+  
+        # Specify the hashing alg
+        algorithm='HS256'
+    )
+    return token.encode().decode('UTF-8')
+  
+  
+# create json data for post requests
+meetingdetails = {"topic": "Testing 101",
+                  "type": 2,
+                  "start_time": "2022-09-3T10: 21: 57",
+                  "duration": "45",
+                  "timezone": "Philippine Time",
+                  "agenda": "test",
+                  "recurrence": {"type": 1,
+                                 "repeat_interval": 1
+                                 },
+                 "settings": {"host_video": 'true',
+                               "participant_video": 'true',
+                               "join_before_host": 'true',
+                               "mute_upon_entry": 'true',
+                               "watermark": 'false',
+                               "audio": 'voip',
+                               "auto_recording": 'cloud',
+                               "waiting_room": 'false',
+                               },
+
+                  }
+  
+# send a request with headers including
+# a token and meeting details
+  
+url = ''
+def createMeeting():
+    # print('hakdog')
+    global url
+    headers = {'authorization': 'Bearer ' + generateToken(),
+               'content-type': 'application/json'}
+    r = requests.post(
+        f'https://api.zoom.us/v2/users/me/meetings',
+        headers=headers, data=json.dumps(meetingdetails))
+  
+    # print("\n creating zoom meeting ... \n")
+    # print(r.text)
+    # converting the output into json and extracting the details
+    y = json.loads(r.text)
+    join_id = y["id"]
+    join_URL = y["join_url"]
+    meetingPassword = y["password"]
+    url = join_id
+    # print(
+    #     f'\n here is your zoom meeting link {join_URL} and your \
+    #     password: "{meetingPassword}"\n')
+  
+  
+# run the create meeting function
+@login_required(login_url='login')
+def admin_home_view(request, *args, **kwargs):
+    global url
+    createMeeting()
+
+    today = date.today()
+    print("Today's date:", today)
+    string_today = str(today)
+    print("Today's string_today:", string_today)
+
+    global Active_Year
+    global Active_Sem    
+     
+    return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem,'today':string_today})
+
+@login_required(login_url='login')
+def admin_videocall(request, *args, **kwargs):
+
+    return render(request, "admin/videocall.html")
 
 
 @login_required(login_url='login')
-def admin_home_view(request, *args, **kwargs): 
-    global Active_Year
-    global Active_Sem     
-    return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem})
+def director_videocall(request, *args, **kwargs):
+
+    return render(request, "director/videocall.html")
 
 @login_required(login_url='login')
 def set_active_year(request, *args, **kwargs):
@@ -322,24 +420,6 @@ def view_subject(request, *args, **kwargs):
     except EmptyPage:
         subject = paginator.page(paginator.num_pages)
     return render(request, "admin/view_subject.html", {"subject": subject,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
-
-
-@login_required(login_url='login')
-def edit_subject(request, code):
-    global Active_Year
-    global Active_Sem
-    subject = Subject.objects.get(subject_code=code)
-    edit_form = EditSubjectForm()
-    if request.method == "POST":
-        edit_form = EditSubjectForm(request.POST)
-        if edit_form.is_valid():
-            new_units = edit_form['units'].value()
-            edit = Subject.objects.get(subject_code=code)
-            edit.units = new_units
-            edit.save()
-            subject = Subject.objects.get(subject_code=code)
-            return redirect('view_subject')
-    return render(request, "admin/edit_subject.html", {'subject': subject, 'edit_form': edit_form,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
 
 @login_required(login_url='login')
@@ -880,7 +960,7 @@ def upload_subject_offerings(request):
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 9):
+            if(col == 10):
                 for data in imported_data:
                     check_depa = Department.objects.all()
                     check_faculty = Faculty.objects.all()
@@ -898,14 +978,14 @@ def upload_subject_offerings(request):
                             check_depa = False
                         if check_depa:
                             get_depa_exist.department_code = data[7]
-                            get_depa_exist.department_name = get_depa_exist.department_name
+                            get_depa_exist.department_name = str(data[8])
                             get_depa_exist.school_code = get_depa_exist.school_code
                             get_depa_exist.save()
                         else:
-                            depa = Department(department_code=data[7])
+                            depa = Department(department_code=data[7],department_name = str(data[8]))
                             depa.save()
                     else:
-                        depa = Department(department_code=data[7])
+                        depa = Department(department_code=data[7],department_name = str(data[8]))
                         depa.save()
 
                     if is_faculty:
@@ -913,7 +993,7 @@ def upload_subject_offerings(request):
                             department_code=data[7])
                         try:
                             get_faculty_exist = Faculty.objects.get(
-                                faculty_id=str(data[8]))
+                                faculty_id=str(data[9]))
                             check_faculty = bool(get_faculty_exist)
                         except Exception:
                             check_faculty = False
@@ -928,13 +1008,13 @@ def upload_subject_offerings(request):
                             get_faculty_exist.save()
                         else:
                             faculty = Faculty(faculty_id=str(
-                                data[8]), department_code=depa)
+                                data[9]), department_code=depa)
                             faculty.save()
                     else:
                         depa = Department.objects.get(
                             department_code=data[7])
                         faculty = Faculty(faculty_id=str(
-                            data[8]), department_code=depa)
+                            data[9]), department_code=depa)
                         faculty.save()
 
                     if is_subject:
@@ -947,7 +1027,6 @@ def upload_subject_offerings(request):
                         if check_subjects:
                             get_subject_exist.subject_code = data[1]
                             get_subject_exist.subject_title = data[2]
-                            get_subject_exist.units = get_subject_exist
                         else:
                             subject = Subject(
                                 subject_code=data[1], subject_title=data[2])
@@ -961,7 +1040,8 @@ def upload_subject_offerings(request):
                     new_subject_offerings_list.append({'offer_no': str(data[0]),
                              'subject_code': str(data[1]),
                                                'school_days':str(data[3]), 'department_code':str(data[7]), 
-                                               'subject_title': data[2], 'faculty_id':str(data[8]),
+                                               'department_name':str(data[8]), 
+                                               'subject_title': data[2], 'faculty_id':str(data[9]),
                                                'school_time': str(data[4]), 'sem_id': str(data[5]), 
                                                'academic_year': str(data[6])})
                     check_subjectOfferings = SubjectOfferings.objects.all()
@@ -971,7 +1051,7 @@ def upload_subject_offerings(request):
                     get_department_code = Department.objects.get(
                         department_code=data[7])
                     get_faculty_id = Faculty.objects.get(
-                        faculty_id=str(data[8]))
+                        faculty_id=str(data[9]))
 
                     if is_subjectOfferings:
                         try:
@@ -988,6 +1068,8 @@ def upload_subject_offerings(request):
                                 check_if_exist.school_time = str(data[4])
                                 check_if_exist.sem_id = str(data[5])
                                 check_if_exist.academic_year = str(data[6])
+                                check_if_exist.department_code=get_department_code,
+                                check_if_exist.department_name=str(data[8]),
                                 check_if_exist.faculty_id = get_faculty_id
                                 check_if_exist.save()
                         else:
@@ -1001,6 +1083,7 @@ def upload_subject_offerings(request):
                                     sem_id=str(data[5]),
                                     academic_year=str(data[6]),
                                     department_code=get_department_code,
+                                    department_name=str(data[8]),
                                     faculty_id=get_faculty_id
                                 )
                                 value.save()
@@ -1015,6 +1098,7 @@ def upload_subject_offerings(request):
                                 sem_id=str(data[5]),
                                 academic_year=str(data[6]),
                                 department_code=get_department_code,
+                                department_name=str(data[8]),
                                 faculty_id=get_faculty_id
                             )
                             value.save()
@@ -1055,7 +1139,7 @@ def upload_student(request):
             col = sheet_obj.max_column
             row = sheet_obj.max_row
 
-            if(col == 11):
+            if(col == 12):
                 for data in imported_data:
                     try:
                         check_if_exist_school = School.objects.get(
@@ -1063,22 +1147,34 @@ def upload_student(request):
                     except Exception:
                         value = School(school_name=str(data[4]))
                         value.save()
+                    get_school = School.objects.get(
+                            school_name=str(data[4]))
                     try:
                         check_if_exist_degree = DegreeProgram.objects.get(
                             program_code=str(data[6]))
+                        check_degree = bool(check_if_exist_degree)
                     except Exception:
-                        value = DegreeProgram(program_code=str(data[6]))
+                        value = DegreeProgram(program_code=str(data[6]), program_name=str(data[7]), school_code = get_school)
                         value.save()
+                    if check_degree:
+                        check_if_exist_degree.program_code = str(data[6])
+                        check_if_exist_degree.program_name = str(data[7])
+                        check_if_exist_degree.school_code = get_school
+                        check_if_exist_degree.save()
                     try:
-                        get_department = Department.objects.get(
+                        check_if_exist_department = Department.objects.get(
                             department_code=str(data[5]))
+                        check_depa = bool(check_if_exist_department)
                     except Exception:
-                        depa = Department(department_code=str(data[5]))
+                        depa = Department(department_code=str(data[5]),school_code = get_school)
                         depa.save()
+                    if check_depa:
+                        check_if_exist_department.department_code=str(data[5])
+                        check_if_exist_department.school_code = get_school
+                        check_if_exist_department.save()
+
                     get_department = Department.objects.get(
                         department_code=str(data[5]))
-                    get_school = School.objects.get(
-                        school_name=str(data[4]))
                     get_degree = DegreeProgram.objects.get(
                         program_code=str(data[6]))
                     value = Student(
@@ -1089,17 +1185,18 @@ def upload_student(request):
                         school_name=get_school,
                         department_code=get_department,
                         program_code=get_degree,
-                        academic_year=str(data[7]),
-                        sem_id=data[8],
-                        student_email=data[9],
-                        role=data[10]
+                        program_name=str(data[7]),
+                        academic_year=str(data[8]),
+                        sem_id=data[9],
+                        student_email=data[10],
+                        role=data[11]
                     )
                     value.save()
                     new_student_list.append({'student_number': str(data[0]), 'lastname': data[1],
                                                'firstname': data[2], 'middlename': data[3], 'school_name': str(data[4]),
-                                               'program_code':str(data[6]),'department_code':str(data[5]),
-                                                'academic_year': str(data[7]),'sem_id':data[8],
-                                                 'role': data[10],'student_email':data[9]})
+                                               'program_code':str(data[6]), 'program_name':str(data[7]),'department_code':str(data[5]),
+                                                'academic_year': str(data[8]),'sem_id':data[9],
+                                                 'role': data[11],'student_email':data[10]})
                         
                 messages.info(request, 'Successfully Added')
             else:
@@ -1114,6 +1211,7 @@ def upload_student(request):
         except EmptyPage:
             student = paginator.page(paginator.num_pages)
     except Exception as e:
+        print('222222',e)
         student=[]
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
@@ -1200,7 +1298,11 @@ def upload_student_load(request):
 def director_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
-    return render(request, "director/home.html", {"form": director_name})
+    today = date.today()
+    print("Today's date:", today)
+    string_today = str(today)
+    print("Today's string_today:", string_today)
+    return render(request, "director/home.html", {"form": director_name,'today':string_today})
 
 
 @login_required(login_url='login')
@@ -4549,3 +4651,6 @@ def student_set_schedule(request, *args, **kwargs):
     # value.board = get
     # value.save()
     # print(value.board)
+
+# JWTOKEN
+#     eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IkQ5V1ZEMkgyUm9XeVJFYTB3QWJITEEiLCJleHAiOjE2NjIxMzIwMzAsImlhdCI6MTY2MjEyNjYzMn0.lMp3dcic5UOH1GLhCl7isXqxw3845zbeULx1IacUWmA

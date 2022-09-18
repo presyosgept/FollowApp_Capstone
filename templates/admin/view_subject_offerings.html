@@ -316,6 +316,7 @@
         <th  style="font-size: 13.5px">Semester ID</th>
         <th  style="font-size: 13.5px">Academic Year</th>
         <th  style="font-size: 13.5px">Department Code</th>
+        <th  style="font-size: 13.5px">Department Name</th>
         <th  style="font-size: 13.5px">Faculty ID</th>
       </tr>
     </thead>  {% for obj in subject_offerings %} 
@@ -344,6 +345,9 @@
         </td>
          <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.department_code_id}}</b>
+        </td>
+        <td  style="text-align: left; font-size: 15px;">
+           <b>{{obj.department_name}}</b>
         </td>
           <td  style="text-align: center; font-size: 15px;">
            <b>{{obj.faculty_id_id}}</b>

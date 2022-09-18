@@ -116,25 +116,6 @@ class EditDepartmentForm(forms.ModelForm):
                   'school_code']
 
 
-UNITS_CHOICES = [
-    ('--', '--'),
-    ('1', '1'),
-    ('2', '2'),
-    ('3', '3'),
-    ('4', '4'),
-    ('5', '5'),
-    ('6', '6'),
-    ('7', '7'),
-    ('8', '8'),
-    ('9', '9'),
-]
-
-
-class EditSubjectForm(forms.Form):
-    units = forms.CharField(widget=forms.Select(choices=UNITS_CHOICES))
-
-
-
 # Edit Data In admin
 
 

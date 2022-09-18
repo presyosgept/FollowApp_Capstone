@@ -50,7 +50,6 @@ from followapp.views import(
     view_faculty_detail,
 
     edit_department,
-    edit_subject,
     edit_school,
     edit_degree_program,
 
@@ -109,11 +108,14 @@ from followapp.views import(
     student_view_schedule,
     student_set_schedule,
     another_student_view_schedule,
-
+    admin_videocall,
+    director_videocall
 )
 
 
 urlpatterns = [
+path('admin/director_videocall', director_videocall, name="director_videocall"),
+path('admin/admin_videocall', admin_videocall, name="admin_videocall"),
     path('', home, name='home'),
     path('login/', loginPage, name='login'),
     path('logout/', logoutUser, name='logout'),
@@ -145,8 +147,6 @@ urlpatterns = [
 
     path('admin/edit_department/<str:code>',
          edit_department, name="edit_department"),
-    path('admin/edit_subject/<str:code>',
-         edit_subject, name="edit_subject"),
     path('admin/edit_school/<str:name>',
          edit_school, name="edit_school"),
     path('admin/edit_degree_program/<str:code>',

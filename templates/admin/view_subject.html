@@ -296,8 +296,6 @@
       <tr>
         <th  style="font-size: 17px;">Subject Code</th>
         <th  style="font-size: 17px;">Subject Title</th>
-        <th  style="font-size: 17px;">Units</th>
-        <th  style="font-size: 17px;">Action</th>
       </tr>
     </thead>  {% for obj in subject %} 
     <tbody>
@@ -308,13 +306,6 @@
         <td  style="text-align: left; font-size: 16px;">
            <b>{{obj.subject_title}}</b>
         </td>
-         <td  style="text-align: left; font-size: 16px;">
-           <b>{{obj.units}}</b>
-        </td>
-        <td  style="text-align: center;">
-      <a style="color: black;" href="{% url 'edit_subject' obj.subject_code %}"><button class="button" style="font-weight: bold; font-size: 11px;">Edit</button></a>
-
-        </td> 
       </tr>
     </tbody> 
     {% endfor %}

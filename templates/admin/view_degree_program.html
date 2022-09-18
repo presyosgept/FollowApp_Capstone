@@ -282,7 +282,7 @@
         <th  style="font-size: 17px;">Program Name</th>
         <th  style="font-size: 17px;">School Code</th>
         <th  style="font-size: 17px;">Counselor ID</th>
-         <th  style="font-size: 17px;">Actions</th>
+         <!-- <th  style="font-size: 17px;">Actions</th> -->
       </tr>
     </thead> {% for obj in degree_program %} <tbody>
       <tr>
@@ -304,10 +304,10 @@
            <b>{{obj.faculty_id.faculty_id}}</b>
         </td>
          {% endif %}
-         <td  style="text-align: center;">
+         <!-- <td  style="text-align: center;">
       <a style="color: black;" href="{% url 'edit_degree_program' obj.program_code %}"><button class="button" style="font-weight: bold; font-size: 11px;">Edit</button></a>
 
-        </td> 
+        </td>  -->
       </tr>
     </tbody> {% endfor %}
   </table>
