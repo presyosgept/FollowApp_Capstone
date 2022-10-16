@@ -1,0 +1,24 @@
+{% block content %}
+
+<!DOCTYPE html>
+<head>
+
+    <title>Video Conf</title>
+</head>
+
+<body>
+ Hello Counselor
+{% if today == '2022-09-12' %} 
+       <a  href="{% url 'admin_videocall' %}">
+                      Video call
+                    </a>
+{% else %}
+walay button
+{% endif %}
+
+</body>
+</html>
+    
+     {% endblock %}
+
+

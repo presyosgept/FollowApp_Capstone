@@ -1,45 +1,95 @@
-from django.shortcuts import render
-
-from twilio.rest import Client
+import datetime as dt
+import random
+from datetime import date, datetime, timedelta
 from json import encoder
 from typing import Counter
-from django.db.models.fields import TimeField
-from django.http import HttpResponse, request
-from django.http.response import Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.forms import inlineformset_factory
-from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Max, Min
-from django.contrib.auth import authenticate, login, logout
 
-from django.contrib import messages
-
-from django.contrib.auth.decorators import login_required
-
-from .utilities import create_notification, create_feedback
-from django.views import generic
-from django.utils import timezone
-from datetime import date, datetime, timedelta
-
-import datetime as dt
-from tablib import Dataset
-
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
 import openpyxl
-
-from django.views.generic import View
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.conf import settings
-import random
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.mail import get_connection, send_mail, send_mass_mail
+from django.core.mail.message import EmailMessage
+from django.db.models import Max, Min
+from django.db.models.fields import TimeField
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, request
+from django.http.response import (
+    Http404,
+    HttpResponsePermanentRedirect,
+    HttpResponseRedirect,
+    JsonResponse,
+)
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views import generic
+from django.views.generic import View
+from tablib import Dataset
+from twilio.rest import Client
 
-from .models import NewTime, Calendar, Subject, School, Department, Faculty, Counselor, SubjectOfferings, DegreeProgram, Student, Studentload
-from .models import CounselorFeedback, AccountCreated, StudentAdditionalInformation, Referral, ReferralDetails, Notification, SetScheduleCounselor, NotificationFeedback
-from .resources import SubjectResource, SchoolResource, DepartmentResource, FacultyResource, CounselorResource, SubjectOfferingsResource, DegreeProgramResource, StudentResource, StudentloadResource
+from .forms import (
+    AccountCreatedForm,
+    AccountsForm,
+    AssignCounselorForm,
+    CalendarForm,
+    CheckSemForm,
+    CounselorFeedbackForm,
+    CreateUserForm,
+    EditDegreeProgramForm,
+    EditDepartmentForm,
+    EditSchoolForm,
+    FilterDateForm,
+    FilterForm,
+    ReferralForm,
+    SearchForm,
+    SetActiveForm,
+    SetScheduleCounselorForm,
+    StudentAdditionalInformationForm,
+    StudentSetSchedForm,
+    VerificationForm,
+)
+from .models import (
+    AccountCreated,
+    Calendar,
+    Counselor,
+    CounselorFeedback,
+    DegreeProgram,
+    Department,
+    Faculty,
+    NewTime,
+    Notification,
+    NotificationFeedback,
+    Referral,
+    ReferralDetails,
+    School,
+    SetScheduleCounselor,
+    Student,
+    StudentAdditionalInformation,
+    Studentload,
+    Subject,
+    SubjectOfferings,
+)
+from .resources import (
+    CounselorResource,
+    DegreeProgramResource,
+    DepartmentResource,
+    FacultyResource,
+    SchoolResource,
+    StudentloadResource,
+    StudentResource,
+    SubjectOfferingsResource,
+    SubjectResource,
+)
 
-from .forms import SetActiveForm,StudentSetSchedForm, FilterDateForm, CalendarForm, CounselorFeedbackForm, SetScheduleCounselorForm, ReferralForm, FilterForm, StudentAdditionalInformationForm, EditDegreeProgramForm, EditSchoolForm, CheckSemForm, SearchForm, AssignCounselorForm, CreateUserForm, AccountsForm, VerificationForm, AccountCreatedForm, EditDepartmentForm
+
+from .utilities import create_feedback, create_notification
+
+
+
+
 
 # global variables
 
@@ -76,7 +126,7 @@ def register(request):
 
             if username == 'followapp':
                 account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = '2a5f464fff622255106942d8ed62e56f'
+                auth_token = '71af7a6561d9048e2c400a993cbb815a'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
@@ -102,7 +152,7 @@ def register(request):
                         flag = 1
                 if flag == 1:
                     account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = '2a5f464fff622255106942d8ed62e56f'
+                    auth_token = '71af7a6561d9048e2c400a993cbb815a'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
@@ -278,22 +328,17 @@ def home(request, *args, **kwargs):
 
 # admin
 
-from django.views.generic import ListView
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import json
+from time import time
 
 import jwt
 import requests
-import json
-from time import time
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic import ListView
 from django_zoom_meetings import ZoomMeetings
 from zoomus import ZoomClient
-  
-# Enter your API key and your API secret
-API_KEY = 'D9WVD2H2RoWyREa0wAbHLA'
-API_SEC = 'qLb39rYza1n3miJgaiQRpaGGsSeFnyxzhOD2'
+
+
   
 # create a function to generate a token
 # using the pyjwt library
@@ -366,29 +411,22 @@ def createMeeting():
 # run the create meeting function
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
-    global url
-    createMeeting()
+    # global url
+    # createMeeting()
 
-    today = date.today()
-    print("Today's date:", today)
-    string_today = str(today)
-    print("Today's string_today:", string_today)
-
+    # today = date.today()
+    # print("Today's date:", today)
+    # string_today = str(today)
+    # print("Today's string_today:", string_today)
+    # get_subject = Subject.objects.get(subject_code='GE TCW').subject_title
+    # print('get_subject',get_subject)
+    # # product = get_object_or_404(Faculty, faculty_id='2000')
+    # print("product:", product)
     global Active_Year
     global Active_Sem    
      
-    return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem,'today':string_today})
+    return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
-@login_required(login_url='login')
-def admin_videocall(request, *args, **kwargs):
-
-    return render(request, "admin/videocall.html")
-
-
-@login_required(login_url='login')
-def director_videocall(request, *args, **kwargs):
-
-    return render(request, "director/videocall.html")
 
 @login_required(login_url='login')
 def set_active_year(request, *args, **kwargs):
@@ -1912,6 +1950,7 @@ def counselor_set_schedule(request, *args, **kwargs):
 @login_required
 def counselor_notifications(request):
     user = request.session.get('username')
+    today = date.today()
     counselor_name = Faculty.objects.get(faculty_id=user)
     goto = request.GET.get('goto', '')
     notification_id = request.GET.get('notification', 0)
@@ -1929,35 +1968,81 @@ def counselor_notifications(request):
 
     counselorNotif = Notification.objects.filter(
         to_user=user).order_by('created_at')
+
+    for notif in counselorNotif:
+        date_only = notif.schedDay.strftime("%Y-%m-%d")
+        if date_only == str(today):
+            if notif.is_counseled == False:
+                notif.is_read_counselor = False
+                notif.save()
+            
     return render(request, 'counselor/notification.html', {"notifications": counselorNotif, "form": counselor_name})
+
+
+from datetime import datetime, timedelta
 
 
 @login_required(login_url='login')
 def counselor_notification_detail(request, id):
+    call = False
+    flag = 0
     user = request.session.get('username')
+    today = date.today()
+    get_referral = Referral.objects.get(id=id)
+    notification = Notification.objects.get(id=id)
+    if (get_referral.date == today):
+        flag=1
+        notification.is_read_counselor = False
+        notification.save()
+
+    referral_id = get_referral.id
+    sched_time_combine = datetime.combine(get_referral.date, get_referral.start_time)
+    sched_time = sched_time_combine-timedelta(minutes=10)
+    
+    now = datetime.now().time()
+    final_now = now.replace(microsecond=0)
+    time_combine  = datetime.combine(today, final_now)
+    before_schedule = sched_time.replace(second = 0)
+    current_time = time_combine.replace(second = 0)
+    if flag == 1:
+        if current_time <=  sched_time_combine.replace(second = 0):
+            call = True
+        else:
+            flag = 0
+
+    if flag == 0:
+        notification.is_read_counselor = True
+        notification.save()
+
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
-    notification = Notification.objects.get(id=id)
-    notification.is_read_counselor = True
-    notification.save()
+    
     detail = []
-    get_referral = Referral.objects.get(id=id)
+    
     for obj in get_referral.referral_id:
             get_details = ReferralDetails.objects.get(id=obj)
             detail.append(ReferralDetails(subject_referred=get_details.subject_referred,
                                             reasons=get_details.reasons, behavior_problem=get_details.behavior_problem,
                                             faculty_id=get_details.faculty_id))
+    #help
     
-    referral_id = get_referral.id
-    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, 'get_referral':get_referral, "detail": detail, "referral_id": referral_id, "form": counselor_name})
+    return render(request, "counselor/counselor_notification_detail.html", {"counselorNotif": counselorNotif, "call":call, 'get_referral':get_referral, "detail": detail, "referral_id": referral_id, "form": counselor_name})
+
+@login_required(login_url='login')
+def counselor_videocall(request, room_name):
+    room = room_name
+    return render(request, "counselor/videocall.html",{'room_name':room, 'id': room_name})
 
 
 @login_required(login_url='login')
 def counselor_feedback_student(request, id):
-    print('hakdog one kung si teacher nag refer')
     global feedback_id
     user = request.session.get('username')
+    notification = Notification.objects.get(id=id)
+    notification.is_counseled = True
+    notification.is_read_counselor = True
+    notification.save()
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
@@ -3775,23 +3860,63 @@ def student_notifications(request):
             return render(request, "student/student_home.html", {})
         elif notification.notification_type == Notification.MANUAL_REFERRAL:
             return render(request, "student/student_home", {})
+
     notif = Notification.objects.filter(extra_id=user).order_by('created_at')
     return render(request, 'student/notification.html', {"studentNotif": studentNotif, "notifications": notif, "form": student_name})
 
 
 @login_required
-def student_notification_detail(request, id):
+def student_notification_detail(request, id, status):
+    call = False
+    if status == 'False':
+        stat = False
+    else:
+        stat = True
+    today = date.today()
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     notif = Notification.objects.filter(extra_id=user, is_read_student=False)
     studentNotif = len(notif)
     notification = Notification.objects.get(id=id)
-    notification.is_read_student = True
+    notification.is_counseled = stat
     notification.save()
-    detail = []
     student = Referral.objects.get(id=id)
-    return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif, 'student':student, "form": student_name})
+    if (student.date == today):
+        notification.is_read_student = False
+        notification.save()
+    else:
+        notification.is_read_student = True
+        notification.save()
 
+    sched_time_combine = datetime.combine(student.date, student.start_time)
+    sched_time = sched_time_combine-timedelta(minutes=10)
+    now = datetime.now().time()
+    final_now = now.replace(microsecond=0)
+    time_combine  = datetime.combine(today, final_now)
+    before_schedule = sched_time.replace(second = 0)
+    current_time = time_combine.replace(second = 0)
+    
+
+    if notification.is_counseled == False:
+        if (student.date == today):
+            if current_time <=  sched_time_combine.replace(second = 0):
+                    call = True
+    else:
+        notification.is_read_student = True
+        notification.save()
+
+        #problem here need eh false balik kung ma view na ang call
+    return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif,'call':call, 'id':id, 'student':student, "form": student_name})
+
+
+
+
+
+
+@login_required(login_url='login')
+def student_videocall(request, room_name):
+    room =  str(room_name)
+    return render(request, "student/videocall.html",{'room_name':room, 'id': room_name})
 
 @login_required(login_url='login')
 def edit_information(request, *args, **kwargs):

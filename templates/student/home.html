@@ -30,7 +30,7 @@
         --first-color-light: #F4F0FA;
         --title-color: #19181B;
         --text-color: #58555E;
-        --navtext-color: #304434;
+        --navtext-color: #0c2c0e;
         --text-color-light: #A5A1AA;
         --body-color: #d8c090;
         --nav-color: #e0b44c;
@@ -38,7 +38,7 @@
         --card-color: #F9F6FD;
         --main1-color: #d8c090;
         --dropdown: #fff;
-        --header-color: #304434;
+        --header-color: #0c2c0e;
       /*========== Font and typography ==========*/
       --body-font: 'Poppins', sans-serif;
       --normal-font-size: .938rem;
@@ -704,7 +704,7 @@
 
     @media (min-width: 56rem) {
       .cards_item {
-          width: 91vw;
+          width: 85vw;
           height: 65vh;
         }
     }
@@ -749,7 +749,7 @@ margin-left: 100px;
       .box-menu{
         border: 2px solid #e0b44c;  
         border-radius: 5px;
-        background-color:  #304434;
+        background-color:  #0c2c0e;
         color: #ffffff;
         height: 7vh;
         width: 57vw;
@@ -766,7 +766,7 @@ margin-left: 100px;
       
       /* /////////// NEW CARD /////////// */
       .card{
-    border-radius: 4px;
+        border-radius: 20px;
     background: #fff;
     box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
       transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
@@ -791,35 +791,51 @@ margin-left: 100px;
 }
 
 .card-1{
-  background-image: url(https://ionicframework.com/img/getting-started/ionic-native-card.png);
-  background-color: #304434;
+  background-image: url(https://img.icons8.com/nolan/344/planner.png);
+  background-color:  #0c2c0e;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 80px;
+    background-size: 95px;
     flex: 1;
+    height: 20vh;
+    width: 16vw;
 
 
 }
 
 .card-2{
-   background-image: url(https://ionicframework.com/img/getting-started/components-card.png);
-   background-color: #304434;
+  background-image: url(https://img.icons8.com/nolan/344/list.png);
+   background-color:  #0c2c0e;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 80px;
+    background-size: 95px;
     flex: 1;
+    height: 20vh;
+    width: 16vw;
 
     
 }
 
 .card-3{
-   background-image: url(https://ionicframework.com/img/getting-started/theming-card.png);
-   background-color: #304434;
+    background-image: url(https://img.icons8.com/nolan/344/time-machine.png);
+   background-color:  #0c2c0e;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 80px;
+    background-size: 95px;
     flex: 1;
+    height: 20vh;
+    width: 15vw;
+}
 
+.card-4{
+    background-image: url(https://img.icons8.com/nolan/344/overtime.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 15vw;
 }
 
 @media(max-width: 990px){
@@ -829,10 +845,18 @@ margin-left: 100px;
 } 
 
 .cards{
-  display:flex; 
-  flex-direction: row; 
+  display: flex;
+        margin-left: 8vw;
+        flex-direction: row;
+        flex-wrap: wrap;
   margin-top: 10vh;
   gap: 2vw;
+}
+.header-logo{
+  margin-top: 1vh;
+  display: flex; 
+  flex-direction: row;
+  gap: 0.5vw;
 }
   </style>
   </head>
@@ -841,9 +865,12 @@ margin-left: 100px;
     <!--========== HEADER ==========-->
     <header class="header">
       <div class="header__container">
-        <img style="height:80px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
-        <a style="font-weight: bold; margin-right:  auto; color: #FFFFFF; font-size: 30px;" href="{% url 'student_home_view' %}" class="header__logo">FOLLOW APP</a>
-      
+        <div class="header-logo">
+                
+          <img style="height:80px; width: 50vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgttA6eVEvVJehiJ69hGL_XiUtYVjrOFUcRFXTpn-ZW9HdPptOjAaXY9kkXv-YY-xXXf8KkASimEvUba9yiUxtbylnjxHvulbHWMRR29s1YSbVVSwBXEbaaGpY62KgPqQUzucnyQ88GR21bqq4HgFXKBsuxuwDTWhnrKmIR2bKF_tgGXTdU54zFVcYs/s320/sdpc.png"></img>
+          <img style="height:80px; width: 17vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_gDyHzpjzbokQOHv1rmZ-nHyL8lIjiqJLb1TT2oLOlKkrXwZSrhsq5l-CzmQx8Sv4n00dKdrvpt0ScnCCZnIT7jME9Rj-0uHysSqvLEwT6EVSn3U3QsdziUsByUl4ZDnlsf_iOXcVUQmvACgO9toT0JZRY-BEwpIflEPxy8LII1CtwGPNxkTEwdF9/s320/usjr%20seal.png">
+          <p style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 28px;  "class="header__logo">FOLLOW APP</p>
+        </div>
         <div>
           <p style="font-weight: bold;  color: #FFFFFF; font-size: 23px;"> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}} </p>
         </div>
@@ -900,15 +927,14 @@ margin-left: 100px;
     <!--========== CONTENTS HOME ==========-->
     <div class="divHome">
       <section id="homie"> {% block content %} <br>
-        <div id="bgslider">
+        <!-- <div id="bgslider">
           <figure>
             <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
             <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">
             <img src="https://usjr.edu.ph/wp-content/uploads/2016/06/OEAM1298-1024x683.jpg" alt="Slider">
             <img src="https://images.squarespace-cdn.com/content/v1/5b7dc424a9e0283283f2127c/1602681165031-381SWS8LMY0K8K2YFSPV/everwell-online-therapy-ontario-counselling_001.png" alt="Slider">
           </figure>
-        </div>
-        <br>
+        </div> -->
         <div class="cards_item">
           <br>
           <div class="box-menu">
@@ -918,33 +944,28 @@ margin-left: 100px;
             <a href="{% url 'student_set_schedule' %}">          
             <div class="col-md-4">
               <div class="card card-1">
-                <h3 style="color: #e0b44c;">Set Appointment</h3>
-                <p style="color: #e0b44c;">Student sets an appointment if he/she wants a counseling 
-                  session with the Counselor.</p>
+                <h4 style="color: #e0b44c; margin-top: 11vh;">Set Appointment</h4>
               </div>
             </div>
             </a>
             <a  href="{% url 'student_view_schedule' %}">
               <div class="col-md-4">
-                <div class="card card-3">
-                  <h3 style="color: #e0b44c;">View Schedule</h3>
-                  <p style="color: #e0b44c;">Student views over the schedule to see whether they have any appointments.</p>
+                <div class="card card-4">
+                  <h4 style="color: #e0b44c; margin-top: 11vh;">View Schedule</h4>
                 </div>
               </div>
             </a>
             <a href="{% url 'student_history' %}">
               <div class="col-md-4">
-                <div class="card card-1">
-                  <h3 style="color: #e0b44c;">View History</h3>
-                  <p style="color: #e0b44c;">Student can check their counseling session history, either recent or past.</p>
+                <div class="card card-3">
+                  <h4 style="color: #e0b44c; margin-top: 11vh;">View History</h4>
                 </div>
               </div>
             </a>
             <a href="{% url 'edit_information' %}">
               <div class="col-md-4">
-                <div class="card card-3">
-                  <h3 style="color: #e0b44c;">Edit Profile</h3>
-                  <p style="color: #e0b44c;">Student has access to his or her profile and can make any necessary changes..</p>
+                <div class="card card-4">
+                  <h4 style="color: #e0b44c; margin-top: 11vh;">Edit Profile</h4>
                 </div>
               </div>
             </a>

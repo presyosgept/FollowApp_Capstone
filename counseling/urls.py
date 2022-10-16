@@ -15,107 +15,89 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.urls import re_path as url
 from django.views.generic import TemplateView
-
-from followapp.views import(
-    loginPage,
-    signup,
-    logoutUser,
-    register,
-    verification_code,
-    home,
-
-    # admin
+from followapp.views import (  # admin; director; counselor; teacher; student; api
     admin_home_view,
-    set_active_year,
-    upload_faculty,
-    upload_subject_offerings,
-    upload_student,
-    upload_student_load,
-
-    view_subject,
-    view_school,
-    view_department,
-    view_faculty,
-    view_counselor,
-    view_subject_offerings,
-    view_degree_program,
-    view_student,
-    view_student_load,
-
-
-    view_student_detail,
-    view_faculty_detail,
-
-    edit_department,
-    edit_school,
-    edit_degree_program,
-
-    search_student,
-    search_faculty,
-
-    view_faculty_with_load,
-    search_faculty_with_load,
-    view_student_with_load,
-    search_student_with_load,
-
-    # director
-    director_home_view,
-    list_degree_program,
+    another_counselor_view_schedule,
+    another_student_view_schedule,
     assign_counselor,
-    per_degree_program,
-    view_stat_by_degree_program,
-    per_counselor,
-    view_stat_by_counselor,
-    view_stat_by_counselor_with_date,
-    view_stat_by_degree_program_with_date,
-
-    # counselor
-    counselor_home_view,
-    view_referred_students,
-    view_pending_referred_students,
-    detail_referred_student_counselor,
-    counselor_set_schedule,
-    counselor_notifications,
-    counselor_notification_detail,
     counselor_feedback_student,
+    counselor_home_view,
+    counselor_notification_detail,
+    counselor_notifications,
+    counselor_set_schedule,
+    counselor_videocall,
     counselor_view_feedback,
     counselor_view_feedback_with_date,
-    detail_referred_student_with_feedback,
     counselor_view_schedule,
-    another_counselor_view_schedule,
-
-
-    # teacher
-    teacher_home_view,
-    student_list_enrolled,
-    teacher_view_referred_students,
     detail_referred_student,
-    referral,
-    teacher_notifications,
-    teacher_notification_detail,
-    search_student_enroll,
-
-    # student
-    student_home_view,
-    student_add_information,
+    detail_referred_student_counselor,
+    detail_referred_student_with_feedback,
+    director_home_view,
+    edit_degree_program,
+    edit_department,
     edit_information,
+    edit_school,
+    home,
+    list_degree_program,
+    loginPage,
+    logoutUser,
+    per_counselor,
+    per_degree_program,
+    referral,
+    register,
+    search_faculty,
+    search_faculty_with_load,
+    search_student,
+    search_student_enroll,
+    search_student_with_load,
+    set_active_year,
+    signup,
+    student_add_information,
     student_history,
-    student_notifications,
+    student_home_view,
+    student_list_enrolled,
     student_notification_detail,
-    student_view_schedule,
+    student_notifications,
     student_set_schedule,
-    another_student_view_schedule,
-    admin_videocall,
-    director_videocall
+    student_videocall,
+    student_view_schedule,
+    teacher_home_view,
+    teacher_notification_detail,
+    teacher_notifications,
+    teacher_view_referred_students,
+    upload_faculty,
+    upload_student,
+    upload_student_load,
+    upload_subject_offerings,
+    verification_code,
+    view_counselor,
+    view_degree_program,
+    view_department,
+    view_faculty,
+    view_faculty_detail,
+    view_faculty_with_load,
+    view_pending_referred_students,
+    view_referred_students,
+    view_school,
+    view_stat_by_counselor,
+    view_stat_by_counselor_with_date,
+    view_stat_by_degree_program,
+    view_stat_by_degree_program_with_date,
+    view_student,
+    view_student_detail,
+    view_student_load,
+    view_student_with_load,
+    view_subject,
+    view_subject_offerings,
 )
 
-
 urlpatterns = [
-path('admin/director_videocall', director_videocall, name="director_videocall"),
-path('admin/admin_videocall', admin_videocall, name="admin_videocall"),
+
+
+
     path('', home, name='home'),
     path('login/', loginPage, name='login'),
     path('logout/', logoutUser, name='logout'),
@@ -222,6 +204,8 @@ path('admin/admin_videocall', admin_videocall, name="admin_videocall"),
          counselor_view_schedule, name="counselor_view_schedule"),
     path('counselor/another_counselor_view_schedule',
          another_counselor_view_schedule, name="another_counselor_view_schedule"),
+     path('counselor/counselor_videocall/<int:room_name>',
+         counselor_videocall, name="counselor_videocall"),
 
 
 
@@ -250,7 +234,7 @@ path('admin/search_student_enroll/<str:search>/<str:offer_no>',
     path('student/student_history', student_history, name="student_history"),
     path('student/student_notifications',
          student_notifications, name="student_notifications"),
-    path('student/student_notification_detail/?P:<int:id>', student_notification_detail,
+    path('student/student_notification_detail/<str:status>/?P:<int:id>', student_notification_detail,
          name='student_notification_detail'),
     path('student/student_view_schedule',
          student_view_schedule, name="student_view_schedule"),
@@ -258,7 +242,8 @@ path('admin/search_student_enroll/<str:search>/<str:offer_no>',
          another_student_view_schedule, name="another_student_view_schedule"),
     path('student/student_set_schedule',
          student_set_schedule, name="student_set_schedule"),
-
+  path('student/student_videocall/<int:room_name>',
+         student_videocall, name="student_videocall"),
 
 
     path('admin/', admin.site.urls),

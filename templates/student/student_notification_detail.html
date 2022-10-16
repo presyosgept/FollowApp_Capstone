@@ -1,6 +1,9 @@
-{% extends "student/home.html" %} {% block title %} Notification_Detail {% endblock %} {% block content %}
+{% extends "student/home.html" %} {% block content %}
 <!--========== BOX ICONS ==========-->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+/>
 <style>
   #wrapper {
     display: flex;
@@ -14,8 +17,7 @@
     border: 1px solid black;
     border-radius: 10px;
     background-color: #98b4ac;
-    box-shadow:
-      0 9px 33px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 9px 33px rgba(0, 0, 0, 0.07);
     margin: auto;
     overflow-wrap: break-word;
   }
@@ -38,7 +40,7 @@ display: flex;
    overflow-y: auto;
 } */
   .table-head {
-    background: #E5E4E2;
+    background: #e5e4e2;
     box-shadow: none;
     color: #fff;
     font-weight: 600;
@@ -225,7 +227,7 @@ display: flex;
     bottom: 0;
     right: 0;
     z-index: -1;
-    background: #E5E4E2;
+    background: #e5e4e2;
   }
 
   .buttons:hover {
@@ -328,7 +330,7 @@ display: flex;
     width: 100%;
     min-width: 1320px;
     height: 60px;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
@@ -379,7 +381,7 @@ display: flex;
     margin: 0 auto;
     width: 160px;
     height: 30px;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
@@ -395,8 +397,8 @@ display: flex;
   }
 
   .button:hover {
-    background-color: #95B9C7;
-    box-shadow: 0px 15px 20px #C9C0BB;
+    background-color: #95b9c7;
+    box-shadow: 0px 15px 20px #c9c0bb;
     color: #fff;
     transform: translateY(-7px);
   }
@@ -409,8 +411,7 @@ display: flex;
     text-align: justify;
     border: 2px solid black;
     border-radius: 15px;
-    box-shadow:
-      5 90px 50px rgba(0, 0, 0, 0.07);
+    box-shadow: 5 90px 50px rgba(0, 0, 0, 0.07);
     min-width: 550px;
     min-height: 200px;
     width: 100px;
@@ -429,7 +430,7 @@ display: flex;
     margin: 0 auto;
     width: 350px;
     height: 45px;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
@@ -447,7 +448,7 @@ display: flex;
   button {
     border-radius: 20px;
     border: 1px solid green;
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 18px;
     font-weight: bold;
     padding: 0 auto;
@@ -471,7 +472,7 @@ display: flex;
 
   .login_btn:hover {
     background-color: green;
-    box-shadow: 0px 5px 5px #C9C0BB;
+    box-shadow: 0px 5px 5px #c9c0bb;
     color: #fff;
     transform: translateY(-7px);
   }
@@ -484,36 +485,36 @@ display: flex;
 <div class="fac">
   <button type="submit" class="buttonF">Full Details</button>
 </div>
-<div class="parent_div"> 
-   <div class="card1">
+<div class="parent_div">
+  <div class="card1">
     <form action="#" class="cleanForm" method="POST">
-      <br>
+      <br />
+
       <div>
-        <h3 style="text-align: justify; margin-left:8px; font-size: 24px;">
+        <h3 style="text-align: justify; margin-left: 8px; font-size: 24px">
           <i>Schedule of Appointment</i>
         </h3>
-        <p class="rowText"> You have a scheduled appointment on <b>{{student.date}}</b> 
-            that will start at <b>{{student.start_time}}</b> and will end at <b>{{student.end_time}}</b>
-          <br>
-          <br>
-          <i>For Call, kindy tap the Call Button</i>
-          <br>
-          <i class='bx bx-calendar-check nav__icon'></i>
+        <p class="rowText">
+          You have a scheduled appointment on <b>{{student.date}}</b> that will
+          start at <b>{{student.start_time}}</b> and will end at
+          <b>{{student.end_time}}</b>
+          <br />
+          <br />
+          <i>For Call, kindy tap the Call Button when Available</i>
+          <br />
         </p>
       </div>
     </form>
-    <div style="margin-top: 2vh;">
-      <a class="call_style" href="">
+    {% if call == True %}
+    <div style="margin-top: 2vh">
+      <a class="call_style" href="{% url 'student_videocall' id %}">
         <button class="btn login_btn">Call</button>
       </a>
     </div>
+
+    {% endif %}
   </div>
-  </div>
-
-          
-
-
-
+</div>
 
 <!-- <div class="parent_div"> {% for object in object_list %} {% if object.subject_referred %} {% if object.behavior_problem %}
    <div class="card1">
@@ -580,6 +581,5 @@ display: flex;
     </div>
   </div>
 </div> {% endif %} {% endfor %} </div>  -->
-
 
 {% endblock %}

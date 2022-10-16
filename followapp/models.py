@@ -1,8 +1,6 @@
 from django.db import models
 from multiselectfield import MultiSelectField
 from django.contrib.postgres.fields import ArrayField
-from viewflow.fields import CompositeKey
-from compositefk.fields import CompositeForeignKey, LocalFieldValue
 
 
 class School(models.Model):
@@ -224,6 +222,7 @@ class Notification(models.Model):
     notification_type = models.CharField(max_length=100, choices=CHOICES)
     is_read_student = models.BooleanField(default=False)
     is_read_counselor = models.BooleanField(default=False)
+    is_counseled = models.BooleanField(default=False)
     extra_id = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -5,14 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--========== BOX ICONS ==========-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sawarabi Gothic">
     <!--========== CSS ==========-->
     <!-- <link rel="stylesheet" href="assets/css/styles.css"> -->
     <style>
-      /*========== GOOGLE FONTS ==========*/
-      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
-
-      /*========== VARIABLES CSS ==========*/
       :root {
         --header-height: 6rem;
         --nav-width: 259px;
@@ -21,7 +16,7 @@
         --first-color-light: #F4F0FA;
         --title-color: #19181B;
         --text-color: #58555E;
-        --navtext-color: #0c2c0e;
+        --navtext-color: #304434;
         --text-color-light: #A5A1AA;
         --body-color: #d8c090;
         --nav-color: #e0b44c;
@@ -29,7 +24,7 @@
         --card-color: #F9F6FD;
         --main1-color: #d8c090;
         --dropdown: #fff;
-        --header-color: #0c2c0e;
+        --header-color: #304434;
         /*========== Font and typography ==========*/
         --body-font: 'Poppins', sans-serif;
         --normal-font-size: .938rem;
@@ -192,7 +187,7 @@
         font-size: var(--normal-font-size);
         text-transform: uppercase;
         letter-spacing: .1rem;
-        color: var(--text-color-light);
+        color: var(--main1-color);
       }
 
       .nav__link {
@@ -212,7 +207,7 @@
 
       .nav__name {
         font-size: var(--normal-font-size);
-        font-weight: var(--font-medium);
+        font-weight: var(--font-semi-bold);
         white-space: nowrap;
       }
 
@@ -285,13 +280,8 @@
         }
       }
 
-      /* @media screen { 
-  .divNotif{
-      margin: var(--header-height) 0 0 0 0 0 auto;
-        max-width: 85%;
-        width: 960px;
-  }
-} */
+
+      
       @media screen and (min-width: 768px) {
         body {
           padding: 1rem 3rem 0 6rem;
@@ -340,7 +330,6 @@
         }
 
         /* Element opacity */
-        /* Element opacity */
         .nav__logo-name {
           font-size: 25px;
           word-spacing: 2vw;
@@ -377,93 +366,32 @@
         }
       }
 
-      /*===== CARD CARD CARD =====*/
-      .card2 {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-        width: 90%;
-        height: 500px;
-        border-radius: 5px;
-        background-color: var(--card-color);
-        float: center;
-        margin-top: 80px;
-        margin-bottom: 20px;
-        margin-right: 80px;
-        margin-left: 80px;
-        text-align: center;
+      
+
+      .nav__container::-webkit-scrollbar {
+        display: none;
       }
 
-      .card2:hover {
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      ::-webkit-scrollbar {
+        display: none;
       }
 
-      .studlistCard {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        padding: 2px;
-        text-align: centerd #f1f1f1;
-        border-radius: 5px;
-        transition: 0.3s;
-        margin-left: 10px;
-        background-color: var(--body-color);
+      ::-webkit-scrollbar-track {
+        background-color: transparent;
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
       }
 
-      .studlistCard:hover {
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      ::-webkit-scrollbar-thumb {
+        background-color: #d6dee1;
+        border-radius: 20px;
+        border: 6px solid transparent;
+        background-clip: content-box;
       }
 
-      .studColumn {
-        float: left;
-        width: 20%;
-        padding: 0 10px;
-      }
-
-      .studRow {
-        margin: 0 -5px;
-      }
-
-      .studRow:after {
-        content: "";
-        display: table;
-        clear: both;
-      }
-
-      /* Responsive columns */
-      @media screen and (max-width: 600px) {
-        .studColumn {
-          width: 100%;
-          display: block;
-          margin-bottom: 20px;
-        }
-      }
-
-      /*===== CONTENT CONTENT =====*/
-      /* .divHome{
-  margin: var(--header-height) 0 0 0;
-  padding: 1rem 1rem 0;
-  font-family: var(--body-font);
-  font-size: var(--normal-font-size);
-  background-color: yellow;
-} */
-      .divNotif {
-        max-width: 85%;
-        width: 960px;
-        margin: 0 auto;
-      }
-
-      .dHome {
-        display: flex;
-        padding: 20px;
-        width: 1200px;
-        padding-left: 5px;
-        min-height: 500px;
-        border-radius: 10px;
-        background-color: #FFFFFF;
-        box-shadow:
-          0 9px 33px rgba(0, 0, 0, 0.07);
-        float: center;
-        flex-wrap: row;
-        margin-left: auto;
-        float: center;
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #a8bbbf;
       }
 
       /* /////////// SLIDER //////////////////// */
@@ -564,7 +492,7 @@
         /* margin-left: 5vw; */
         /* align-items: center; */
         background-color: #d4d8d8;
-        padding: 4px;
+        padding: 8px;
         border-radius: 5px;
         /* this */
       }
@@ -577,8 +505,8 @@
 
       @media (min-width: 56rem) {
         .cards_item {
-          width: 83vw;
-          height: 65vh;
+          width: 90vw;
+          height: 70vh;
         }
       }
 
@@ -618,11 +546,11 @@ margin-left: 100px; */
       .nav__icon_user{
         font-size: 100px;
       }
-
+      
       .box-menu{
         border: 2px solid #e0b44c;  
         border-radius: 5px;
-        background-color:  #0c2c0e;
+        background-color:  #304434;
         color: #ffffff;
         height: 7vh;
         width: 57vw;
@@ -636,11 +564,16 @@ margin-left: 100px; */
         text-align: center; 
         margin-left: 1vw;
       }
+      .cards{
+  display:flex; 
+  flex-direction: row; 
+  margin-top: 10vh;
+  gap: 1vw;
+}
 
-            
-      /* /////////// NEW CARD /////////// */
-      .card{
-    border-radius: 20px;
+  /* /////////// NEW CARD /////////// */
+  .card{
+    border-radius: 4px;
     background: #fff;
     box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
       transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
@@ -665,40 +598,40 @@ margin-left: 100px; */
 }
 
 .card-1{
-  background-image: url(https://img.icons8.com/nolan/344/view-details.png);
-  background-color:  #0c2c0e;
+  background-image: url(https://ionicframework.com/img/getting-started/ionic-native-card.png);
+  background-color: #304434;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 95px;
+    background-size: 80px;
     flex: 1;
-    height: 20vh;
-    width: 18vw;
+    height: 40vh;
+    width: 14.5vw;
 
 
 }
 
 .card-2{
-   background-image: url(https://img.icons8.com/nolan/344/project.png);
-   background-color:  #0c2c0e;
+   background-image: url(https://ionicframework.com/img/getting-started/components-card.png);
+   background-color: #304434;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 95px;
+    background-size: 80px;
     flex: 1;
-    height: 20vh;
-    width: 18vw;
+    height: 40vh;
+    width: 14.5vw;
 
     
 }
 
 .card-3{
-    background-image: url(https://img.icons8.com/nolan/344/project.png);
-   background-color:  #0c2c0e;
+   background-image: url(https://ionicframework.com/img/getting-started/theming-card.png);
+   background-color: #304434;
       background-repeat: no-repeat;
     background-position: right;
-    background-size: 95px;
+    background-size: 80px;
     flex: 1;
-    height: 20vh;
-    width: 16vw;
+    height: 40vh;
+    width: 14.5vw;
 }
 
 @media(max-width: 990px){
@@ -706,48 +639,31 @@ margin-left: 100px; */
     margin: 20px;
   }
 } 
-
-.cards{
-  display: flex;
-        margin-left: 12vw;
-        flex-direction: row;
-        flex-wrap: wrap;
-  margin-top: 10vh;
-  gap: 2vw;
-}
-.header-logo{
-  margin-top: 1vh;
-  display: flex; 
-  flex-direction: row;
-  gap: 0.5vw;
-}
     </style>
-    </style>
-    <title>Follow App Director</title>
+    <title>Follow App Counselor</title>
   </head>
   <body>
     <!--========== HEADER ==========-->
     <header class="header">
       <div class="header__container">
-        <div class="header-logo">
-                
-          <img style="height:80px; width: 50vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgttA6eVEvVJehiJ69hGL_XiUtYVjrOFUcRFXTpn-ZW9HdPptOjAaXY9kkXv-YY-xXXf8KkASimEvUba9yiUxtbylnjxHvulbHWMRR29s1YSbVVSwBXEbaaGpY62KgPqQUzucnyQ88GR21bqq4HgFXKBsuxuwDTWhnrKmIR2bKF_tgGXTdU54zFVcYs/s320/sdpc.png"></img>
-          <img style="height:80px; width: 17vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_gDyHzpjzbokQOHv1rmZ-nHyL8lIjiqJLb1TT2oLOlKkrXwZSrhsq5l-CzmQx8Sv4n00dKdrvpt0ScnCCZnIT7jME9Rj-0uHysSqvLEwT6EVSn3U3QsdziUsByUl4ZDnlsf_iOXcVUQmvACgO9toT0JZRY-BEwpIflEPxy8LII1CtwGPNxkTEwdF9/s320/usjr%20seal.png">
-          <p style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 28px;  "class="header__logo">FOLLOW APP</p>
-        </div>
-        <div>
-          <p style="font-weight: bold; color: #FFFFFF; font-size: 23px;"> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}}  </p>
-        </div>
+        <img style="height:80px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img>
+        <a style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 30px;  " href="{% url 'counselor_home_view' %}" class="header__logo">FOLLOW APP</a>
          <div>
-          <a href="{% url 'director_home_view' %}" style="margin-right: 2vw;margin-left: 2vw;">
+          <p style="font-weight: bold; color: #FFFFFF; font-size: 23px; "> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}} &nbsp; &nbsp;</p>
+        </div>
+
+        <div>
+          <a href="{% url 'counselor_home_view' %}" style="margin-right: 2vw;">
             <i class='bx bx-home-heart nav__icon_color'></i>
           </a>
         </div>
-          <div>
+         <div>
             <a href="{% url 'logout' %}" class="nav__link">
               <i class='bx bx-log-out-circle nav__icon_color'></i>
             </a>
           </div>  
+       
+         
       </div>
     </header>
     <!--========== NAV ==========-->
@@ -757,81 +673,113 @@ margin-left: 100px; */
           <div style="margin-left: 3vw;">
             <i class='bx bx-user-circle nav__icon_user'></i>
           </div>
-          <a href="{% url 'director_home_view' %}" class="nav__link nav__logo">
-            <span class="nav__logo-name">DIRECTOR</span>
+          <a href="{% url 'counselor_home_view' %}" class="nav__link nav__logo">
+            <span class="nav__logo-name">COUNSELOR</span>
           </a>
           <div class="nav__list">
             <div class="nav__items">
-              <a href="{% url 'list_degree_program' %}" class="nav__link">
-                <i class='bx bx-user-check nav__icon'></i>
-                <span class="nav__name">View Degree Programs</span>
+              <a href="{% url 'counselor_notifications' %}" class="nav__link">
+                <i class='bx bx-bell nav__icon'></i>
+                <span class="nav__name">Notifications {{counselorNotif}}</span>
               </a>
               <div class="nav__dropdown">
-                <a href="#" class="nav__link">
+                <a href="#refer" class="nav__link">
                   <i class='bx bx-navigation nav__icon'></i>
-                  <span class="nav__name">Statistic of Referrals</span>
+                  <span class="nav__name">Referral</span>
                   <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
                 </a>
                 <div class="nav__dropdown-collapse">
                   <div class="nav__dropdown-content">
-                    <a href="{% url 'per_degree_program' %}" class="nav__dropdown-item">Per Degree Program</a>
-                    <a href="{% url 'per_counselor' %}" class="nav__dropdown-item">Per Counselor</a>
+                    <a href="{% url 'view_referred_students' %}" class="nav__dropdown-item">List of Referrals</a>
+                    <a href="{% url 'view_pending_referred_students' %}" class="nav__dropdown-item">List of Pending Referrals</a>
                   </div>
                 </div>
               </div>
-
+              <a href="{% url 'counselor_set_schedule' %}" class="nav__link">
+                <i class='bx bx-calendar-edit nav__icon'></i>
+                <span class="nav__name">Set Schedule</span>
+              </a>
+              <a href="{% url 'counselor_view_schedule' %}" class="nav__link">
+                <i class='bx bx-calendar nav__icon'></i>
+                <span class="nav__name">Schedules</span>
+              </a>
+              <a href="{% url 'counselor_view_feedback' %}" class="nav__link">
+                <i class='bx bx-note nav__icon'></i>
+                <span class="nav__name">Feedbacks</span>
+              </a>
             </div>
-         
+            <!-- <a href="{% url 'logout' %}" class="nav__link nav__logout">
+              <i class='bx bx-log-out nav__icon'></i>
+              <span class="nav__name">Sign Out</span>
+            </a> -->
       </nav>
     </div>
-    <!--========== CONTENTS HOME ==========-->
-    <section id="homie"> {% block content %}
-      <!-- E TRY CAROSEL NGANHI -->
-      <br>
-      <!-- <div id="bgslider">
+    <!--========== CONTENTS NOTIFICATION ==========-->
+    <div class="divHome">
+      <section id="notif"> {% block content %} <br>
+        <div id="bgslider">
           <figure>
             <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
             <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">
             <img src="https://usjr.edu.ph/wp-content/uploads/2016/06/OEAM1298-1024x683.jpg" alt="Slider">
             <img src="https://images.squarespace-cdn.com/content/v1/5b7dc424a9e0283283f2127c/1602681165031-381SWS8LMY0K8K2YFSPV/everwell-online-therapy-ontario-counselling_001.png" alt="Slider">
           </figure>
-      </div> -->
-
-      <div class="cards_item">
+        </div>
         <br>
+        <div class="cards_item">
+          <br>
           <div class="box-menu">
-            <div class="box-text">Student Box Menu</div>
+            <div class="box-text">Counselor Box Menu</div>
           </div>
           <div class="cards">
-            <a href="{% url 'list_degree_program' %}">
+            <a href="{% url 'view_referred_students' %}">
               <div class="col-md-4">
                 <div class="card card-1">
-                  <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">View Degree Programs</h4>
-                  <!-- <p style="color: #e0b44c;">Displays the list of Degree Programs where the Director can assign a specific counselor.</p> -->
+                  <h3 style="color: #e0b44c;">List of Referrals</h3>
+                  <p style="color: #e0b44c;">Display list of referred students</p>
                 </div>
               </div>
             </a>
-            <a href="{% url 'per_degree_program' %}">
+            <a href="{% url 'view_pending_referred_students' %}">
               <div class="col-md-4">
-                <div class="card card-2">
-                  <h4 style="color: #e0b44c;  margin-top: 9vh;  margin-bottom: 2vh;">Per Degree Program</h4>
-                  <!-- <p style="color: #e0b44c;">Displays a list of statistics for each degree program from which the director can choose dates to display datas.</p> -->
+                <div class="card card-1">
+                  <h3 style="color: #e0b44c;">List of Pending Referrals</h3>
+                  <p style="color: #e0b44c;">The list of students that are referred by the Teacher</p>
                 </div>
               </div>
             </a>
-            <a href="{% url 'per_counselor' %}">
-              <div class="col-md-3">
+            <a href="{% url 'counselor_set_schedule' %}" >
+              <div class="col-md-4">
                 <div class="card card-3">
-                  <h4 style="color: #e0b44c;  margin-top: 9vh;  margin-bottom: 2vh;">Per Counselor</h4>
-                  <!-- <p style="color: #e0b44c;">Displays a list of statistics for each counselor from which the director can choose dates to display datas.</p> -->
+                  <h3 style="color: #e0b44c;">Set Schedule</h3>
+                  <p style="color: #e0b44c;">The Counselor will set a schedule if he/she is not available on a certain day.</p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'counselor_view_schedule' %}">
+              <div class="col-md-4">
+                <div class="card card-1">
+                  <h3 style="color: #e0b44c;">Schedules</h3>
+                  <p style="color: #e0b44c;">Displays the list of the Counselor's schedule </p>
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'counselor_view_feedback' %}">
+              <div class="col-md-4">
+                <div class="card card-3">
+                  <h3 style="color: #e0b44c;">Feedbacks</h3>
+                  <p style="color: #e0b44c;">The counselor can view previous and recent feedbacks.</p>
                 </div>
               </div>
             </a>
           </div>
+          <br>
+        </div>
         <br>
-      </div>
-      </div>
-       {% endblock %}
-    </section>
+        {% endblock %}
+      </section>
+    </div>
+    <!--========== MAIN JS ==========-->
+    <script src="main.js"></script>
   </body>
 </html>

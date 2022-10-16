@@ -319,14 +319,14 @@
 
                 {% if object.status == 'done' %}
               <td class="text-center">
-                <a href="{% url 'student_notification_detail' object.id %}" style="color: black; font-size: 16px;">
-                  <b>{{object.choice}}</b>
+                <a href="{% url 'student_notification_detail' 'False' object.id %}" style="color: black; font-size: 16px;">
+                  <b>COUNSELED</b>
                 </a>
               </td>
               {% else %}
                       <td class="text-center" style="background-color: #387C44;">
-                <a href="{% url 'student_notification_detail' object.id %}" style="color: #fff; font-size: 16px;">
-                  <b>{{object.choice}}</b>
+                <a href="{% url 'student_notification_detail' 'False' object.id %}" style="color: #fff; font-size: 16px;">
+                  <b>COUNSELING</b>
                 </a>
               </td>
                {% endif %}

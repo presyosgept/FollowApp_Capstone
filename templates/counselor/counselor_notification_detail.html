@@ -385,12 +385,27 @@
   <br>
   <br>
   <div>
+    
+   
   <br>  <div class="schedule_appointment">
     <div class="schedule_title">
       <h3>
         Schedule of Appointment
       </h3>
     </div>
+    {% if call == True %}
+
+    <div class="wrap" >
+      <center>
+        <a href="{% url 'counselor_videocall' referral_id %}">
+          <button class="button" style="font-weight: 800;  color: #fff;">
+            <h4 style="font-weight: bold; margin: 0 auto;">Call</h4>
+          </button>
+        </a>
+      </center>
+    </div> 
+
+    {% endif %}
     <br>
     <br>
     <div class="schedule_information">
@@ -433,7 +448,7 @@
      {% endif %}
      {% endfor %}
 
-     {% if not get_referral.feedback %}
+     <!-- {% if not get_referral.feedback %}
      <div class="wrap" >
          <center>
            <a href="{% url 'counselor_feedback_student' referral_id %}">
@@ -443,7 +458,7 @@
            </a>
          </center>
        </div> 
-        {% endif %}
+        {% endif %} -->
     </div>
   </div> 
   

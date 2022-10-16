@@ -1,24 +1,1170 @@
-{% block content %}
-
 <!DOCTYPE html>
-<head>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--========== BOX ICONS ==========-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sawarabi Gothic">
+    <!--========== CSS ==========-->
+    <!-- <link rel="stylesheet" href="assets/css/styles.css"> -->
+    <style>
+      /*========== GOOGLE FONTS ==========*/
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
-    <title>Video Conf</title>
-</head>
+      /*========== VARIABLES CSS ==========*/
+      :root {
+        --header-height: 6rem;
+        --nav-width: 259px;
+        /*========== Colors ==========*/
+        --first-color: #fff;
+        --first-color-light: #F4F0FA;
+        --title-color: #19181B;
+        --text-color: #58555E;
+        --navtext-color: #0c2c0e;
+        --text-color-light: #A5A1AA;
+        --body-color: #d8c090;
+        --nav-color: #e0b44c;
+        --container-color: #FFFFFF;
+        --card-color: #F9F6FD;
+        --main1-color: #d8c090;
+        --dropdown: #fff;
+        --list-data: #e0b44c;
+        --header-color: #0c2c0e;
+        /*========== Font and typography ==========*/
+        --body-font: 'Poppins', sans-serif;
+        --normal-font-size: .938rem;
+        --small-font-size: .75rem;
+        --smaller-font-size: .75rem;
+        /*========== Font weight ==========*/
+        --font-medium: 500;
+        --font-semi-bold: 600;
+        /*========== z index ==========*/
+        --z-fixed: 100;
+      }
 
-<body>
- Hello Counselor
-{% if today == '2022-09-12' %} 
-       <a  href="{% url 'admin_videocall' %}">
-                      Video call
-                    </a>
-{% else %}
-walay button
-{% endif %}
+      @media screen and (min-width: 1024px) {
+        :root {
+          --normal-font-size: 1rem;
+          --small-font-size: .875rem;
+          --smaller-font-size: .813rem;
+        }
+      }
 
-</body>
-</html>
+      /*========== BASE ==========*/
+      *,
+      ::before,
+      ::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: var(--header-height) 0 0 0;
+        padding: 1rem 1rem 0;
+        font-family: var(--body-font);
+        font-size: var(--normal-font-size);
+        color: var(--text-color);
+        overflow-y: auto;
+      }
+
+      h3 {
+        margin: 0;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 10%;
+        height: auto;
+      }
+
+      /*========== HEADER ==========*/
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--header-color);
+        box-shadow: 0 1px 0 rgba(22, 8, 43, 0.1);
+          
+          z-index: var(--z-fixed);
+      }
+
+      .header__container {
+        display: flex;
+        align-items: center;
+        height: var(--header-height);
+        justify-content: space-between;
+      }
+
+      .header__img {
+        width: 35px;
+        height: 35px;
+        border-radius: 5%;
+      }
+
+      .header__logo {
+        color: var(--title-color);
+        font-weight: var(--font-medium);
+        display: none;
+        font-size: 21px;
+      }
+
+      .header__search {
+        display: flex;
+        padding: .40rem .75rem;
+        background-color: var(--body-color);
+        border-radius: .25rem;
+        margin-left: 15px;
+      }
+
+      .header__input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background-color: var(--body-color);
+      }
+
+      .header__input::placeholder {
+        font-family: var(--body-font);
+        color: var(--text-color);
+      }
+
+      .header__icon,
+      .header__toggle {
+        font-size: 1.5rem;
+      }
+
+      .header__toggle {
+        color: var(--title-color);
+        cursor: pointer;
+      }
+
+      /*========== NAV ==========*/
+      .nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        padding: 1rem 1rem 0;
+        background-color: var(--nav-color);
+        box-shadow: 1px 0 0 rgba(22, 8, 43, 0.1);
+        z-index: var(--z-fixed);
+        transition: .4s;
+      }
+
+
+      .nav__container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 3rem;
+        overflow: auto;
+        scrollbar-width: none;
+        /* For mozilla */
+      }
+
+      /* For Google Chrome and others */
+      .nav__container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .nav__logo {
+        font-weight: var(--font-semi-bold);
+        margin-bottom: 2.5rem;
+      }
+
+      .nav__list,
+      .nav__items {
+        display: grid;
+      }
+
+      .nav__list {
+        row-gap: 2.5rem;
+      }
+
+      .nav__items {
+        row-gap: 1.5rem;
+      }
+
+      .nav__subtitle {
+        font-size: var(--normal-font-size);
+        text-transform: uppercase;
+        letter-spacing: .1rem;
+        color: var(--text-color-light);
+      }
+
+      .nav__link {
+        display: flex;
+        align-items: center;
+        color: var(--navtext-color);
+      }
+
+      .nav__link:hover {
+        color: var(--first-color);
+      }
+
+      .nav__icon {
+        font-size: 1.2rem;
+        margin-right: .5rem;
+      }
+
+      .nav__icon_color {
+        color: #ffffff;
+        font-size: 40px;
+      }
+
+      .nav__name {
+        font-size: var(--normal-font-size);
+        font-weight: var(--font-medium);
+        white-space: nowrap;
+      }
+
+      /* .nav__logout {
+  margin-top: 1rem;
+} */
+      /* Dropdown */
+      .nav__dropdown {
+        overflow: hidden;
+        max-height: 21px;
+        transition: .4s ease-in-out;
+      }
+
+      .nav__dropdown-collapse {
+        background-color: var(--main1-color);
+        border-radius: .25rem;
+        margin-top: 1rem;
+      }
+
+      .nav__dropdown-content {
+        display: grid;
+        row-gap: .5rem;
+        padding: .75rem 2.5rem .75rem 1.8rem;
+      }
+
+      .nav__dropdown-item {
+        font-size: var(--small-font-size);
+        font-weight: var(--font-medium);
+        color: var(--navtext-color);
+      }
+
+      .nav__dropdown-item:hover {
+        color: var(--dropdown);
+      }
+
+      .nav__dropdown-icon {
+        margin-left: auto;
+        transition: .4s;
+      }
+
+      /* Show dropdown collapse */
+      .nav__dropdown:hover {
+        max-height: 100rem;
+      }
+
+      /* Rotate icon arrow */
+      .nav__dropdown:hover .nav__dropdown-icon {
+        transform: rotate(180deg);
+      }
+
+      /*===== Show menu =====*/
+      .show-menu {
+        left: 0;
+      }
+
+      /*===== Active link =====*/
+      .active {
+        color: var(--first-color);
+      }
+
+      /* ========== MEDIA QUERIES ==========*/
+      /* For small devices reduce search*/
+      @media screen and (max-width: 320px) {
+        .header__search {
+          width: 70%;
+        }
+
+        .card1 {
+          width: 70%;
+        }
+      }
+
+      /* @media screen { 
+  .divNotif{
+      margin: var(--header-height) 0 0 0 0 0 auto;
+        max-width: 85%;
+        width: 960px;
+  }
+} */
+      @media screen and (min-width: 768px) {
+        body {
+          padding: 1rem 3rem 0 6rem;
+        }
+
+        .header {
+          padding: 0 3rem 0 6rem;
+        }
+
+        .header__container {
+          height: calc(var(--header-height) + .5rem);
+        }
+
+        .header__search {
+          width: 300px;
+          padding: .55rem .75rem;
+        }
+
+        .header__toggle {
+          display: none;
+        }
+
+        .header__logo {
+          display: block;
+        }
+
+        .header__img {
+          width: 40px;
+          height: 40px;
+          order: 1;
+        }
+
+        .nav {
+          left: 0;
+          padding: 1.2rem 1.5rem 0;
+          width: 69px;
+          /* Reduced navbar */
+        }
+
+        .nav__items {
+          row-gap: 1.7rem;
+        }
+
+        .nav__icon {
+          font-size: 1.3rem;
+        }
+
+        /* Element opacity */
+        .nav__logo-name {
+          font-size: 25px;
+          word-spacing: 2vw;
+          margin-left: 3vw;
+        }
+
+        .nav__name,
+        .nav__subtitle,
+        .nav__dropdown-icon {
+          opacity: 0;
+          transition: .3s;
+        }
+
+        /* Navbar expanded */
+        .nav:hover {
+          width: var(--nav-width);
+        }
+
+        /* Visible elements */
+        .nav:hover .nav__logo-name {
+          opacity: 1;
+        }
+
+        .nav:hover .nav__subtitle {
+          opacity: 1;
+        }
+
+        .nav:hover .nav__name {
+          opacity: 1;
+        }
+
+        .nav:hover .nav__dropdown-icon {
+          opacity: 1;
+        }
+      }
+
+      /*===== CARD CARD CARD =====*/
+      /* .card1 {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        width: 102%;
+        height: 550px;
+        border-radius: 5px;
+        background-color: #E9E4D4;
+        float: center;
+        margin-top: 10px;
+        margin-bottom: 35px;
+        margin-right: 500px;
+        margin-left: 80px; 
+        text-align: center;
+      }
+
+      .card1:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .card2 {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        width: 90%;
+        height: 500px;
+        border-radius: 5px;
+        background-color: var(--card-color);
+        float: center;
+        margin-top: 80px;
+        margin-bottom: 20px;
+        margin-right: 80px;
+        margin-left: 80px;
+        text-align: center;
+      }
+
+      .card2:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      } */
+
+      /*===== CONTENT CONTENT =====*/
+      /* .divHome{
+  margin: var(--header-height) 0 0 0;
+  padding: 1rem 1rem 0;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  background-color: yellow;
+} */
+      .divNotif {
+        max-width: 85%;
+        width: 960px;
+        margin: 0 auto;
+      }
+
+      .column {
+        float: left;
+        width: 33.33%;
+        padding: 5px;
+      }
+
+      /* Clearfix (clear floats) */
+      .row::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+
+      .image_card {
+        height: auto;
+        max-width: 100%;
+        vertical-align: middle;
+      }
+
+      /* .cards {
+        border-radius: 5px;
+        display: flex;
+        margin-left: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+      } */
+
+      .parent_cards_item{
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: #d4d8d8;
+        padding: 8px;
+        border-radius: 5px;
+      }
+      .cards_item {
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: transparent;
+        padding: 8px;
+        border-radius: 5px;
+        /* this */
+      }
+      .cards_item_vd {
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: transparent;
+        padding: 8px;
+        border-radius: 5px;
+        /* this */
+      }
+      .cards_item_vl {
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: transparent;
+        padding: 8px;
+        border-radius: 5px;
+        margin-top: 22vh;
+        /* this */
+      }
+      .cards_item_act {
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: transparent;
+        padding: 8px;
+        border-radius: 5px;
+        /* this */
+      }
+      
+
+      @media (min-width: 40rem) {
+        .cards_item {
+          width: 50%;
+        }
+        .cards_item_vd {
+          width: 50%;
+        }
+        .cards_item_vl {
+          width: 50%;
+        }
+        .cards_item_act {
+          width: 50%;
+        }
+      }
+
+      @media (min-width: 56rem) {
+        .parent_cards_item{
+          width: 88vw;
+          height: 195vh;
+        }
+        .cards_item {
+          width: 88vw;
+          height: 45vh;
+        }
+        .cards_item_vd {
+          width: 88vw;
+          height: 45vh;
+        }
+        .cards_item_vl {
+          width: 88vw;
+          height: 45vh;
+        }
+        .cards_item_act {
+          width: 88vw;
+          height: 45vh;
+        }
+      }
+
+
+      .card_content {
+        padding: 1rem;
+        background: #0c2c0e;
+      }
+
+      .card_title {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: capitalize;
+        margin: 0px;
+      }
+
+      .card_text {
+        color: #ffffff;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+        font-weight: 400;
+      }
+      .header-icon{
+        display: flex; 
+        flex-direction: row;
+        gap: 2vw;
+      }
+      .box-menu{
+        float: left;
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #0c2c0e;
+        color: #ffffff;
+        height: 7vh;
+        width: 20vw;
+        margin: 0 auto;
+      }    
+      .box-menu-vd{
+        float: left;
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #0c2c0e;
+        color: #ffffff;
+        height: 7vh;
+        width: 20vw;
+        margin: 0 auto;
+      }   
+      .box-menu-vl{
+        float: left;
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #0c2c0e;
+        color: #ffffff;
+        height: 7vh;
+        width: 23vw;
+        margin: 0 auto;
+      } 
+      .box-menu-act{
+        float: left;
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #0c2c0e;
+        color: #ffffff;
+        height: 7vh;
+        width: 20vw;
+        margin: 0 auto;
+      } 
+      .nav__icon_user{
+        font-size: 100px;
+      }
+      .box-text{
+        font-size: 25px; 
+        margin-top: 1vh; 
+        margin-bottom: 1vh;
+        text-align: center; 
+        margin-left: 1vw;
+      }
+
+      /* /////////// NEW CARD /////////// */
+      .card{
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+  padding: 14px 80px 18px 36px;
+  cursor: pointer;
+}
+
+.card:hover{
+     transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+.card h3{
+  font-weight: 600;
+}
+
+.card img{
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  max-height: 120px;
+}
+
+.card-1 {
+  background-image: url(https://img.icons8.com/nolan/344/technology-items.png);
+  background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 18vw;
+}
+
+.card-2{
+   background-image: url(https://img.icons8.com/nolan/344/google-groups.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+
     
-     {% endblock %}
+}
+
+.card-3{
+    background-image: url(https://img.icons8.com/nolan/344/google-classroom.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+.card-4{
+    background-image: url(https://img.icons8.com/nolan/344/documents-folder.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 16vw;
+}
+
+/* ////////////////////////////////////// View Data Menu ///////////////////////////// */
+
+.card-1-vd{
+   background-image: url(https://img.icons8.com/nolan/344/document.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+
+.card-2-vd{
+   background-image: url(https://img.icons8.com/nolan/344/university.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+.card-3-vd{
+   background-image: url(https://img.icons8.com/nolan/344/tree-structure.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 15vw;
+}
+.card-4-vd{
+   background-image: url(https://img.icons8.com/nolan/344/school-director.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+.card-5-vd{
+   background-image: url(https://img.icons8.com/nolan/344/consultation.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 14vw;
+}
+.card-6-vd{
+   background-image: url(https://img.icons8.com/nolan/344/technology-items.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 17.5vw;
+}
+.card-7-vd{
+   background-image: url(https://img.icons8.com/nolan/344/view-details.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 17.5vw;
+}
+.card-8-vd{
+   background-image: url(https://img.icons8.com/nolan/344/google-classroom.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+.card-9-vd{
+   background-image: url(https://img.icons8.com/nolan/344/documents-folder.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 16vw;
+}
+/* ////////////////////////////////////// View Load Menu ///////////////////////////// */
+
+.card-1-vl{
+   background-image: url(https://img.icons8.com/nolan/344/school-director.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 13vw;
+}
+
+.card-2-vl{
+   background-image: url(https://img.icons8.com/nolan/344/google-classroom.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 14vw;
+}
+
+/* ////////////////////////////////////// View Load Menu ///////////////////////////// */
+
+.card-1-act{
+   background-image: url(https://img.icons8.com/nolan/344/nui2.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 16vw;
+}
+@media(max-width: 990px){
+  .card{
+    margin: 20px;
+  }
+} 
+
+.cards{
+  display: flex;
+        margin-left: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+  margin-top: 10vh;
+  gap: 2vw;
+}
+.cards-vd{
+  display: flex;
+        margin-left: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+  margin-top: 10vh;
+  gap: 2vw;
+}
+.cards-vl{
+  display: flex;
+        margin-left: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+  margin-top: 10vh;
+  gap: 2vw;
+}
+.cards-act{
+  display: flex;
+        margin-left: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+  margin-top: 10vh;
+  gap: 2vw;
+}
+.list-upload-data:hover{
+  color: var(--list-data);
+  opacity: 1;
+}
 
 
+.upload__data_list{
+  color: var(--first-color);
+}
+.upload__data_list:hover {
+        color: var(--list-data);
+}
+
+.view__data_list{
+  color: var(--first-color);
+}
+.view__data_list:hover {
+        color: var(--list-data);
+}
+
+.viewload__data_list{
+  color: var(--first-color);
+}
+.viewload__data_list:hover {
+        color: var(--list-data);
+}
+.active-sem{
+  font-size: 16px; 
+  color: #0c2c0e; 
+  font-weight: bold
+}
+.header-logo{
+  margin-top: 1vh;
+  display: flex; 
+  flex-direction: row;
+  gap: 0.5vw;
+}
+    </style>
+    <title>Follow App Admin</title>
+  </head>
+  <body>
+    <!--========== HEADER ==========-->
+    <!-- <header class="header"><div class="header__container"><img style="height:50px; " src="https://1.bp.blogspot.com/-zssvz_H77as/YSdIaUUbIbI/AAAAAAAAAf0/xhPKHM0G8dczMa5vP7MPCZvNVeZQkpKgACLcBGAsYHQ/w945-h600-p-k-no-nu/logo3.png"></img><a style="font-weight: bold; margin-right:  auto; color: #FFFFFF; " href="{% url 'admin_home_view' %}"  class="header__logo">FOLLOW APP</a><div class="header__toggle"><i class='bx bx-menu' id="header-toggle"></i></div></div></header> -->
+    <header class="header">
+      <div class="header__container"> 
+        <div class="header-logo">
+                
+          <img style="height:80px; width: 50vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgttA6eVEvVJehiJ69hGL_XiUtYVjrOFUcRFXTpn-ZW9HdPptOjAaXY9kkXv-YY-xXXf8KkASimEvUba9yiUxtbylnjxHvulbHWMRR29s1YSbVVSwBXEbaaGpY62KgPqQUzucnyQ88GR21bqq4HgFXKBsuxuwDTWhnrKmIR2bKF_tgGXTdU54zFVcYs/s320/sdpc.png"></img>
+          <img style="height:80px; width: 17vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_gDyHzpjzbokQOHv1rmZ-nHyL8lIjiqJLb1TT2oLOlKkrXwZSrhsq5l-CzmQx8Sv4n00dKdrvpt0ScnCCZnIT7jME9Rj-0uHysSqvLEwT6EVSn3U3QsdziUsByUl4ZDnlsf_iOXcVUQmvACgO9toT0JZRY-BEwpIflEPxy8LII1CtwGPNxkTEwdF9/s320/usjr%20seal.png">
+          <p style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 28px;  "class="header__logo">FOLLOW APP</p>
+        </div>
+        <div class="header-icon">
+          <div>
+            <a href="{% url 'admin_home_view' %}"  class="nav__link">
+              <i class='bx bx-home-heart nav__icon_color'></i>
+            </a>
+          </div>
+          <div>
+            <a href="{% url 'logout' %}" class="nav__link">
+              <i class='bx bx-log-out-circle nav__icon_color'></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!--========== NAV ==========-->
+    <div class="nav" id="navbar">
+      <nav class="nav__container">
+        <div>
+          <div style="margin-left: 3vw;">
+            <i class='bx bx-user-circle nav__icon_user'></i>
+          </div>
+
+          <a href="{% url 'admin_home_view' %}" class="nav__link nav__logo">
+            <span class="nav__logo-name">ADMIN</span>
+          </a>
+           <p  class="active-sem">Academic Year:<b style="color: #000; margin-left: 0.5vw;">
+            {{Active_Year}}</b></p>
+             <p class="active-sem">Semester:<b style="color: #000; margin-left: 0.5vw;">
+            {{Active_Sem}}</b></p>
+          <div class="nav__list">
+            <div class="nav__items">
+              <div class="nav__dropdown">
+                <a href="#refer" class="nav__link">
+                  <i class='bx bx-upload nav__icon'></i>
+                  <span class="nav__name" id="upload-id">Upload</span>
+                  <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                </a>
+                <div class="nav__dropdown-collapse">
+                  <div class="nav__dropdown-content">
+                    <a href="{% url 'upload_subject_offerings' %}" class="nav__dropdown-item">Upload Subject Offerings</a>
+                    <a href="{% url 'upload_faculty' %}" class="nav__dropdown-item">Upload Faculty</a>
+                    <a href="{% url 'upload_student' %}" class="nav__dropdown-item">Upload Student</a>
+                    <a href="{% url 'upload_student_load' %}" class="nav__dropdown-item">Upload Student Load</a>
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="nav__dropdown">
+                <a href="#refer" class="nav__link">
+                  <i class='bx bx-file-find nav__icon'></i>
+                  <span class="nav__name">View</span>
+                  <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                </a>
+                <div class="nav__dropdown-collapse">
+                  <div class="nav__dropdown-content">
+                    <a href="{% url 'view_subject' %}" class="nav__dropdown-item"> Subject</a>
+                    <a href="{% url 'view_school' %}" class="nav__dropdown-item"> School</a>
+                    <a href="{% url 'view_department' %}" class="nav__dropdown-item"> Department</a>
+                    <a href="{% url 'view_faculty' %}" class="nav__dropdown-item"> Faculty</a>
+                    <a href="{% url 'view_counselor' %}" class="nav__dropdown-item"> Counselor</a>
+                    <a href="{% url 'view_subject_offerings' %}" class="nav__dropdown-item"> Subject Offerings</a>
+                    <a href="{% url 'view_degree_program' %}" class="nav__dropdown-item"> Degree Program</a>
+                    <a href="{% url 'view_student' %}" class="nav__dropdown-item"> Student</a>
+                    <a href="{% url 'view_student_load' %}" class="nav__dropdown-item"> Student Load</a>
+                  </div>
+                </div>
+              </div>
+              <div class="nav__dropdown">
+                <a href="#refer" class="nav__link">
+                  <i class='bx bx-list-ul nav__icon'></i>
+                  <span class="nav__name">View Load</span>
+                  <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                </a>
+                <div class="nav__dropdown-collapse">
+                  <div class="nav__dropdown-content">
+                    <a href="{% url 'view_faculty_with_load' %}" class="nav__dropdown-item"> Faculty</a>
+                    <a href="{% url 'view_student_with_load' %}" class="nav__dropdown-item"> Student</a>
+                  </div>
+                </div>
+              </div>
+                <a href="{% url 'set_active_year' %}" class="nav__link">
+                <i class='bx bx-check-shield nav__icon'></i>
+                <span class="nav__name">Activate Data</span>
+              </a>
+              </div>
+            </div>
+          </div>
+          <br>
+       
+      </nav>
+    </div>
+    <!--========== CONTENTS NOTIFICATION ==========-->
+    <div class="divHome">
+      <section id="notif"> {% block content %} <br>
+        <div class="parent_cards_item">
+          <div class="cards_item">
+            <div class="box-menu">
+              <div class="box-text">Upload Data Menu</div>
+            </div>
+            <div class="cards">
+              <a href="{% url 'upload_subject_offerings' %}">
+                <div class="col-md-4">
+                  <div class="card card-1">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Subject Offerings</h4>
+                  </div>
+                </div>
+              </a>
+              <a  href="{% url 'upload_faculty' %}">
+                <div class="col-md-4">
+                  <div class="card card-2">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Faculty</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'upload_student' %}">
+                <div class="col-md-4">
+                  <div class="card card-3">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Student</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'upload_student_load' %}">
+                <div class="col-md-4">
+                  <div class="card card-4">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Student Load</h4>
+                  </div>
+                </div>
+              </a>
+  
+            </div>
+  
+          </div>
+          <div class="cards_item_vd">
+            <div class="box-menu-vd">
+              <div class="box-text">View Data Menu</div>
+            </div>
+            <div class="cards-vd">
+              <a href="{% url 'view_subject' %}">               
+              <div class="col-md-4">
+                <div class="card card-1-vd">
+                  <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Subject</h4>
+                </div>
+              </div>
+              </a>
+              <a href="{% url 'view_school' %}">
+                <div class="col-md-4">
+                  <div class="card card-2-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">School</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_department' %}">
+                <div class="col-md-4">
+                  <div class="card card-3-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Department</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_faculty' %}"> 
+                <div class="col-md-4">
+                  <div class="card card-4-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Faculty</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_counselor' %}">
+                <div class="col-md-4">
+                  <div class="card card-5-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Counselor</h4>
+                  </div>
+                </div>
+              </a>
+              <a  href="{% url 'view_subject_offerings' %}">
+                <div class="col-md-4">
+                  <div class="card card-6-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Subject Offerings</h4>
+                  </div>
+                </div>
+              </a>
+              <a  href="{% url 'view_degree_program' %}">
+                <div class="col-md-7">
+                  <div class="card card-7-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Degree Program</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_student' %}">
+                <div class="col-md-8">
+                  <div class="card card-8-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Student</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_student_load' %}">
+                <div class="col-md-9">
+                  <div class="card card-9-vd">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Student Load</h4>
+                  </div>
+                </div>
+              </a>
+  
+            </div>
+            <br>
+          </div>
+  
+          <div class="cards_item_vl">
+            <div class="box-menu-vl">
+              <div class="box-text">View Load Data Menu</div>
+            </div>
+            <div class="cards-vl">
+              <a href="{% url 'view_faculty_with_load' %}">
+                <div class="col-md-4S">
+                  <div class="card card-1-vl">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Faculty</h4>
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'view_student_with_load' %}">
+                <div class="col-md-4">
+                  <div class="card card-2-vl">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Students</h4>
+                  </div>
+                </div>
+              </a>
+  
+            </div>
+            <br>
+          </div>
+          <div class="cards_item_act">
+            <div class="box-menu-act">
+              <div class="box-text">Activate Data</div>
+            </div>
+            <div class="cards-act">
+              <a href="{% url 'set_active_year' %}" >
+                <div class="col-md-4S">
+                  <div class="card card-1-act">
+                    <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">Activate Data</h4>
+                  </div>
+                </div>
+              </a>
+  
+            </div>
+            <br>
+          </div>
+        </div>
+
+        {% endblock %}
+      </section>
+    </div>
+    <!--========== MAIN JS ==========-->
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
