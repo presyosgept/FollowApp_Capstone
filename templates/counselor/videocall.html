@@ -6,493 +6,210 @@
     <title>Video Conf</title>
 </head>
 <style>
-    #wrapper {
-      display: flex;
-      padding: 20px;
-    }
-  
-    #square {
-      min-width: 300px;
-      height: 350px;
-      border-radius: 20px;
-      border: 1px solid black;
-      border-radius: 10px;
-      background-color: #98b4ac;
-      box-shadow:
-        0 9px 33px rgba(0, 0, 0, 0.07);
-      margin: auto;
-      overflow-wrap: break-word;
-    }
-  
-    /* .box {
-    
-    border: 2px solid black;
-  border-radius: 15px;
-  
-      box-shadow:
-        5 90px 50px rgba(0, 0, 0, 0.07);
-        min-width: 550px;
-  min-height: 200px;
-  
-  display: flex;
-    width: 100px;
-    white-space: nowrap;
-    text-overflow: ellipsis; 
-    margin-left: 20px;
-     overflow-y: auto;
-  } */
-    .table-head {
-      background: #E5E4E2;
-      box-shadow: none;
-      color: #fff;
-      font-weight: 600;
-      line-height: 5px;
-      box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
-      width: 500px;
-      margin: auto;
-      border-radius: 20px;
-    }
-  
-    .table-head .table-cell {
-      border-right: none;
-    }
-  
-    .table-cell {
-      display: table-cell;
-      width: 20%;
-      text-align: center;
-      padding: 4px 0;
-      border-right: 1px solid #838996;
-      vertical-align: middle;
-    }
-  
-    .first-cell {
-      text-align: left;
-      padding-left: 10px;
-      width: 8%;
-    }
-  
-    .last-cell {
-      border-right: none;
-      width: 15px;
-    }
-  
-    /* a{
-        textdecoration: none;
-        color: #555;
-    } */
-    p {
-      font-size: 17px;
-      color: black;
-    }
-  
-    .listTitle {
-      font-size: 20px;
-      text-align: center;
-    }
-  
-    @media only screen and (max-width: 600px) {
-      .table-row {
-        font-size: 11px;
-        margin: auto;
+        body {
+          overflow: hidden; 
+          font-family: var(--body-font);
       }
+
+        :root {
+          --header-height: 4.3rem;
+        --header-color: #0c2c0e;
+        --body-font: 'Poppins', sans-serif;
+        --normal-font-size: .938rem;
+        --small-font-size: .75rem;
+        --smaller-font-size: .75rem;
+        /*========== Font weight ==========*/
+        --font-medium: 500;
+        --font-semi-bold: 600;
+      }
+      /*========== HEADER ==========*/
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--header-color);
+        box-shadow: 0 1px 0 rgba(22, 8, 43, 0.1);
+        padding: 0 1rem;
+        z-index: var(--z-fixed);
+      }
+
+      .header__container {
+        display: flex;
+        align-items: center;
+        height: var(--header-height);
+        justify-content: space-between;
+      }
+      .header__logo {
+        color: var(--title-color);
+        font-weight: var(--font-medium);
+        font-size: 21px;
+      }
+      @media screen and (min-width: 768px) {
+        .header {
+          padding: 0 3rem 0 6rem;
+        }
+
+        .header__container {
+          height: calc(var(--header-height) + .3rem);
+        }
+      }
+
+
+      .video_call{
+      width: 86vw;
+      height: 79vh;
+      margin-top: 8vh;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); 
     }
-  
-    .trow-list {
-      display: inline-block;
-      width: 70%;
-      font-family: sans-serif;
-      background: transparent;
-      padding: 10px 0;
-      margin: auto;
-    }
-  
-    .modal1 {
-      font-size: 21px;
-      font-weight: 300;
-      text-align: left;
-    }
-  
-    .modal2 {
-      font-size: 20px;
-      text-align: left;
-      line-height: 25px;
-    }
-  
-    div.item {
-      vertical-align: auto;
-      display: inline-block;
-      text-align: center;
-      width: 120px;
-    }
-  
-    .caption {
-      display: block;
-    }
-  
-    .item {
-      width: 200px;
-      text-align: center;
-      display: block;
-      background-color: transparent;
-      border: 1px solid transparent;
-      margin-right: 10px;
-      margin-bottom: 1px;
-      float: left;
-    }
-  
-    #index-gallery {
-      width: 465px;
-    }
-  
-    .form_container {
-      margin-top: 20px;
-    }
-  
-    #form-title {
-      color: #fff;
-    }
-  
+
+
+    
     .login_btn {
-      width: 100%;
-      background: #48444c !important;
+
+      font-size: 19px;
+      height: 6.5vh;
+      width: 20vw;
+      background: red !important;
       color: white !important;
+      border-radius: 10px;
+      margin-bottom: 2vh;
+      padding: 0;
+border: none;
+background: none;
+font-family: var(--body-font);
     }
-  
+
     .login_btn:focus {
       box-shadow: none !important;
       outline: 0px !important;
     }
-  
+
+    .login_btn:hover {
+      box-shadow: 0px 2px 2px #C9C0BB;
+      transform: translateY(-4px);
+    }
+
     .login_container {
       padding: 0 2rem;
     }
-  
-    /* <--------- FOR BUTTON SA FEEDBAK ----->  */
-    .table-head1 {
-      background: #d8c090;
-      box-shadow: none;
-      color: #fff;
-      font-weight: 600;
-      line-height: 1px;
-      box-shadow: 0 1px 4px 0px rgba(0, 0, 50, 0.3);
-      width: 300px;
-      margin-left: 20px;
-      border-radius: 20px;
-    }
-  
-    .table-head1 .table-cell1 {
-      border-right: none;
-    }
-  
-    .table-cell1 {
-      display: table-cell;
-    }
-  
-    .first-cell1 {
-      text-align: left;
-      padding-left: 10px;
-      width: 8%;
-    }
-  
-    .buttons {
-      width: 200px;
-      height: auto;
-      border: 5em;
-      cursor: pointer;
-      outline: none;
-      font-size: 16px;
-      -webkit-transform: translate(0);
-      transform: translate(0);
-      background-image: linear-gradient(45deg, #98b4ac, #d8c090);
-      padding: 0.7em 2em;
-      border-radius: 65px;
-      box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
-      -webkit-transition: box-shadow 0.25s;
-      transition: box-shadow 0.25s;
-      color: white;
-    }
-  
-    .buttons .text {
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-image: linear-gradient(45deg, #d8c090, #98b4ac);
-    }
-  
-    .buttons:after {
-      content: "";
-      border-radius: 18px;
-      position: absolute;
-      margin: 4px;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: -1;
-      background: #E5E4E2;
-    }
-  
-    .buttons:hover {
-      background-image: linear-gradient(-45deg, #98b4ac, #d8c090);
-      box-shadow: 0 12px 24px rgba(128, 128, 128, 0.1);
-    }
-  
-    .buttons:hover .text {
-      background-image: linear-gradient(-45deg, #d8c090, #98b4ac);
-    }
-  
-    .Pbox {
-      font-size: 19px;
-      line-height: 30px;
-      text-align: justify;
-      overflow-y: scroll;
-      overflow-x: hidden;
-    }
-  
-    .column {
-      min-width: 300px;
-      float: left;
-      margin-right: 20px;
-    }
-  
-    .row {
-      width: 500px;
-      float: right;
-      text-align: left;
-      text-align: justify;
-      flex-direction: column-reverse;
-      padding: 8px;
-      margin-left: auto;
-      padding: 10px;
-      line-height: 30px;
-    }
-  
-    .rowText {
-      font-size: 26px;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    .image {
-      max-width: 320px;
-      height: 150px;
-    }
-  
-    .picInfo {
-      display: flex;
-      justify-content: center;
-    }
-  
-    .column {
-      width: 250px;
-      float: left;
-      margin-right: 20px;
-    }
-  
-    .row1 {
-      width: 450px;
-      float: left;
-      margin-left: 200px;
-      padding-top: 17px;
-    }
-  
-    .last {
-      margin: 0;
-      padding: 10px;
-    }
-  
-    .pText {
-      font-weight: 600;
-      font-size: 20px;
-    }
-  
-    .bText {
-      color: #000;
-      font-size: 20px;
-    }
-  
-    form.cleanForm {
-      width: 700px;
-      margin: 0 auto;
-    }
-  
-    form.cleanForm p {
-      margin-bottom: 15px;
-    }
-  
-    .fac {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    .buttonF {
-      margin-top: 4vh;
-      position: fixed;
-      width: 100%;
-      min-width: 1320px;
-      height: 60px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 2.5px;
-      font-weight: 600;
-      color: #000;
-      background-color: #d8c090;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease 0s;
-      cursor: pointer;
-      outline: none;
-    }
-  
+
+    .header-logo{
+  margin-top: 1vh;
+  display: flex; 
+  flex-direction: row;
+  gap: 25vw;
+}
+.call_style {
+    color: #fff;
+    font-family: var(--body-font);
+  }
+
+ .parent_div {
+    display: flex;
+    flex-direction: row;
+    column-gap: 4rem;
+    margin-left: 6rem;
+  }
+  .card1 {
+    color: #fff;
+    margin: 0 auto;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 40vw;
+    height: 15vw;
+    border-radius: 5px;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #304434;
+    margin-top: 8vh;
+    margin-bottom: 3vh;
+  }
+
+  @media screen and (max-width: 320px) {
+
+
     .card1 {
-      color: #fff;
-      margin: 0 auto;
-      box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-      transition: 0.3s;
-      width: fit-content;
-      height: 35vh;
-      border-radius: 5px;
-      flex-direction: column;
-      overflow: hidden;
-      background-color: #304434;
-      margin-top: 8vh;
-      margin-bottom: 3vh;
+      width: 70%;
     }
-  
-    @media screen and (max-width: 320px) {
-      .header__search {
-        width: 70%;
-      }
-  
-      .card1 {
-        width: 70%;
-      }
-    }
-  
-    .wrap {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: auto;
-    }
-  
-    .button {
-      margin: 0 auto;
-      width: 160px;
-      height: 30px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 2.5px;
-      font-weight: 500;
-      color: #000;
-      background-color: #d8c090;
-      border: none;
-      border-radius: 45px;
-      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease 0s;
-      cursor: pointer;
-      outline: none;
-    }
-  
-    .button:hover {
-      background-color: #95B9C7;
-      box-shadow: 0px 15px 20px #C9C0BB;
-      color: #fff;
-      transform: translateY(-7px);
-    }
-  
-    .scroll-box {
-      background: #f4f4f4;
-      height: 400px;
-      padding: 15px;
-      overflow-y: scroll;
-      text-align: justify;
-      border: 2px solid black;
-      border-radius: 15px;
-      box-shadow:
-        5 90px 50px rgba(0, 0, 0, 0.07);
-      min-width: 550px;
-      min-height: 200px;
-      width: 100px;
-      text-overflow: ellipsis;
-      margin-left: 60px;
-    }
-  
-    .parent_div {
-      display: flex;
-      flex-direction: row;
-      column-gap: 4rem;
-      margin-left: 6rem;
-    }
-  
-    .message {
-      margin: 0 auto;
-      width: 350px;
-      height: 45px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 2.5px;
-      font-weight: 500;
-      color: #fff;
-      background-color: #3c3c5c;
-      border: none;
-      border-radius: 10px;
-      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease 0s;
-      cursor: pointer;
-      outline: none;
-    }
-  
-    button {
-      border-radius: 20px;
-      border: 1px solid green;
-      color: #FFFFFF;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 0 auto;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: transform 80ms ease-in;
-      margin: 0 auto;
-      height: 3.5vh;
-    }
-  
-    .login_btn {
-      width: 11vw;
-      height: 4vh;
-      background: green !important;
-      color: white !important;
-    }
-  
-    .login_btn:focus {
-      box-shadow: none !important;
-      outline: 0px !important;
-    }
-  
-    .login_btn:hover {
-      background-color: green;
-      box-shadow: 0px 5px 5px #C9C0BB;
-      color: #fff;
-      transform: translateY(-3px);
-    }
-  
-    .call_style {
-      color: #fff;
-      font-size: 15.5px;
-    }
+  }
+  .fac {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttonF {
+    margin-bottom: 10.5vh;
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #000;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .done_btn {
+
+font-size: 19px;
+height: 6.5vh;
+width: 17vw;
+background: green !important;
+color: white !important;
+border-radius: 10px;
+margin-bottom: 2vh;
+padding: 0;
+border: none;
+background: none;
+font-family: var(--body-font);
+}
+
+.done_btn:focus {
+box-shadow: none !important;
+outline: 0px !important;
+}
+
+.done_btn:hover {
+box-shadow: 0px 2px 2px #C9C0BB;
+transform: translateY(-4px);
+}
+
+.end_container {
+padding: 0 2rem;
+}
 </style>
 <body>
-    <div id="hello" style="    display: block;
-    width: 100%;
-    height: 100vh"></div> 
+  <header class="header">
+    <div class="header__container">
+      <div>
+        <p style="font-weight: bold;color: #FFFFFF;font-size: 31px;"class="header__logo">
+          FOLLOW APP</p>
+      </div>
+  </header>
+
+  <div style="margin-top: 10.5vh; display: flex; justify-content: center; align-items: center;">
+    <a class="call_style" href="{% url 'student_not_attend' room_name %}">
+      <button class="btn login_btn">Click here if student did not attend</button>
+    </a>
+  </div>
+
+  <div id="hello" class="video_call">
+  </div> 
+
+
     <script src="https://meet.jit.si/external_api.js"></script>
     <script>
         let name = "{{room_name}}";
@@ -510,15 +227,17 @@
         
         let participants = [];
         api.addEventListener('participantJoined', (data) => {
-            console.log("HAKDOG1");
+           
             participants.push(data);
         });
 
         api.addEventListener('participantLeft', ({ id }) => {
+         
             api.dispose();
-            document.querySelector('#hello').outerHTML = "<div class='fac'> <button type='submit' class='buttonF'>Session Details</button></div> <div class='parent_div'> <div class='card1'> <form  class='cleanForm' method='POST'><br> <div></div><h3 style='text-align: justify; margin-left:8px; font-size: 28px;'><i>Counseling Session</i></h3><p class='rowText'>Session is already ended.</b></p></form><div style='display: flex; justify-content: center; align-items: center;'><a href='{% url 'counselor_feedback_student' id  %}' class='call_style'><br><button class='btn login_btn'>Done</button></a></div></div> </div>";
+            document.querySelector('#hello').outerHTML = "<div class='fac'> <button type='submit' class='buttonF'>Session Details</button></div> <div class='parent_div'> <div class='card1'> <form  class='cleanForm' method='POST'><br> <div></div><h3 style='text-align: justify; margin-left:8px; font-size: 28px;'><i>Counseling Session</i></h3><p style='text-align: center; margin-left:8px; font-size: 28px;'>Session is already ended.</b></p></form><div style='display: flex; justify-content: center; align-items: center;'><a href='{% url 'counselor_feedback_student' id  %}' class='call_style'><br><button class='btn done_btn'>Done</button></a></div></div> </div>";
           
         });
+
        
     </script>
 
@@ -526,5 +245,3 @@
 </html>
     
      {% endblock %}
-
-

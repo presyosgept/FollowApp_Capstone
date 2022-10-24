@@ -26,7 +26,6 @@ from django.http.response import (
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import generic
-from django.views.generic import View
 from tablib import Dataset
 from twilio.rest import Client
 
@@ -84,14 +83,7 @@ from .resources import (
     SubjectResource,
 )
 
-
 from .utilities import create_feedback, create_notification
-
-
-
-
-
-# global variables
 
 
 count = 0
@@ -338,7 +330,9 @@ from django.views.generic import ListView
 from django_zoom_meetings import ZoomMeetings
 from zoomus import ZoomClient
 
-
+# Enter your API key and your API secret
+API_KEY = 'D9WVD2H2RoWyREa0wAbHLA'
+API_SEC = 'qLb39rYza1n3miJgaiQRpaGGsSeFnyxzhOD2'
   
 # create a function to generate a token
 # using the pyjwt library
@@ -1498,6 +1492,30 @@ def view_stat_by_counselor_with_date(request, counselor_id):
 def counselor_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
+    
+    notifications = Notification.objects.filter(to_user=user)
+    today = date.today()
+
+    
+
+    for notif in notifications:
+        date_only = notif.schedDay.strftime("%Y-%m-%d")
+        if date_only == str(today):
+            sched_time_combine = datetime.combine(notif.schedDay, notif.schedStartTime)
+            ten_mins_before_sched_time = sched_time_combine-timedelta(minutes=10)
+            now = datetime.now().time()
+            final_now = now.replace(microsecond=0)
+            time_combine  = datetime.combine(today, final_now)
+            before_schedule = ten_mins_before_sched_time.replace(second = 0)
+            current_time = time_combine.replace(second = 0)
+
+            if before_schedule == current_time or current_time >= before_schedule:
+                if current_time >= sched_time_combine:
+                    print("mana imong sched")
+                if notif.is_counseled == False:
+                    notif.is_read_counselor = False
+                    notif.save()
+            
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
     return render(request, "counselor/home.html", {"counselorNotif": counselorNotif, "form": counselor_name})
@@ -1969,12 +1987,12 @@ def counselor_notifications(request):
     counselorNotif = Notification.objects.filter(
         to_user=user).order_by('created_at')
 
-    for notif in counselorNotif:
-        date_only = notif.schedDay.strftime("%Y-%m-%d")
-        if date_only == str(today):
-            if notif.is_counseled == False:
-                notif.is_read_counselor = False
-                notif.save()
+    # for notif in counselorNotif:
+    #     date_only = notif.schedDay.strftime("%Y-%m-%d")
+    #     if date_only == str(today):
+    #         if notif.is_counseled == False:
+    #             notif.is_read_counselor = False
+    #             notif.save()
             
     return render(request, 'counselor/notification.html', {"notifications": counselorNotif, "form": counselor_name})
 
@@ -1984,40 +2002,28 @@ from datetime import datetime, timedelta
 
 @login_required(login_url='login')
 def counselor_notification_detail(request, id):
-    call = False
-    flag = 0
-    user = request.session.get('username')
-    today = date.today()
-    get_referral = Referral.objects.get(id=id)
-    notification = Notification.objects.get(id=id)
-    if (get_referral.date == today):
-        flag=1
-        notification.is_read_counselor = False
-        notification.save()
-
-    referral_id = get_referral.id
-    sched_time_combine = datetime.combine(get_referral.date, get_referral.start_time)
-    sched_time = sched_time_combine-timedelta(minutes=10)
     
-    now = datetime.now().time()
-    final_now = now.replace(microsecond=0)
-    time_combine  = datetime.combine(today, final_now)
-    before_schedule = sched_time.replace(second = 0)
-    current_time = time_combine.replace(second = 0)
-    if flag == 1:
-        if current_time <=  sched_time_combine.replace(second = 0):
-            call = True
-        else:
-            flag = 0
-
-    if flag == 0:
-        notification.is_read_counselor = True
-        notification.save()
+    user = request.session.get('username')
+    
+    get_referral = Referral.objects.get(id=id)
+    referral_id = get_referral.id
 
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
+
+    call= False
+    today = date.today()
+    notifications = Notification.objects.get(id=id)
     
+    date_only = notifications.schedDay.strftime("%Y-%m-%d")
+    if date_only == str(today):
+        if notifications.is_read_counselor == False:
+            if notifications.is_counseled == False:
+                call = True
+    else:         
+        notifications.is_read_counselor = True
+        notifications.save()
     detail = []
     
     for obj in get_referral.referral_id:
@@ -2034,6 +2040,17 @@ def counselor_videocall(request, room_name):
     room = room_name
     return render(request, "counselor/videocall.html",{'room_name':room, 'id': room_name})
 
+
+@login_required(login_url='login')
+def student_not_attend(request, id):
+    print("present resched")
+    user = request.session.get('username')
+    counselor_name = Faculty.objects.get(faculty_id=user)
+    notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
+    counselorNotif = len(notif)
+    get_notif = Notification.objects.get(id=id)
+    print(get_notif)
+    return render(request, "counselor/student_not_attend.html", {"counselorNotif": counselorNotif, "form": counselor_name})
 
 @login_required(login_url='login')
 def counselor_feedback_student(request, id):
@@ -3060,7 +3077,7 @@ def teacher_view_referred_students(request, status):
     if status == 'all' or status == '--':
         for obj in referrals:
             for check in obj.referral_id:
-                print('check',check)
+                print('checkhtrhhnhn',check)
                 get_details = ReferralDetails.objects.get(id = check)
                 if get_details.faculty_id is not None:
                     print('huuuuyyy',get_details.faculty_id,get_details.faculty_id.faculty_id,obj.id)
@@ -3068,14 +3085,21 @@ def teacher_view_referred_students(request, status):
                         id_list.append(obj.id)
         print(id_list)
         for flag in id_list:
+                print("hatdog")
                 referral = Referral.objects.get(id=flag)
-                qs.append(Referral(id=flag,firstname=referral.firstname,
-                                                                lastname=referral.lastname, student_number=referral.student_number,
-                                                                degree_program=referral.degree_program,
-                                                                counselor_id=referral.counselor_id,
-                                                                start_time=referral.start_time, end_time=referral.end_time,
-                                                                date=referral.date,
-                                                                status=referral.status))
+                referral_info = ReferralDetails.objects.get(id=referral.id)
+                print("refrr", referral_info.subject_referred)
+                qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
+                                                'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
+                                                'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
+                # qs.append(Referral(id=flag,firstname=referral.firstname,
+                #                                                 lastname=referral.lastname, student_number=referral.student_number,
+                #                                                 degree_program=referral.degree_program,
+                #                                                 counselor_id=referral.counselor_id,
+                #                                                 start_time=referral.start_time, end_time=referral.end_time,
+                #                                                 date=referral.date,
+                #                                                 status=referral.status,
+                #                                                 subject_referred=referral_info.subject_referred))
     elif (status == 'pending'):
         for obj in referrals:
             if obj.status == 'pending':
@@ -3086,13 +3110,18 @@ def teacher_view_referred_students(request, status):
                             id_list.append(obj.id)
                 for flag in id_list:
                     referral = Referral.objects.get(id=flag)
-                    qs.append(Referral(id=flag,firstname=referral.firstname,
-                                                                    lastname=referral.lastname, student_number=referral.student_number,
-                                                                    degree_program=referral.degree_program,
-                                                                    counselor_id=referral.counselor_id,
-                                                                    start_time=referral.start_time, end_time=referral.end_time,
-                                                                    date=referral.date,
-                                                                    status=referral.status))
+                    referral_info = ReferralDetails.objects.get(id=referral.id)
+                    qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
+                                                'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
+                                                'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
+                    # qs.append(Referral(id=flag,firstname=referral.firstname,
+                    #                                                 lastname=referral.lastname, student_number=referral.student_number,
+                    #                                                 degree_program=referral.degree_program,
+                    #                                                 counselor_id=referral.counselor_id,
+                    #                                                 start_time=referral.start_time, end_time=referral.end_time,
+                    #                                                 date=referral.date,
+                    #                                                 status=referral.status,
+                    #                                                 subject_referred=referral_info.subject_referred))
         
     elif (status == 'done'):
         for obj in referrals:
@@ -3104,13 +3133,18 @@ def teacher_view_referred_students(request, status):
                             id_list.append(obj.id)
                 for flag in id_list:
                     referral = Referral.objects.get(id=flag)
-                    qs.append(Referral(id=flag,firstname=referral.firstname,
-                                                                    lastname=referral.lastname, student_number=referral.student_number,
-                                                                    degree_program=referral.degree_program,
-                                                                    counselor_id=referral.counselor_id,
-                                                                    start_time=referral.start_time, end_time=referral.end_time,
-                                                                    date=referral.date,
-                                                                    status=referral.status))           
+                    referral_info = ReferralDetails.objects.get(id=referral.id)
+                    qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
+                                                'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
+                                                'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
+                    # qs.append(Referral(id=flag,firstname=referral.firstname,
+                    #                                                 lastname=referral.lastname, student_number=referral.student_number,
+                    #                                                 degree_program=referral.degree_program,
+                    #                                                 counselor_id=referral.counselor_id,
+                    #                                                 start_time=referral.start_time, end_time=referral.end_time,
+                    #                                                 date=referral.date,
+                    #                                                 status=referral.status,
+                    #                                                 subject_referred=referral_info.subject_referred))           
     # if status == 'all' or status == '--':
     #     print('all')
     #     for obj in referrals:
@@ -3836,6 +3870,29 @@ def student_add_information(request, *args, **kwargs):
 def student_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
+
+    notifications = Notification.objects.filter(to_user=user)
+    today = date.today()
+
+    for notif in notifications:
+        date_only = notif.schedDay.strftime("%Y-%m-%d")
+        if date_only == str(today):
+            sched_time_combine = datetime.combine(notif.schedDay, notif.schedStartTime)
+            ten_mins_before_sched_time = sched_time_combine-timedelta(minutes=10)
+            now = datetime.now().time()
+            final_now = now.replace(microsecond=0)
+            time_combine  = datetime.combine(today, final_now)
+            before_schedule = ten_mins_before_sched_time.replace(second = 0)
+            current_time = time_combine.replace(second = 0)
+
+            if before_schedule == current_time or current_time >= before_schedule:
+                if current_time >= sched_time_combine:
+                    print("mana imong sched")
+                if notif.is_counseled == False:
+                    notif.is_read_student = False
+                    notif.save()
+
+
     notif = Notification.objects.filter(extra_id=user, is_read_student=False)
     studentNotif = len(notif)
     return render(request, "student/home.html", {"studentNotif": studentNotif, "form": student_name})
@@ -3881,42 +3938,44 @@ def student_notification_detail(request, id, status):
     notification.is_counseled = stat
     notification.save()
     student = Referral.objects.get(id=id)
-    if (student.date == today):
-        notification.is_read_student = False
-        notification.save()
-    else:
-        notification.is_read_student = True
-        notification.save()
 
-    sched_time_combine = datetime.combine(student.date, student.start_time)
-    sched_time = sched_time_combine-timedelta(minutes=10)
-    now = datetime.now().time()
-    final_now = now.replace(microsecond=0)
-    time_combine  = datetime.combine(today, final_now)
-    before_schedule = sched_time.replace(second = 0)
-    current_time = time_combine.replace(second = 0)
+ 
+
+    call= False
+    today = date.today()
+    notifications = Notification.objects.get(id=id)
     
-
-    if notification.is_counseled == False:
-        if (student.date == today):
-            if current_time <=  sched_time_combine.replace(second = 0):
-                    call = True
-    else:
-        notification.is_read_student = True
-        notification.save()
-
-        #problem here need eh false balik kung ma view na ang call
+    date_only = notifications.schedDay.strftime("%Y-%m-%d")
+    if date_only == str(today):
+        if notifications.is_read_student == True:
+            if notifications.is_counseled == False:
+                call = True
+    else:         
+        notifications.is_read_student = True
+        notifications.save()
+    detail = []
     return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif,'call':call, 'id':id, 'student':student, "form": student_name})
-
-
-
 
 
 
 @login_required(login_url='login')
 def student_videocall(request, room_name):
-    room =  str(room_name)
+    room =  room_name
     return render(request, "student/videocall.html",{'room_name':room, 'id': room_name})
+
+@login_required(login_url='login')
+def counselor_not_attend(request,id):
+    print("present resched")
+    user = request.session.get('username')
+    student_name = Student.objects.get(student_number=user)
+
+    notif = Notification.objects.filter(extra_id=user, is_read_student=False)
+    studentNotif = len(notif)
+    return render(request, "student/counselor_not_attend.html", {"studentNotif": studentNotif, "form": student_name})
+
+
+
+
 
 @login_required(login_url='login')
 def edit_information(request, *args, **kwargs):

@@ -19,12 +19,16 @@ from django.urls import include, path
 from django.urls import re_path as url
 from django.views.generic import TemplateView
 from followapp.views import (  # admin; director; counselor; teacher; student; api
+    CounselorList,
+    RegisterApi,
+    VerificationApi,
     admin_home_view,
     another_counselor_view_schedule,
     another_student_view_schedule,
     assign_counselor,
     counselor_feedback_student,
     counselor_home_view,
+    counselor_not_attend,
     counselor_notification_detail,
     counselor_notifications,
     counselor_set_schedule,
@@ -42,6 +46,7 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
     edit_school,
     home,
     list_degree_program,
+    login_api,
     loginPage,
     logoutUser,
     per_counselor,
@@ -55,10 +60,12 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
     search_student_with_load,
     set_active_year,
     signup,
+    signup_api,
     student_add_information,
     student_history,
     student_home_view,
     student_list_enrolled,
+    student_not_attend,
     student_notification_detail,
     student_notifications,
     student_set_schedule,
@@ -96,6 +103,16 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
 
 urlpatterns = [
 
+    #api
+    # path('student_api/', studentsList.as_view()),
+    path('counselor_api/', CounselorList.as_view()),
+    path('register_api/<str:id>/<str:email>', RegisterApi.as_view()),
+    path('verification_api/<str:id>/<str:code>', VerificationApi.as_view()),
+    # path('register_api/<str:id>/<str:password>', RegisterApi.as_view()),
+    path('signup_api', signup_api),
+    path('login_api', login_api),
+    # path('account/register', create_auth),
+    # path('api-token-auth/', views.obtain_auth_token, name='api-token-auth'),
 
 
     path('', home, name='home'),
@@ -180,6 +197,7 @@ urlpatterns = [
 
     # counselor
     path('counselor/', counselor_home_view, name="counselor_home_view"),
+    path('counselor/student_not_attend/<int:id>', student_not_attend, name="student_not_attend"),
     path('counselor/view_referred_students',
          view_referred_students, name="view_referred_students"),
     path('counselor/view_pending_referred_students',
@@ -228,6 +246,8 @@ path('admin/search_student_enroll/<str:search>/<str:offer_no>',
 
     # student
     path('student/', student_home_view, name="student_home_view"),
+    path('student/counselor_not_attend/<int:id>', counselor_not_attend, name="counselor_not_attend"),
+    
     path('student_add_information/', student_add_information,
          name="student_add_information"),
     path('student/edit_information', edit_information, name="edit_information"),

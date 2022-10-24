@@ -241,6 +241,46 @@
       /* margin-right: 90px;
       margin-left: 90px; */
     }
+    #id_username{
+      box-sizing: border-box;
+      width: 20vw;
+	font-size: 17px;
+	border: none;
+	padding: 10px 10px;
+	border-radius: 3px;
+	font-family: 'Poppins',sans-serif;
+	color: #4a4a4a;
+	letter-spacing: 0.5px;
+	box-shadow: 0 2px 8px rgba(22,89,233,0.4);
+  font-weight: 400;
+    }
+    #id_password1{
+      box-sizing: border-box;
+      width: 20vw;
+	font-size: 17px;
+	border: none;
+	padding: 10px 10px;
+	border-radius: 3px;
+	font-family: 'Poppins',sans-serif;
+	color: #4a4a4a;
+	letter-spacing: 0.5px;
+	box-shadow: 0 2px 8px rgba(22,89,233,0.4);
+  font-weight: 400;
+    }
+    #id_password2{
+      box-sizing: border-box;
+      width: 20vw;
+	font-size: 17px;
+	border: none;
+	padding: 10px 10px;
+	border-radius: 3px;
+	font-family: 'Poppins',sans-serif;
+	color: #4a4a4a;
+	letter-spacing: 0.5px;
+	box-shadow: 0 2px 8px rgba(22,89,233,0.4);
+  font-weight: 400;
+    }
+    
 
 </style>
 
@@ -261,16 +301,7 @@
 				<div>
 					{{form.password2}}
 				</div>
-				<!-- <div class="input-group mb-3">
-					<div class="input-group-append">
-						<span class="input-group-text"><i class="fas fa-user"></i></span>
-					</div>
-					{{form.username}}
-				</div> -->
 
-				<!-- <div class="d-flex justify-content-center mt-3 login_container">
-					 <input class="btn login_btn" type="submit" value="Register Account">
-				   </div> -->
 				   {% for message in messages %}
 				 
 					   <center> <p>{{message}}</p> </center>

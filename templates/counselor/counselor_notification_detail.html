@@ -157,6 +157,7 @@
     }
   
     .login_btn {
+      height: 4vh;
       width: 100%;
       background: #48444c !important;
       color: white !important;
@@ -322,9 +323,8 @@
     } */
     }
   
-    .wrap {
- 
-    }
+
+    
   
     .button {
       margin-top: 4vh;
@@ -337,7 +337,7 @@
       -webkit-transform: translate(0);
       transform: translate(0);
       background-color: #304434;
-      border-radius: 65px;
+      border-radius: 10px;
       box-shadow: 1px 1px 10px rgba(255, 255, 255, 0.438);
       -webkit-transition: box-shadow 0.25s;
       transition: all 0.3s ease 0s;
@@ -395,15 +395,14 @@
     </div>
     {% if call == True %}
 
-    <div class="wrap" >
+
       <center>
         <a href="{% url 'counselor_videocall' referral_id %}">
           <button class="button" style="font-weight: 800;  color: #fff;">
-            <h4 style="font-weight: bold; margin: 0 auto;">Call</h4>
+            <h4 style="font-weight: bold; margin: 0 auto;">JOIN</h4>
           </button>
         </a>
       </center>
-    </div> 
 
     {% endif %}
     <br>

@@ -423,8 +423,23 @@
         padding: 1rem;
       }
 
+      .cards_box {
+        margin: auto;
+        /* margin-left: 5vw; */
+        /* align-items: center; */
+        background-color: #d4d8d8;
+        padding: 8px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-top: 8vh;
+        /* this */
+      }
+
       @media (min-width: 40rem) {
         .cards_item {
+          width: 20%;
+        }
+        .cards_box {
           width: 20%;
         }
       }
@@ -432,6 +447,10 @@
       @media (min-width: 56rem) {
         .cards_item {
           width: 20%;
+        }
+        .cards_box {
+          width: 65vw;
+          height: 50vh;
         }
       }
 
@@ -519,6 +538,85 @@
   flex-direction: row;
   gap: 0.5vw;
 }
+
+.box-menu{
+        border: 2px solid #e0b44c;  
+        border-radius: 5px;
+        background-color:  #0c2c0e;
+        color: #ffffff;
+        height: 7vh;
+        width: 50vw;
+        margin: 0 auto;
+      }      
+
+      .box-text{
+        font-size: 25px; 
+        margin-top: 1vh; 
+        margin-bottom: 1vh;
+        text-align: center; 
+        margin-left: 1vw;
+      }
+      .box{
+        display: flex;
+        margin-left: 3vw;
+        flex-direction: row;
+        flex-wrap: wrap;
+  margin-top: 10vh;
+  gap: 1vw;
+}
+
+  /* /////////// NEW CARD /////////// */
+  .box_icon{
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+      transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+  padding: 14px 80px 18px 36px;
+  cursor: pointer;
+}
+
+.box_icon:hover{
+     transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+}
+
+.box_icon h3{
+  font-weight: 600;
+}
+
+.box_icon img{
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  max-height: 120px;
+}
+
+.card-1{
+  background-image: url(https://img.icons8.com/nolan/344/list.png);
+  background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 15vw;
+
+
+}
+
+.card-2{
+   background-image: url(https://img.icons8.com/nolan/344/list.png);
+   background-color:  #0c2c0e;
+      background-repeat: no-repeat;
+    background-position: right;
+    background-size: 95px;
+    flex: 1;
+    height: 20vh;
+    width: 15vw;
+
+    
+}
+
     </style>
     <title>Follow App Teacher</title>
   </head>
@@ -528,9 +626,10 @@
       <div class="header__container">
         <div class="header-logo">
                 
-          <img style="height:80px; width: 50vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgttA6eVEvVJehiJ69hGL_XiUtYVjrOFUcRFXTpn-ZW9HdPptOjAaXY9kkXv-YY-xXXf8KkASimEvUba9yiUxtbylnjxHvulbHWMRR29s1YSbVVSwBXEbaaGpY62KgPqQUzucnyQ88GR21bqq4HgFXKBsuxuwDTWhnrKmIR2bKF_tgGXTdU54zFVcYs/s320/sdpc.png"></img>
-          <img style="height:80px; width: 17vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_gDyHzpjzbokQOHv1rmZ-nHyL8lIjiqJLb1TT2oLOlKkrXwZSrhsq5l-CzmQx8Sv4n00dKdrvpt0ScnCCZnIT7jME9Rj-0uHysSqvLEwT6EVSn3U3QsdziUsByUl4ZDnlsf_iOXcVUQmvACgO9toT0JZRY-BEwpIflEPxy8LII1CtwGPNxkTEwdF9/s320/usjr%20seal.png">
-          <p style="font-weight: bold; margin-right:  auto; color: #FFFFFF;font-size: 28px;  "class="header__logo">FOLLOW APP</p>
+          <img style="height:80px; width: 50vw;" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_gDyHzpjzbokQOHv1rmZ-nHyL8lIjiqJLb1TT2oLOlKkrXwZSrhsq5l-CzmQx8Sv4n00dKdrvpt0ScnCCZnIT7jME9Rj-0uHysSqvLEwT6EVSn3U3QsdziUsByUl4ZDnlsf_iOXcVUQmvACgO9toT0JZRY-BEwpIflEPxy8LII1CtwGPNxkTEwdF9/s320/usjr%20seal.png">
+          <a href="{% url 'teacher_home_view' %}">
+            <p style="font-weight: bold; margin-left: 1vw; margin-right:  auto; color: #FFFFFF;font-size: 28px;  "class="header__logo">FOLLOW APP</p>
+          </a>
         </div>
         <div>
           <p style="font-weight: bold;color: #FFFFFF; font-size: 23px; "> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}}  </p>
@@ -561,7 +660,11 @@
             <div class="nav__items">
               <a href="{% url 'teacher_notifications' %}" class="nav__link">
                 <i class='bx bx-bell nav__icon'></i>
+                {% if teacherNotif != 0 %}
+                <span class="nav__name" style="color: red">Notifications {{teacherNotif}} </span>
+                {% else %}
                 <span class="nav__name">Notifications {{teacherNotif}} </span>
+                {% endif %}
               </a>
               <a href="{% url 'teacher_view_referred_students' 'all' %}" class="nav__link">
                 <i class='bx bx-user-pin nav__icon'></i>
@@ -602,10 +705,39 @@
               </div>
             </div>
           </a>
-        </div> {% endfor %} {% endblock %} </div>
+        </div> 
+        {% endfor %} 
+        <div class="cards_box">
+          <br>
+          <div class="box-menu">
+            <div class="box-text">Teacher Box Menu</div>
+          </div>
+          <div class="box">
+            <a href="{% url 'teacher_notifications' %}">
+              <div class="col-md-4">
+                <div class="box_icon card-1">
+                  <h4 style="color: #e0b44c; margin-top: 11vh;">Notifications</h4>
+                  <!-- <p style="color: #e0b44c;">Display list of referred students</p> -->
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'teacher_view_referred_students' 'all' %}">
+              <div class="col-md-4">
+                <div class="box_icon card-2">
+                  <h4 style="color: #e0b44c; margin-top: 8vh;">View Referred Students</h4>
+                  <!-- <p style="color: #e0b44c;">The list of students that are referred by the Teacher</p> -->
+                </div>
+              </div>
+            </a>
+          </div>
+          <br>
+        </div>
+        {% endblock %} </div>
       <br>
       <br>
     </div>
+
     </div>
   </body>
+  
 </html>

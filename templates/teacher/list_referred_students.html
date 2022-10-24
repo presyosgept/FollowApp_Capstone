@@ -248,8 +248,10 @@
         <th class="thkid">ID Number</th>
         <th class="thkid">Students Name</th>
         <th class="thkid">Degree Program</th>
+        <th class="thkid">Subject Referred</th>
         <th class="thkid">Status</th>
         <th class="thkid">Information</th>
+        
       </tr>
     </thead> {% for object in object_list reversed %} <tbody>
       <tr>
@@ -257,9 +259,10 @@
         <td style="font-size: 16px;" class="parent_program">{{object.student_number}}</td>
         <td style="font-size: 16px;" class="parent_program">{{object.lastname}}, &nbsp; {{object.firstname}}</td>
         <td style="font-size: 16px;" class="parent_program">{{object.degree_program}}</td>
+        <td style="font-size: 16px;" class="parent_program">{{object.subject_referred}}</td>
         <td style="font-size: 16px;" class="parent_program">{{object.status|title}}</td>
         <td style="font-size: 16px; color: black;" class="parent_program">
-          <a href="{% url 'detail_referred_student' object.id %}" style="font-weight: 550; color: black;">View More Information</a>
+          <a href="{% url 'detail_referred_student' object.id %}" style="font-weight: 550; color: black;"><i class='bx bx-log-in-circle nav__icon' style="color: gray;"></i></a>
         </td>
       </tr>
     <tbody> {% endfor %}

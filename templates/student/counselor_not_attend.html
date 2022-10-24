@@ -858,6 +858,54 @@ margin-left: 100px;
   flex-direction: row;
   gap: 0.5vw;
 }
+.card1 {
+    color: #fff;
+    margin: 0 auto;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    width: 40vw;
+    height: 15vw;
+    border-radius: 5px;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #304434;
+    margin-top: 8vh;
+    margin-bottom: 3vh;
+  }
+
+  @media screen and (max-width: 320px) {
+
+
+    .card1 {
+      width: 70%;
+    }
+  }
+  .fac {
+    margin-top: 2.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .buttonF {
+    position: fixed;
+    width: 100%;
+    min-width: 1320px;
+    height: 60px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: #000;
+    background-color: #d8c090;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
   </style>
   </head>
   <title> Follow App Student </title>
@@ -899,13 +947,9 @@ margin-left: 100px;
           
           <div class="nav__list">
             <div class="nav__items">
-              <a href="{% url 'student_notifications' %}"  class="nav__link">
+              <a href="{% url 'student_notifications' %}" class="nav__link">
                 <i class='bx bx-bell nav__icon'></i>
-                {% if studentNotif != 0 %}
-                <span class="nav__name" style="color: red">Notifications {{studentNotif}} </span>
-                {% else %}
-                <span class="nav__name">Notifications {{studentNotif}} </span>
-                {% endif %}
+                <span class="nav__name">Notifications {{studentNotif}}</span>
               </a>
               <a href="{% url 'student_set_schedule' %}" class="nav__link">
                 <i class='bx bx-calendar-check nav__icon'></i>
@@ -926,58 +970,19 @@ margin-left: 100px;
             </div>
       </nav>
     </div>
-    <!--========== CONTENTS HOME ==========-->
-    <div class="divHome">
-      <section id="homie"> {% block content %} <br>
-        <!-- <div id="bgslider">
-          <figure>
-            <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2016/06/OEAM1298-1024x683.jpg" alt="Slider">
-            <img src="https://images.squarespace-cdn.com/content/v1/5b7dc424a9e0283283f2127c/1602681165031-381SWS8LMY0K8K2YFSPV/everwell-online-therapy-ontario-counselling_001.png" alt="Slider">
-          </figure>
-        </div> -->
-        <div class="cards_item">
-          <br>
-          <div class="box-menu">
-            <div class="box-text">Student Box Menu</div>
-          </div>
-          <div class="cards">
-            <a href="{% url 'student_set_schedule' %}">          
-            <div class="col-md-4">
-              <div class="card card-1">
-                <h4 style="color: #e0b44c; margin-top: 11vh;">Set Appointment</h4>
-              </div>
-            </div>
-            </a>
-            <a  href="{% url 'student_view_schedule' %}">
-              <div class="col-md-4">
-                <div class="card card-4">
-                  <h4 style="color: #e0b44c; margin-top: 11vh;">View Schedule</h4>
-                </div>
-              </div>
-            </a>
-            <a href="{% url 'student_history' %}">
-              <div class="col-md-4">
-                <div class="card card-3">
-                  <h4 style="color: #e0b44c; margin-top: 11vh;">View History</h4>
-                </div>
-              </div>
-            </a>
-            <a href="{% url 'edit_information' %}">
-              <div class="col-md-4">
-                <div class="card card-4">
-                  <h4 style="color: #e0b44c; margin-top: 11vh;">Edit Profile</h4>
-                </div>
-              </div>
-            </a>
-          </div>
-          <br>
-        </div>
-        <br>
-        {% endblock %}
-      </section>
+    <!--========== CONTENTS SCHEDULE ==========-->
+    <div class="fac">
+      <button type="submit" class="buttonF">Schedule</button>
     </div>
+     <div class='parent_div'>
+       <div class='card1'> 
+        <form  class='cleanForm' method='POST'>
+          <br>
+         <div></div><h3 style='text-align: justify; margin-left:8px; font-size: 25px;'><i>Counseling Session Schedule</i>
+        </h3><p style='text-align: center; margin-left:8px; font-size: 20px; margin-top: 3vh;'>Check your notification for another schedule.</b></p>
+      </form>
+        <div style='display: flex; justify-content: center; align-items: center;'>
+    </div></div> </div>
     <!--========== MAIN JS ==========-->
     <script src="assets/js/main.js"></script>
   </body>

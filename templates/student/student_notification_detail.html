@@ -152,6 +152,8 @@ display: flex;
   }
 
   .login_btn {
+    border-radius: 10px;
+    height: 5vh;
     width: 100%;
     background: #48444c !important;
     color: white !important;
@@ -472,9 +474,9 @@ display: flex;
 
   .login_btn:hover {
     background-color: green;
-    box-shadow: 0px 5px 5px #c9c0bb;
+    box-shadow: 0px 2px 2px #c9c0bb;
     color: #fff;
-    transform: translateY(-7px);
+    transform: translateY(-4px);
   }
 
   .call_style {
@@ -500,15 +502,15 @@ display: flex;
           <b>{{student.end_time}}</b>
           <br />
           <br />
-          <i>For Call, kindy tap the Call Button when Available</i>
-          <br />
+          <i>For Counselling Session, kindy tap the Join Button when Available</i>
+          <br/>
         </p>
       </div>
     </form>
     {% if call == True %}
     <div style="margin-top: 2vh">
       <a class="call_style" href="{% url 'student_videocall' id %}">
-        <button class="btn login_btn">Call</button>
+        <button class="btn login_btn">Join</button>
       </a>
     </div>
 
