@@ -29,6 +29,7 @@ from django.views import generic
 from tablib import Dataset
 from twilio.rest import Client
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .forms import (
     AccountCreatedForm,
     AccountsForm,
@@ -320,102 +321,13 @@ def home(request, *args, **kwargs):
 
 # admin
 
-import json
-from time import time
 
-import jwt
-import requests
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.views.generic import ListView
-from django_zoom_meetings import ZoomMeetings
-from zoomus import ZoomClient
 
-# Enter your API key and your API secret
-API_KEY = 'D9WVD2H2RoWyREa0wAbHLA'
-API_SEC = 'qLb39rYza1n3miJgaiQRpaGGsSeFnyxzhOD2'
-  
-# create a function to generate a token
-# using the pyjwt library
-  
-  
-def generateToken():
-    token = jwt.encode(
-  
-        # Create a payload of the token containing
-        # API Key & expiration time
-        {'iss': API_KEY, 'exp': time() + 5000},
-  
-        # Secret used to generate token signature
-        API_SEC,
-  
-        # Specify the hashing alg
-        algorithm='HS256'
-    )
-    return token.encode().decode('UTF-8')
-  
-  
-# create json data for post requests
-meetingdetails = {"topic": "Testing 101",
-                  "type": 2,
-                  "start_time": "2022-09-3T10: 21: 57",
-                  "duration": "45",
-                  "timezone": "Philippine Time",
-                  "agenda": "test",
-                  "recurrence": {"type": 1,
-                                 "repeat_interval": 1
-                                 },
-                 "settings": {"host_video": 'true',
-                               "participant_video": 'true',
-                               "join_before_host": 'true',
-                               "mute_upon_entry": 'true',
-                               "watermark": 'false',
-                               "audio": 'voip',
-                               "auto_recording": 'cloud',
-                               "waiting_room": 'false',
-                               },
 
-                  }
   
-# send a request with headers including
-# a token and meeting details
-  
-url = ''
-def createMeeting():
-    # print('hakdog')
-    global url
-    headers = {'authorization': 'Bearer ' + generateToken(),
-               'content-type': 'application/json'}
-    r = requests.post(
-        f'https://api.zoom.us/v2/users/me/meetings',
-        headers=headers, data=json.dumps(meetingdetails))
-  
-    # print("\n creating zoom meeting ... \n")
-    # print(r.text)
-    # converting the output into json and extracting the details
-    y = json.loads(r.text)
-    join_id = y["id"]
-    join_URL = y["join_url"]
-    meetingPassword = y["password"]
-    url = join_id
-    # print(
-    #     f'\n here is your zoom meeting link {join_URL} and your \
-    #     password: "{meetingPassword}"\n')
-  
-  
-# run the create meeting function
+
 @login_required(login_url='login')
 def admin_home_view(request, *args, **kwargs):
-    # global url
-    # createMeeting()
-
-    # today = date.today()
-    # print("Today's date:", today)
-    # string_today = str(today)
-    # print("Today's string_today:", string_today)
-    # get_subject = Subject.objects.get(subject_code='GE TCW').subject_title
-    # print('get_subject',get_subject)
-    # # product = get_object_or_404(Faculty, faculty_id='2000')
-    # print("product:", product)
     global Active_Year
     global Active_Sem    
      
@@ -1243,7 +1155,6 @@ def upload_student(request):
         except EmptyPage:
             student = paginator.page(paginator.num_pages)
     except Exception as e:
-        print('222222',e)
         student=[]
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
@@ -1318,7 +1229,6 @@ def upload_student_load(request):
         except EmptyPage:
             student_load = paginator.page(paginator.num_pages)
     except Exception as e:
-        print('eeee',e)
         student_load = []
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student_load.html", {"student_load": student_load,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
@@ -1331,9 +1241,7 @@ def director_home_view(request, *args, **kwargs):
     user = request.session.get('username')
     director_name = Faculty.objects.get(faculty_id=user)
     today = date.today()
-    print("Today's date:", today)
     string_today = str(today)
-    print("Today's string_today:", string_today)
     return render(request, "director/home.html", {"form": director_name,'today':string_today})
 
 
@@ -1544,7 +1452,6 @@ def view_pending_referred_students(request):
 
 @login_required(login_url='login')
 def detail_referred_student_counselor(request, id):
-    print('hoy')
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
@@ -1571,7 +1478,6 @@ def counselor_set_schedule(request, *args, **kwargs):
     if request.method == "POST":
         offer = SetScheduleCounselorForm(request.POST)
         if offer.is_valid():
-            print('valid')
             pickedDateForm = offer['date'].value()
             start_timeForm = offer['start_time'].value()
             end_timeForm = offer['end_time'].value()
@@ -2043,13 +1949,11 @@ def counselor_videocall(request, room_name):
 
 @login_required(login_url='login')
 def student_not_attend(request, id):
-    print("present resched")
     user = request.session.get('username')
     counselor_name = Faculty.objects.get(faculty_id=user)
     notif = Notification.objects.filter(to_user=user, is_read_counselor=False)
     counselorNotif = len(notif)
     get_notif = Notification.objects.get(id=id)
-    print(get_notif)
     return render(request, "counselor/student_not_attend.html", {"counselorNotif": counselorNotif, "form": counselor_name})
 
 @login_required(login_url='login')
@@ -2574,7 +2478,7 @@ def another_counselor_view_schedule(request, *args, **kwargs):
         faculty_id=user,sem_id = Active_Sem , academic_year=Active_Year)
     classes_of_counselor_list_checker = bool(classes_of_counselor_list)
 
-    print('classes_of_counselor_list_checker',classes_of_counselor_list_checker)
+
     if(classes_of_counselor_list_checker == True):
         for object in classes_of_counselor_list:
             if day_name == 'Thu':
@@ -3077,29 +2981,17 @@ def teacher_view_referred_students(request, status):
     if status == 'all' or status == '--':
         for obj in referrals:
             for check in obj.referral_id:
-                print('checkhtrhhnhn',check)
                 get_details = ReferralDetails.objects.get(id = check)
                 if get_details.faculty_id is not None:
-                    print('huuuuyyy',get_details.faculty_id,get_details.faculty_id.faculty_id,obj.id)
                     if user == get_details.faculty_id.faculty_id:
                         id_list.append(obj.id)
-        print(id_list)
         for flag in id_list:
-                print("hatdog")
                 referral = Referral.objects.get(id=flag)
                 referral_info = ReferralDetails.objects.get(id=referral.id)
-                print("refrr", referral_info.subject_referred)
                 qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
                                                 'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
                                                 'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
-                # qs.append(Referral(id=flag,firstname=referral.firstname,
-                #                                                 lastname=referral.lastname, student_number=referral.student_number,
-                #                                                 degree_program=referral.degree_program,
-                #                                                 counselor_id=referral.counselor_id,
-                #                                                 start_time=referral.start_time, end_time=referral.end_time,
-                #                                                 date=referral.date,
-                #                                                 status=referral.status,
-                #                                                 subject_referred=referral_info.subject_referred))
+               
     elif (status == 'pending'):
         for obj in referrals:
             if obj.status == 'pending':
@@ -3114,14 +3006,7 @@ def teacher_view_referred_students(request, status):
                     qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
                                                 'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
                                                 'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
-                    # qs.append(Referral(id=flag,firstname=referral.firstname,
-                    #                                                 lastname=referral.lastname, student_number=referral.student_number,
-                    #                                                 degree_program=referral.degree_program,
-                    #                                                 counselor_id=referral.counselor_id,
-                    #                                                 start_time=referral.start_time, end_time=referral.end_time,
-                    #                                                 date=referral.date,
-                    #                                                 status=referral.status,
-                    #                                                 subject_referred=referral_info.subject_referred))
+                  
         
     elif (status == 'done'):
         for obj in referrals:
@@ -3137,68 +3022,7 @@ def teacher_view_referred_students(request, status):
                     qs.append({'id': flag, 'firstname':referral.firstname, 'lastname':referral.lastname, 'student_number':referral.student_number,
                                                 'degree_program':referral.degree_program, 'counselor_id':referral.counselor_id, 'start_time':referral.start_time,
                                                 'end_time':referral.end_time, 'date':referral.date, 'status':referral.status, 'subject_referred':referral_info.subject_referred})
-                    # qs.append(Referral(id=flag,firstname=referral.firstname,
-                    #                                                 lastname=referral.lastname, student_number=referral.student_number,
-                    #                                                 degree_program=referral.degree_program,
-                    #                                                 counselor_id=referral.counselor_id,
-                    #                                                 start_time=referral.start_time, end_time=referral.end_time,
-                    #                                                 date=referral.date,
-                    #                                                 status=referral.status,
-                    #                                                 subject_referred=referral_info.subject_referred))           
-    # if status == 'all' or status == '--':
-    #     print('all')
-    #     for obj in referrals:
-    #         for check in obj.referral_id:
-    #             for obj1 in check:
-    #                 print('obj',obj)
-    #                 get_details = ReferralDetails.objects.get(id = obj1)
-    #                 if get_details.faculty_id is not None:
-    #                     if user == get_details.faculty_id.faculty_id:
-    #                         flag = obj.id
-    #     referral = Referral.objects.get(id=flag)
-    #     qs.append(Referral(id=flag,firstname=referral.firstname,
-    #                                                     lastname=referral.lastname, student_number=referral.student_number,
-    #                                                     degree_program=referral.degree_program,
-    #                                                     counselor_id=referral.counselor_id,
-    #                                                     start_time=referral.start_time, end_time=referral.end_time,
-    #                                                      date=referral.date,
-    #                                                     status=referral.status))
-                
-    # elif (status == 'pending'):
-    #     for obj in referrals:
-    #         if obj.status == 'pending':
-    #             for check in obj.referral_id:
-    #                 for obj1 in check:
-    #                     get_details = ReferralDetails.objects.get(id = obj1)
-    #                     if get_details.faculty_id is not None:
-    #                         if user == get_details.faculty_id.faculty_id:
-    #                             flag = obj.id
-    #             referral = Referral.objects.get(id=flag)
-    #             qs.append(Referral(id=flag,firstname=referral.firstname,
-    #                                                             lastname=referral.lastname, student_number=referral.student_number,
-    #                                                             degree_program=referral.degree_program,
-    #                                                             counselor_id=referral.counselor_id,
-    #                                                             start_time=referral.start_time, end_time=referral.end_time,
-    #                                                             date=referral.date,
-    #                                                             status=referral.status))
-        
-    # elif (status == 'done'):
-    #     for obj in referrals:
-    #         if obj.status == 'done':
-    #             for check in obj.referral_id:
-    #                 for obj1 in check:
-    #                     get_details = ReferralDetails.objects.get(id = obj1)
-    #                     if get_details.faculty_id is not None:
-    #                         if user == get_details.faculty_id.faculty_id:
-    #                             flag = obj.id
-    #             referral = Referral.objects.get(id=flag)
-    #             qs.append(Referral(id=flag,firstname=referral.firstname,
-    #                                                             lastname=referral.lastname, student_number=referral.student_number,
-    #                                                             degree_program=referral.degree_program,
-    #                                                             counselor_id=referral.counselor_id,
-    #                                                             start_time=referral.start_time, end_time=referral.end_time,
-    #                                                             date=referral.date,
-    #                                                             status=referral.status))
+    
     filterform = FilterForm()
     if request.method == "POST":
         filterform = FilterForm(request.POST)
@@ -3248,7 +3072,6 @@ def referral(request, studentReferredId, offer_no):
     if request.method == "POST":
         referral_form = ReferralForm(request.POST, initial={ 'subject_referred': subject_referred_code})
         if referral_form.is_valid():
-            print('valid')
             today = date.today()
             now = dt.datetime.now()
             classes_counselor = []
@@ -3262,9 +3085,6 @@ def referral(request, studentReferredId, offer_no):
             counselor_assigned_id = get_object_counselor_assigned.faculty_id_id
             CounselorLoad = SubjectOfferings.objects.filter(
                 faculty_id=counselor_assigned_id)
-
-            for obj in CounselorLoad:
-                print(obj.school_time)
 
             timeArray = []
             initialtime = 0
@@ -3836,7 +3656,6 @@ def student_add_information(request, *args, **kwargs):
     if request.method == "POST":
         infoForm = StudentAdditionalInformationForm(
             request.POST, instance=student_name)
-        print(infoForm.errors)
         if infoForm.is_valid():
             student_number = infoForm['student_number'].value()
             lastname = infoForm['lastname'].value()
@@ -3965,7 +3784,6 @@ def student_videocall(request, room_name):
 
 @login_required(login_url='login')
 def counselor_not_attend(request,id):
-    print("present resched")
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
 
@@ -4045,10 +3863,7 @@ def student_view_schedule(request, *args, **kwargs):
     offer = CalendarForm()
     if request.method == "POST":
         offer = CalendarForm(request.POST)
-        print('hello')
-        print(offer.errors)
         if offer.is_valid():
-            print('hi')
             offer.save()
 
     classes_of_student = []
@@ -4059,7 +3874,6 @@ def student_view_schedule(request, *args, **kwargs):
 
     if(classes_of_student_list_checker == True):
         for object in classes_of_student_list:
-            print('object.offer_no.offer_no',object.offer_no.offer_no)
             try:
                 get_school_days = SubjectOfferings.objects.get(
                     offer_no=object.offer_no.offer_no, sem_id = Active_Sem, academic_year=Active_Year)
@@ -4251,7 +4065,6 @@ def student_set_schedule(request, *args, **kwargs):
     degree_program_student_referred = degree.program_code
     if request.method == "POST":
         schedForm = StudentSetSchedForm(request.POST)
-        print(schedForm.errors)
         if schedForm.is_valid():
             today = date.today()
             now = dt.datetime.now()
@@ -4770,71 +4583,3 @@ def student_set_schedule(request, *args, **kwargs):
     return render(request, "student/set_schedule.html", {"studentNotif": studentNotif, "schedform": schedForm, "form": student_name})
 
 # student
-
-
-
-# try:
-    #     a = ReferralDetails.objects.get(id = 1)
-    # except:
-    #     print('way sud')
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # print(day_name[:-1])
-    # Referral.objects.all().delete()
-    # Notification.objects.all().delete()
-    # timeArray = []
-    # newTime = str('2')+':00'
-    # timeArray.append(datetime.strptime(newTime, '%H:%M').time())
-    # newTime = str('2')+':30'
-    # d = datetime.strptime(newTime, "%H:%M").time()
-    # with_ampm = d.strftime("%I:%M %p")
-    # print('with_ampm', with_ampm)
-    # print('d', d)
-    # print('newTime', newTime)
-    # print('timeArray', timeArray)
-    # subject = SubjectOfferings.objects.get(offer_no='60002')
-    # splitDate = subject.school_time.split('-')
-    # check_a = 'hello'
-    # check_b = 'l'
-    # if check_b in check_a:
-    #     print('work')
-    # checkaaa = bool(check_b in check_a)
-    # print(checkaaa)
-    # time = '12:30 pm'
-    # convert_into_time = datetime.strptime(time, '%H:%M %p').time()
-    # convert_into_time_with_ampm = convert_into_time.strftime('%I:%M %p')
-    # print(convert_into_time, type(convert_into_time))
-    # print(convert_into_time_with_ampm, type(convert_into_time_with_ampm))
-    # time1 = '8:30 pm'
-    # time2 = '8:30 pm'
-
-    # print(time2, type(time2))
-    # d = datetime.strptime("22:30", "%H:%M")
-    # with_ampm = d.strftime("%I:%M %p")
-    # print(d.strftime("%I:%M %p"))
-
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # abbreviation = day_name[0]
-    # print('abbreviation', abbreviation)
-    # print('day_name[0]', day_name[0])
-    # today = date.today()
-    # day_name = today.strftime("%a")
-    # abbreviation = day_name[0:2]
-    # print(abbreviation)
-    # print(day_name[0:2])
-    # a = '10124534534534534454'
-    # ap = []
-    # get = []
-    # value = ChessBoard.objects.get(id=2)
-    # print(value.board)
-    # for obj in value.board:
-    #     get.append(obj)
-    # get.append(a)
-    # print(get)
-    # value.board = get
-    # value.save()
-    # print(value.board)
-
-# JWTOKEN
-#     eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IkQ5V1ZEMkgyUm9XeVJFYTB3QWJITEEiLCJleHAiOjE2NjIxMzIwMzAsImlhdCI6MTY2MjEyNjYzMn0.lMp3dcic5UOH1GLhCl7isXqxw3845zbeULx1IacUWmA
