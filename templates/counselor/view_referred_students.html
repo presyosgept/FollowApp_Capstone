@@ -210,11 +210,9 @@
           <td style="font-size: 16px;" class="parent_program">{{object.degree_program}}</td>
           <td style="font-size: 16px;" class="parent_program">{{object.date}}</td>
           <td style="font-size: 16px;" class="parent_program">{{object.status|title}}</td>
-          <td style="font-size: 16px;" class="parent_program">
-            <a href="{% url 'detail_referred_student_counselor' object.id  %}" style="color: black; font-weight: 550;">
-              <b>View More Information</b>
-            </a>
-          </td>
+           <td style="font-size: 16px; color: black;" class="parent_program">
+          <a href="{% url 'detail_referred_student_counselor' object.id  %}" style="font-weight: 550; color: black;"><i class='bx bx-log-in-circle nav__icon' style="color: gray;"></i></a>
+        </td>
         </tr>
       <tbody> {% endfor %}
     </table>

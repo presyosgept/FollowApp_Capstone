@@ -63,7 +63,7 @@
         font-family: var(--body-font);
         font-size: var(--normal-font-size);
         color: var(--text-color);
-        overflow-y: auto;
+        overflow-y: scroll;
       }
 
       h3 {
@@ -295,6 +295,7 @@
       @media screen and (min-width: 768px) {
         body {
           padding: 1rem 3rem 0 6rem;
+          overflow-y: scroll;
         }
 
         .header {
@@ -525,14 +526,13 @@
         }
       }
 
-      ::-webkit-scrollbar {
+      /* ::-webkit-scrollbar {
         display: none;
       }
 
       ::-webkit-scrollbar-track {
         background-color: transparent;
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
       }
 
@@ -545,7 +545,7 @@
 
       ::-webkit-scrollbar-thumb:hover {
         background-color: #a8bbbf;
-      }
+      } */
 
       .image_card {
         height: auto;
@@ -736,7 +736,8 @@ margin-left: 100px; */
         <div>
           <p style="font-weight: bold; color: #FFFFFF; font-size: 23px;"> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}}  </p>
         </div>
-         <div>
+        <div style="display: flex; flex-direction: row;">
+           <div>
           <a href="{% url 'director_home_view' %}" style="margin-right: 2vw;margin-left: 2vw;">
             <i class='bx bx-home-heart nav__icon_color'></i>
           </a>
@@ -746,6 +747,7 @@ margin-left: 100px; */
               <i class='bx bx-log-out-circle nav__icon_color'></i>
             </a>
           </div>  
+        </div>
       </div>
     </header>
     <!--========== NAV ==========-->
@@ -762,7 +764,7 @@ margin-left: 100px; */
             <div class="nav__items">
               <a href="{% url 'list_degree_program' %}" class="nav__link">
                 <i class='bx bx-user-check nav__icon'></i>
-                <span class="nav__name">View Degree Programs</span>
+                <span class="nav__name"> Assign Counselors </span>
               </a>
               <div class="nav__dropdown">
                 <a href="#" class="nav__link">
@@ -804,7 +806,7 @@ margin-left: 100px; */
             <a href="{% url 'list_degree_program' %}">
               <div class="col-md-4">
                 <div class="card card-1">
-                  <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;">View Degree Programs</h4>
+                  <h4 style="color: #e0b44c;  margin-top: 9vh; margin-bottom: 2vh;"> Assign Counselors </h4>
                   <!-- <p style="color: #e0b44c;">Displays the list of Degree Programs where the Director can assign a specific counselor.</p> -->
                 </div>
               </div>

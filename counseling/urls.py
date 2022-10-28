@@ -18,10 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.urls import re_path as url
 from django.views.generic import TemplateView
-from followapp.views import (  # admin; director; counselor; teacher; student; api
-    CounselorList,
-    RegisterApi,
-    VerificationApi,
+from followapp.views import (  # admin; director; counselor; teacher; student;s
     admin_home_view,
     another_counselor_view_schedule,
     another_student_view_schedule,
@@ -46,7 +43,6 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
     edit_school,
     home,
     list_degree_program,
-    login_api,
     loginPage,
     logoutUser,
     per_counselor,
@@ -60,7 +56,6 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
     search_student_with_load,
     set_active_year,
     signup,
-    signup_api,
     student_add_information,
     student_history,
     student_home_view,
@@ -103,16 +98,7 @@ from followapp.views import (  # admin; director; counselor; teacher; student; a
 
 urlpatterns = [
 
-    #api
-    # path('student_api/', studentsList.as_view()),
-    path('counselor_api/', CounselorList.as_view()),
-    path('register_api/<str:id>/<str:email>', RegisterApi.as_view()),
-    path('verification_api/<str:id>/<str:code>', VerificationApi.as_view()),
-    # path('register_api/<str:id>/<str:password>', RegisterApi.as_view()),
-    path('signup_api', signup_api),
-    path('login_api', login_api),
-    # path('account/register', create_auth),
-    # path('api-token-auth/', views.obtain_auth_token, name='api-token-auth'),
+
 
 
     path('', home, name='home'),

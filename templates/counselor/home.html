@@ -58,7 +58,7 @@
         font-family: var(--body-font);
         font-size: var(--normal-font-size);
         color: var(--text-color);
-        overflow-y: auto;
+        overflow-y: scroll;
       }
 
       h3 {
@@ -369,17 +369,12 @@
       
 
       .nav__container::-webkit-scrollbar {
-        display: none;
-      }
-
-      ::-webkit-scrollbar {
-        display: none;
+        /* display: none; */
       }
 
       ::-webkit-scrollbar-track {
         background-color: transparent;
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
       }
 
@@ -697,9 +692,8 @@ margin-left: 100px; */
         <div>
           <p style="font-weight: bold;  color: #FFFFFF; font-size: 23px;"> {{form.firstname }} {{form.lastname }} &nbsp; - &nbsp; {{request.session.username}} </p>
         </div>
-
-        
-        <div>
+        <div style="display: flex; flex-direction: row;">
+          <div>
           <a href="{% url 'counselor_home_view' %}" style="margin-right: 2vw;">
             <i class='bx bx-home-heart nav__icon_color'></i>
           </a>
@@ -708,7 +702,8 @@ margin-left: 100px; */
             <a href="{% url 'logout' %}" class="nav__link">
               <i class='bx bx-log-out-circle nav__icon_color'></i>
             </a>
-          </div>  
+          </div> 
+        </div> 
        
          
       </div>
