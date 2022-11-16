@@ -224,12 +224,14 @@ class Notification(models.Model):
     is_read_counselor = models.BooleanField(default=False)
     is_counseled = models.BooleanField(default=False)
     extra_id = models.IntegerField()
-
+    is_approve_counselor = models.BooleanField(null=True, blank=True)
+    is_approve_student = models.BooleanField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(max_length=220)
     schedDay = models.DateTimeField()
     schedStartTime = models.TimeField()
     schedEndTime = models.TimeField()
+    is_reSched = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "Notification"

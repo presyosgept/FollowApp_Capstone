@@ -81,9 +81,4 @@ class StudentloadAdmin(ImportExportModelAdmin):
                     'sem_id', 'academic_year')
 
 
-#
-#
-#
-#
-#
 admin.site.register(AccountCreated)

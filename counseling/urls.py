@@ -23,9 +23,9 @@ from followapp.views import (  # admin; director; counselor; teacher; student;s
     another_counselor_view_schedule,
     another_student_view_schedule,
     assign_counselor,
+    counselor_accept_or_not,
     counselor_feedback_student,
     counselor_home_view,
-    counselor_not_attend,
     counselor_notification_detail,
     counselor_notifications,
     counselor_set_schedule,
@@ -47,6 +47,7 @@ from followapp.views import (  # admin; director; counselor; teacher; student;s
     logoutUser,
     per_counselor,
     per_degree_program,
+    re_create_schedule,
     referral,
     register,
     search_faculty,
@@ -60,7 +61,6 @@ from followapp.views import (  # admin; director; counselor; teacher; student;s
     student_history,
     student_home_view,
     student_list_enrolled,
-    student_not_attend,
     student_notification_detail,
     student_notifications,
     student_set_schedule,
@@ -94,20 +94,18 @@ from followapp.views import (  # admin; director; counselor; teacher; student;s
     view_student_with_load,
     view_subject,
     view_subject_offerings,
+    import_date_set
 )
 
 urlpatterns = [
-
-
-
-
     path('', home, name='home'),
     path('login/', loginPage, name='login'),
     path('logout/', logoutUser, name='logout'),
     path('signup/', signup, name='signup'),
     path('register/', register, name='register'),
     path('verification_code/', verification_code, name="verification_code"),
-
+    path('admin/import_date_set', import_date_set, name="import_date_set"),
+path('re_create_schedule/<int:referral_id>/<int:notification_id>/<str:actor>', re_create_schedule, name="re_create_schedule"),
     # admin
     path('head/', admin_home_view, name="admin_home_view"), 
      path('admin/set_active_year', set_active_year, name="set_active_year"),
@@ -183,7 +181,8 @@ urlpatterns = [
 
     # counselor
     path('counselor/', counselor_home_view, name="counselor_home_view"),
-    path('counselor/student_not_attend/<int:id>', student_not_attend, name="student_not_attend"),
+    path('counselor/counselor_accept_or_not/<int:id>/<str:status>/<str:user>', counselor_accept_or_not, name="counselor_accept_or_not"),
+    
     path('counselor/view_referred_students',
          view_referred_students, name="view_referred_students"),
     path('counselor/view_pending_referred_students',
@@ -208,7 +207,7 @@ urlpatterns = [
          counselor_view_schedule, name="counselor_view_schedule"),
     path('counselor/another_counselor_view_schedule',
          another_counselor_view_schedule, name="another_counselor_view_schedule"),
-     path('counselor/counselor_videocall/<int:room_name>',
+     path('counselor/counselor_videocall/<int:room_name>/<int:id>',
          counselor_videocall, name="counselor_videocall"),
 
 
@@ -227,13 +226,12 @@ urlpatterns = [
          teacher_notifications, name="teacher_notifications"),
     path('teacher/teacher_notification_detail/?P:<int:id>', teacher_notification_detail,
          name='teacher_notification_detail'),
-path('admin/search_student_enroll/<str:search>/<str:offer_no>',
-         search_student_enroll, name="search_student_enroll"),
+     path('admin/search_student_enroll/<str:search>/<str:offer_no>',
+          search_student_enroll, name="search_student_enroll"),
 
     # student
     path('student/', student_home_view, name="student_home_view"),
-    path('student/counselor_not_attend/<int:id>', counselor_not_attend, name="counselor_not_attend"),
-    
+   
     path('student_add_information/', student_add_information,
          name="student_add_information"),
     path('student/edit_information', edit_information, name="edit_information"),
@@ -248,7 +246,7 @@ path('admin/search_student_enroll/<str:search>/<str:offer_no>',
          another_student_view_schedule, name="another_student_view_schedule"),
     path('student/student_set_schedule',
          student_set_schedule, name="student_set_schedule"),
-  path('student/student_videocall/<int:room_name>',
+  path('student/student_videocall/<int:room_name>/<int:id>',
          student_videocall, name="student_videocall"),
 
 
