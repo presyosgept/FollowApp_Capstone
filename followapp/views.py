@@ -310,57 +310,593 @@ def admin_home_view(request, *args, **kwargs):
      
     return render(request, "admin/home.html", {'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 
-# import csv
-# import numpy as np
-# import pandas as pd
-# from sklearn.linear_model import LinearRegression
-# import pandas as pd
-# from sklearn import linear_model
-# import statsmodels.api as sm
+import csv
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn import linear_model
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
 @login_required(login_url='login')
 def import_date_set(request, *args, **kwargs):
-    # if request.method == 'POST':
-    #     print("Aaaa")
-    #     new_student_load_list = []
-    #     student_number = []
-    #     english = []
-    #     mathematics = []
-    #     science = []
-    #     CMP = []
-    #     accoutning = []
-    #     human_anatomy = []
-    #     status = []
-    #     dataset = Dataset()
-    #     new_student_load = request.FILES['myfile']
-    #     imported_data = dataset.load(
-    #     new_student_load.read(), format='xlsx')
-    #     for data in imported_data:
-    #         student_number.append(data[0])
-    #         english.append(data[1])
-    #         mathematics.append(data[2])
-    #         science.append(data[3])
-    #         CMP.append(data[4])
-    #         accoutning.append(data[5])
-    #         human_anatomy.append(data[6])
-    #         status.append(data[7])
-    #         # new_student_load_list.append([data1,data2,data3,data4,data5,data6])
-    #     new_student_load_list.append({'student_number': student_number,'english': english,
-    #                     'mathematics':mathematics,'science': science,'CMP': CMP ,'accoutning':accoutning,
-    #                     'human_anatomy': human_anatomy,'status':status}) 
-    #     # print('new_student_load_list',new_student_load_list)
-    #     # print('student_number',student_number)
-    #     df = pd.DataFrame(new_student_load_list)
-    #     print(df)
-    #     x = df[['student_number','english','mathematics','science','CMP','accoutning','human_anatomy']]
-    #     y = df['status']
-    #     # with sklearn
-    #     regr = linear_model.LinearRegression()
-    #     print(type(x),type(y))
-    #     new_list_x = list(map(float, x))
-    #     new_list_y = list(map(float, y))
-    #     regr.fit(new_list_x, new_list_y)
-    return render(request, "admin/import_date_set.html",)
+    if request.method == 'POST':
+        model = []
+        student_number_data = []
+        absences_data = []
+        content_data = []
+        assignment_data = []
+        quiz_data = []
+        status_data = []
+        dataset = Dataset()
+        new_student_load = request.FILES['myfile']
+        imported_data = dataset.load(
+        new_student_load.read(), format='xlsx')
+        for data in imported_data:
+            student_number_data.append(data[0])
+            if data[1] >= 3 or data[2] >= 3 or data[3] >= 3:
+                has_tres_data =1
+            else:
+                has_tres_data=0
+            absences_data.append(data[4])
+            content = data[5] / data[6]
+            content_data.append(content)
+            assignment = data[7] / data[8]
+            assignment_data.append(assignment)
+            quiz = data[9] / data[10]
+            quiz_data.append(quiz)
+            status_data.append(data[11])
+            model.append({'student_number': data[0],'has_tres_data':has_tres_data,'absences_data': data[4],
+                            'content_data':content,'assignment_data': assignment,'quiz_data': quiz,
+                            'status_data':data[11]})
+        print("model",model)
+        df = pd.DataFrame(model)
+        print("df",df)
+        print("shape of you",df.shape)
+        x = df[['has_tres_data','absences_data','content_data','assignment_data','quiz_data']]
+        y = df['status_data']
+        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
+     
+        rforest = RandomForestClassifier()
+        rforest.fit(X_train, y_train)
 
+        # rforest_pred = rforest.predict(X_test)
+        # rforest_acc = accuracy_score(rforest_pred, y_test)
+        # print("Test accuracy: {:.2f}%".format(rforest_acc*100))
+        # pred=pd.DataFrame({'Actual':y_test, 'Predicted':rforest_pred})
+        # pred[1:100]
+        # print(pred)
+        rforest_pred = rforest.predict(x)
+        rforest_acc = accuracy_score(rforest_pred, y)
+        print("Test accuracy: {:.2f}%".format(rforest_acc*100))
+        pred=pd.DataFrame({'Student Number':df['student_number'],'Actual':y, 'Predicted':rforest_pred})
+        # print("aaa",pred)
+        # for i, row in df.iterrows():
+        #     print('index: ', i, row['student_number'])
+        for ind in pred.index:
+            if pred['Predicted'][ind] == 1:
+                print("irefer ni sya", pred['Student Number'][ind])
+                user =pred['Student Number'][ind]
+                studentReferred = Student.objects.get(student_number=user)
+                degree = DegreeProgram.objects.get(
+                    program_code=studentReferred.program_code_id)
+                degree_program_student_referred = degree.program_code
+                today = date.today()
+                now = dt.datetime.now()
+                classes_counselor = []
+                notAvailableSched = []
+                sample = []
+                tomorrow = today
+                finder = 0
+
+                get_object_counselor_assigned = DegreeProgram.objects.get(
+                    program_code=degree_program_student_referred)
+                counselor_assigned_id = get_object_counselor_assigned.faculty_id_id
+                CounselorLoad = SubjectOfferings.objects.filter(
+                    faculty_id=counselor_assigned_id)
+                timeArray = []
+                initialtime = 0
+                newTime = str(initialtime)+':00:00'
+
+                for x in range(24):
+                    timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+                    newTime = str(initialtime)+':30:00'
+                    timeArray.append(datetime.strptime(newTime, '%H:%M:%S').time())
+                    initialtime = initialtime + 1
+                    newTime = str(initialtime)+':00:00'
+                
+                while(finder == 0):
+                    tomorrow = tomorrow+timedelta(days=1)
+                    day_name = tomorrow.strftime("%a")
+                    if(day_name != "Sun" and day_name != "Sat"):
+                        referral_list_byday = Referral.objects.filter(
+                            date=tomorrow)
+                        CounselorLoadCheck = bool(CounselorLoad)
+                        referral_list_byday_check = bool(referral_list_byday)
+                        if(CounselorLoadCheck == True):
+                            for object in CounselorLoad:
+                                if day_name == 'Thu':
+                                    check = bool(
+                                        day_name[:-1].upper() in object.school_days)
+                                else:
+                                    check = bool(
+                                        day_name[0].upper() in object.school_days)
+                                if(check == True):
+                                    classes_counselor.append(SubjectOfferings(offer_no=object.offer_no, subject_code=object.subject_code,
+                                                                            subject_title=object.subject_title, school_days=object.school_days,
+                                                                            school_time=object.school_time, sem_id=object.sem_id, academic_year=object.academic_year,
+                                                                            department_code=object.department_code, faculty_id=object.faculty_id))
+                        else:
+                            CounselorLoadCheck = False
+                        classes_counselor_check = bool(classes_counselor)
+
+                        notAvailableSched = SetScheduleCounselor.objects.filter(
+                            date=tomorrow, faculty_id=counselor_assigned_id)
+                        notAvailableSchedChecker = bool(notAvailableSched)
+
+                        start = datetime.strptime('8:00:00', '%H:%M:%S').time()
+                        end = datetime.strptime('17:30:00', '%H:%M:%S').time()
+
+                        TimeTaken = 0
+                        TimeTaken1 = 0
+                        TimeTaken2 = 0
+                        counter = 0
+
+                        if (classes_counselor_check == False and referral_list_byday_check == False and notAvailableSchedChecker == False):
+                            print('1')
+                            startTime = datetime.strptime(
+                                '8:00:00', '%H:%M:%S').time()
+                            endTime = datetime.strptime(
+                                '9:00:00', '%H:%M:%S').time()
+                            time1 = startTime
+                            time2 = endTime
+                            finder = 1
+                        elif(classes_counselor_check == True and referral_list_byday_check == False and notAvailableSchedChecker == False):
+                            print('2')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in classes_counselor:
+                                        get_time = object.school_time
+                                        classes_counselor_time = get_time.split(
+                                            '-')
+                                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                                        ).replace(" ", "")
+                                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                                        ).replace(" ", "")
+
+                                        # for start_time
+                                        if (classes_counselor_start_time[1]) == ':':
+                                            classes_counselor_start_time = "".join(
+                                                ('0', classes_counselor_start_time))
+                                        if classes_counselor_start_time[-2:] == "AM":
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = str(
+                                                    '00' + classes_counselor_start_time[2:-2])
+                                            else:
+                                                cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = classes_counselor_start_time[:-2]
+                                            else:
+                                                cc_start = str(
+                                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                        # for end_time
+                                        if classes_counselor_end_time[1] == ':':
+                                            classes_counselor_end_time = "".join(
+                                                ('0', classes_counselor_end_time))
+                                        if classes_counselor_end_time[-2:] == "AM":
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = str(
+                                                    '00' + classes_counselor_end_time[2:-2])
+                                            else:
+                                                cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = classes_counselor_end_time[:-2]
+                                            else:
+                                                cc_end = str(
+                                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                        cc_start_convert = datetime.strptime(
+                                            cc_start, '%H:%M').time()
+                                        cc_end_convert = datetime.strptime(
+                                            cc_end, '%H:%M').time()
+                                        if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0 and counter == 0):
+                                        time1 = timeArray[x]
+                                        counter = 1
+                                        TimeTaken = 0
+                                    elif(TimeTaken == 0 and counter == 1):
+                                        time2 = timeArray[x+1]
+                                        counter = 0
+                                        finder = 1
+                                        break
+                                    elif(TimeTaken != 0):
+                                        time1 = ''
+                                        counter = 0
+                                        TimeTaken = 0
+
+                        elif classes_counselor_check == False and referral_list_byday_check == True and notAvailableSchedChecker == False:
+                            print('3')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in referral_list_byday:
+                                        if(timeArray[x+1] <= object.end_time and timeArray[x] >= object.start_time):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0 and counter == 0):
+                                        time1 = timeArray[x]
+                                        counter = 1
+                                        TimeTaken = 0
+                                    elif(TimeTaken == 0 and counter == 1):
+                                        time2 = timeArray[x+1]
+                                        counter = 0
+                                        finder = 1
+                                        break
+                                    elif(TimeTaken != 0):
+                                        time1 = ''
+                                        counter = 0
+                                        TimeTaken = 0
+
+                        elif(classes_counselor_check == False and referral_list_byday_check == False and notAvailableSchedChecker == True):
+                            print('4')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in notAvailableSched:
+                                        if(timeArray[x+1] <= object.end_time and timeArray[x] >= object.start_time):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0 and counter == 0):
+                                        time1 = timeArray[x]
+                                        counter = 1
+                                        TimeTaken = 0
+                                    elif(TimeTaken == 0 and counter == 1):
+                                        time2 = timeArray[x+1]
+                                        counter = 0
+                                        finder = 1
+                                        break
+                                    elif(TimeTaken != 0):
+                                        time1 = ''
+                                        counter = 0
+                                        TimeTaken = 0
+                        elif(classes_counselor_check == True and referral_list_byday_check == True and notAvailableSchedChecker == False):
+                            print('5')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in classes_counselor:
+                                        get_time = object.school_time
+                                        classes_counselor_time = get_time.split(
+                                            '-')
+                                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                                        ).replace(" ", "")
+                                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                                        ).replace(" ", "")
+
+                                        # for start_time
+                                        if (classes_counselor_start_time[1]) == ':':
+                                            classes_counselor_start_time = "".join(
+                                                ('0', classes_counselor_start_time))
+                                        if classes_counselor_start_time[-2:] == "AM":
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = str(
+                                                    '00' + classes_counselor_start_time[2:-2])
+                                            else:
+                                                cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = classes_counselor_start_time[:-2]
+                                            else:
+                                                cc_start = str(
+                                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                        # for end_time
+                                        if classes_counselor_end_time[1] == ':':
+                                            classes_counselor_end_time = "".join(
+                                                ('0', classes_counselor_end_time))
+                                        if classes_counselor_end_time[-2:] == "AM":
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = str(
+                                                    '00' + classes_counselor_end_time[2:-2])
+                                            else:
+                                                cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = classes_counselor_end_time[:-2]
+                                            else:
+                                                cc_end = str(
+                                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                        cc_start_convert = datetime.strptime(
+                                            cc_start, '%H:%M').time()
+                                        cc_end_convert = datetime.strptime(
+                                            cc_end, '%H:%M').time()
+                                        if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0):
+                                        for object2 in referral_list_byday:
+                                            if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+                                                TimeTaken1 += 1
+                                        if(TimeTaken1 == 0 and counter == 0):
+                                            time1 = timeArray[x]
+                                            counter = 1
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                        elif (TimeTaken1 == 0 and counter == 1):
+                                            time2 = timeArray[x+1]
+                                            finder = 1
+                                            counter = 0
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            break
+                                        elif(TimeTaken1 != 0):
+                                            time1 = ''
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            counter = 0
+                                    else:
+                                        counter = 0
+                                        TimeTaken = 0
+                                        time1 = ''
+                                else:
+                                    counter = 0
+                                    TimeTaken = 0
+                                    time1 = ''
+
+                        elif(classes_counselor_check == True and referral_list_byday_check == False and notAvailableSchedChecker == True):
+                            print('6')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in classes_counselor:
+                                        get_time = object.school_time
+                                        classes_counselor_time = get_time.split(
+                                            '-')
+                                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                                        ).replace(" ", "")
+                                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                                        ).replace(" ", "")
+
+                                        # for start_time
+                                        if (classes_counselor_start_time[1]) == ':':
+                                            classes_counselor_start_time = "".join(
+                                                ('0', classes_counselor_start_time))
+                                        if classes_counselor_start_time[-2:] == "AM":
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = str(
+                                                    '00' + classes_counselor_start_time[2:-2])
+                                            else:
+                                                cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = classes_counselor_start_time[:-2]
+                                            else:
+                                                cc_start = str(
+                                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                        # for end_time
+                                        if classes_counselor_end_time[1] == ':':
+                                            classes_counselor_end_time = "".join(
+                                                ('0', classes_counselor_end_time))
+                                        if classes_counselor_end_time[-2:] == "AM":
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = str(
+                                                    '00' + classes_counselor_end_time[2:-2])
+                                            else:
+                                                cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = classes_counselor_end_time[:-2]
+                                            else:
+                                                cc_end = str(
+                                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                        cc_start_convert = datetime.strptime(
+                                            cc_start, '%H:%M').time()
+                                        cc_end_convert = datetime.strptime(
+                                            cc_end, '%H:%M').time()
+                                        if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0):
+                                        for object2 in notAvailableSched:
+                                            if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+                                                TimeTaken1 += 1
+                                        if(TimeTaken1 == 0 and counter == 0):
+                                            time1 = timeArray[x]
+                                            counter = 1
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                        elif (TimeTaken1 == 0 and counter == 1):
+                                            time2 = timeArray[x+1]
+                                            finder = 1
+                                            counter = 0
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            break
+                                        elif(TimeTaken1 != 0):
+                                            time1 = ''
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            counter = 0
+                                    else:
+                                        counter = 0
+                                        TimeTaken = 0
+                                        time1 = ''
+                                else:
+                                    counter = 0
+                                    TimeTaken = 0
+                                    time1 = ''
+
+                        elif(classes_counselor_check == False and referral_list_byday_check == True and notAvailableSchedChecker == True):
+                            print('7')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in notAvailableSched:
+                                        if(timeArray[x+1] <= object.end_time and timeArray[x] >= object.start_time):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0):
+                                        for object2 in referral_list_byday:
+                                            if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+                                                TimeTaken1 += 1
+                                        if(TimeTaken1 == 0 and counter == 0):
+                                            time1 = timeArray[x]
+                                            counter = 1
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                        elif (TimeTaken1 == 0 and counter == 1):
+                                            time2 = timeArray[x+1]
+                                            finder = 1
+                                            counter = 0
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            break
+                                        elif(TimeTaken1 != 0):
+                                            time1 = ''
+                                            TimeTaken = 0
+                                            TimeTaken1 = 0
+                                            counter = 0
+
+                                    else:
+                                        counter = 0
+                                        TimeTaken = 0
+                                        time1 = ''
+                                else:
+                                    counter = 0
+                                    TimeTaken = 0
+                                    time1 = ''
+
+                        elif(classes_counselor_check == True and referral_list_byday_check == True and notAvailableSchedChecker == True):
+                            print('8')
+                            for x in range(len(timeArray)):
+                                if(timeArray[x] >= start and timeArray[x] < end):
+                                    for object in classes_counselor:
+                                        get_time = object.school_time
+                                        classes_counselor_time = get_time.split(
+                                            '-')
+                                        classes_counselor_start_time = classes_counselor_time[0].upper(
+                                        ).replace(" ", "")
+                                        classes_counselor_end_time = classes_counselor_time[1].upper(
+                                        ).replace(" ", "")
+
+                                        # for start_time
+                                        if (classes_counselor_start_time[1]) == ':':
+                                            classes_counselor_start_time = "".join(
+                                                ('0', classes_counselor_start_time))
+                                        if classes_counselor_start_time[-2:] == "AM":
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = str(
+                                                    '00' + classes_counselor_start_time[2:-2])
+                                            else:
+                                                cc_start = classes_counselor_start_time[:-2]
+                                        else:
+                                            if classes_counselor_start_time[:2] == '12':
+                                                cc_start = classes_counselor_start_time[:-2]
+                                            else:
+                                                cc_start = str(
+                                                    int(classes_counselor_start_time[:2]) + 12) + classes_counselor_start_time[2:-2]
+                                        # for end_time
+                                        if classes_counselor_end_time[1] == ':':
+                                            classes_counselor_end_time = "".join(
+                                                ('0', classes_counselor_end_time))
+                                        if classes_counselor_end_time[-2:] == "AM":
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = str(
+                                                    '00' + classes_counselor_end_time[2:-2])
+                                            else:
+                                                cc_end = classes_counselor_end_time[:-2]
+                                        else:
+                                            if classes_counselor_end_time[:2] == '12':
+                                                cc_end = classes_counselor_end_time[:-2]
+                                            else:
+                                                cc_end = str(
+                                                    int(classes_counselor_end_time[:2]) + 12) + classes_counselor_end_time[2:-2]
+                                        cc_start_convert = datetime.strptime(
+                                            cc_start, '%H:%M').time()
+                                        cc_end_convert = datetime.strptime(
+                                            cc_end, '%H:%M').time()
+                                        if(timeArray[x+1] <= cc_end_convert and timeArray[x] >= cc_start_convert):
+                                            TimeTaken += 1
+                                    if(TimeTaken == 0):
+                                        for object2 in referral_list_byday:
+                                            if(timeArray[x+1] <= object2.end_time and timeArray[x] >= object2.start_time):
+                                                TimeTaken1 += 1
+                                        if(TimeTaken1 == 0):
+                                            for object3 in notAvailableSched:
+                                                print("3", timeArray[x])
+                                                if(timeArray[x+1] <= object3.end_time and timeArray[x] >= object3.start_time):
+                                                    TimeTaken2 += 1
+                                            if(TimeTaken2 == 0 and counter == 0):
+                                                print('time1:', timeArray[x])
+                                                time1 = timeArray[x]
+                                                counter = 1
+                                                TimeTaken = 0
+                                                TimeTaken1 = 0
+                                                TimeTaken2 = 0
+                                            elif(TimeTaken2 == 0 and counter == 1):
+                                                print('time2:', timeArray[x])
+                                                time2 = timeArray[x+1]
+                                                finder = 1
+                                                counter = 0
+                                                TimeTaken = 0
+                                                TimeTaken1 = 0
+                                                TimeTaken2 = 0
+                                                break
+                                            elif TimeTaken2 != 0:
+                                                time1 = ''
+                                                TimeTaken = 0
+                                                TimeTaken1 = 0
+                                                TimeTaken2 = 0
+                                                counter = 0
+                                            else:
+                                                counter = 0
+                                                TimeTaken = 0
+                                                TimeTaken1-0
+                                                time1 = ''
+                                        else:
+                                            TimeTaken1 = 0
+                                            counter = 0
+                                            time1 = ''
+                                    else:
+                                        counter = 0
+                                        TimeTaken = 0
+                                        time1 = ''
+                        ScheduledReferralbyDay = []
+                        ClassesCounselor = []
+                        notAvailableSched = []
+
+                        print('time1', time1)
+                        print('time2', time2)
+                        if(time1 != '' and time2 != ''):
+                            print('9')
+                            list_reasons = []
+                            reasons = "Automated Referral"
+                            try:
+                                check_if_exist = Referral.objects.get(
+                                    student_number=studentReferred.student_number, date=tomorrow, status='pending')
+                                flag = True
+                            except Exception:
+                                flag = False
+                            if flag == False:
+                                studentInfo = ReferralDetails(reasons=reasons)
+                                studentInfo.save() 
+                                referral_id = ReferralDetails.objects.last()
+                                studentSched = Referral(student_number=studentReferred.student_number,
+                                                    firstname=studentReferred.firstname,
+                                                    lastname=studentReferred.lastname,
+                                                    middlename=studentReferred.middlename,
+                                                    degree_program=studentReferred.program_code_id,
+                                                    counselor_id=counselor_assigned_id,
+                                                    start_time=time1, end_time=time2, date=tomorrow,
+                                                    choice='Counseling',referral_id = [referral_id.id])
+                                studentSched.save()
+                                create_notification(counselor_assigned_id, user, 'automated_referral', extra_id=int(
+                                    studentReferred.student_number), schedDay=tomorrow, schedStartTime=time1, schedEndTime=time2, is_reSched=False)
+                            else:
+                                studentInfo = ReferralDetails(reasons=reasons)
+                                studentInfo.save() 
+                                get_referral_id = ReferralDetails.objects.last()
+                                referral_list = [get_referral_id.id]
+                                for obj in check_if_exist.referral_id:
+                                    referral_list.append(obj)
+                                check_if_exist.referral_id = referral_list
+                                check_if_exist.save()
+                            # messages.info(
+                            #     request, 'Successfully Set Schedule')
+    return render(request, "admin/import_date_set.html",)
+# print(pred['Student Number'][ind], pred['Actual'][ind])
 @login_required(login_url='login')
 def set_active_year(request, *args, **kwargs):
     global Active_Year

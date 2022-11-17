@@ -120,7 +120,7 @@ font-family: var(--body-font);
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     width: 40vw;
-    height: 15vw;
+    height: 17vw;
     border-radius: 5px;
     flex-direction: column;
     overflow: hidden;
@@ -201,7 +201,7 @@ padding: 0 2rem;
   </header>
 
   <div style="margin-top: 10.5vh; display: flex; justify-content: center; align-items: center;">
-    <a class="call_style" href="{% url 'student_not_attend' room_name %}">
+    <a class="call_style" href="{% url 're_create_schedule' room_name id 'student_cancel' %}">
       <button class="btn login_btn">Click here if student did not attend</button>
     </a>
   </div>

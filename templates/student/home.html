@@ -20,6 +20,11 @@
   <style>
     /*========== GOOGLE FONTS ==========*/
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+    @import url(https://fonts.googleapis.com/css?family=Lobster);
+
+@import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css);
+
+
 
     /*========== VARIABLES CSS ==========*/
     :root {
@@ -754,6 +759,7 @@ margin-left: 100px;
         height: 7vh;
         width: 57vw;
         margin: 0 auto;
+        margin-top: 2vh;
       }      
 
       .box-text{
@@ -858,6 +864,78 @@ margin-left: 100px;
   flex-direction: row;
   gap: 0.5vw;
 }
+
+/* /////////// Message Alert Schedule is Changed! /////// */
+.alert.success{
+  margin-left: 2.5vw;
+}
+.alert .inner {
+  margin-bottom: 10vh;
+  display: block;
+  width: 28vw;
+  padding: 6px;
+  margin: 6px;
+  border-radius: 3px;
+  border: 1px solid rgb(180,180,180);
+  background-color: rgb(212,212,212);
+  
+}
+
+.alert .close {
+  float: right;
+  margin: 3px 12px 0px 0px;
+  cursor: pointer;
+}
+
+.alert .inner,.alert .close {
+  color: rgb(88,88,88);
+}
+
+.alert input {
+  display: none;
+}
+
+.alert input:checked ~ * {
+  animation-name: dismiss,hide;
+  animation-duration: 300ms;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: 0s,100ms;
+}
+
+.alert.success .inner {
+  border: 1px solid rgb(214,233,198);
+  background-color: rgb(223,240,216);
+}
+
+.alert.success .inner,.alert.success .close {
+  color: rgb(70,136,71);
+  
+}
+
+
+@keyframes dismiss {
+  0% {
+    opacity: 1;
+  }
+  90%, 100% {
+    opacity: 0;
+    font-size: 0.1px;
+    transform: scale(0);
+  }
+}
+
+@keyframes hide {
+  100% {
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+  }
+}
   </style>
   </head>
   <title> Follow App Student </title>
@@ -929,16 +1007,23 @@ margin-left: 100px;
     <!--========== CONTENTS HOME ==========-->
     <div class="divHome">
       <section id="homie"> {% block content %} <br>
-        <!-- <div id="bgslider">
-          <figure>
-            <img src="https://usjr.edu.ph/wp-content/uploads/2020/09/USJ-R-online-2.png" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2021/04/scs-square_logo-600x600-1.png" alt="Slider">
-            <img src="https://usjr.edu.ph/wp-content/uploads/2016/06/OEAM1298-1024x683.jpg" alt="Slider">
-            <img src="https://images.squarespace-cdn.com/content/v1/5b7dc424a9e0283283f2127c/1602681165031-381SWS8LMY0K8K2YFSPV/everwell-online-therapy-ontario-counselling_001.png" alt="Slider">
-          </figure>
-        </div> -->
+        <!-- <div class="parent_message"> {% for message in messages %} <p class="message">
+          <b>{{message}} !@#$%^7*</b>
+        </p> {% endfor %} 
+      </div> -->
+        <div class="alert success">
+          {% for message in messages %} 
+          <input type="checkbox" id="alert1"/>
+          <p class="inner">
+            <strong>{{message}}</strong>
+            <label class="close" title="close" for="alert1">
+              <i class="icon-remove"></i>
+            </label>
+          </p>
+          {% endfor %} 
+        </div>
+        <br>
         <div class="cards_item">
-          <br>
           <div class="box-menu">
             <div class="box-text">Student Box Menu</div>
           </div>

@@ -352,12 +352,13 @@ display: flex;
     margin: 0 auto;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
-    width: fit-content;
+    height: 60vh;
+    width: 65vw;
     border-radius: 5px;
     flex-direction: column;
     overflow: hidden;
     background-color: #304434;
-    margin-top: 8vh;
+    margin-top: 10vh;
     margin-bottom: 3vh;
   }
 
@@ -389,7 +390,7 @@ display: flex;
     letter-spacing: 2.5px;
     font-weight: 500;
     color: #000;
-    background-color: #d8c090;
+    background-color: #e0b44c;
     border: none;
     border-radius: 45px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -399,10 +400,59 @@ display: flex;
   }
 
   .button:hover {
-    background-color: #95b9c7;
-    box-shadow: 0px 15px 20px #c9c0bb;
+    box-shadow: 0px 2px 5px #c9c0bb;
     color: #fff;
-    transform: translateY(-7px);
+    transform: translateY(-2px);
+  }
+
+  .button_accept {
+    margin: 0 auto;
+    width: 10vw;
+    height: 4.5vh;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #008000;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button_accept:hover {
+    box-shadow: 0px 2px 5px #c9c0bb;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .button_decline {
+    margin: 0 auto;
+    width: 10vw;
+    height: 4.5vh;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #F70D1A;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .button_decline:hover {
+    box-shadow: 0px 2px 5px #c9c0bb;
+    color: #fff;
+    transform: translateY(-2px);
   }
 
   .scroll-box {
@@ -483,33 +533,62 @@ display: flex;
     color: #fff;
     font-size: 15.5px;
   }
+  .confirmation_buttons{
+    display: flex; 
+    flex-direction: row; 
+    gap: 2vw; 
+    padding: 3vh;
+    justify-content: center;
+    align-items: center;
+  }
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">Full Details</button>
+
 </div>
+<div class="parent_message"> {% for message in messages %} <p class="message">
+  <b>{{message}} !</b>
+</p> {% endfor %} </div>
 <div class="parent_div">
   <div class="card1">
-    <form action="#" class="cleanForm" method="POST">
-      <br />
-
-      <div>
-        <h3 style="text-align: justify; margin-left: 8px; font-size: 24px">
-          <i>Schedule of Appointment</i>
-        </h3>
-        <p class="rowText">
-          You have a scheduled appointment on <b>{{student.date}}</b> that will
-          start at <b>{{student.start_time}}</b> and will end at
-          <b>{{student.end_time}}</b>
-          <br />
-          <br />
-          <i>For Counselling Session, kindy tap the Join Button when Available</i>
-          <br/>
-        </p>
+ 
+    {% if notification_detail.referral_id %}
+    {% if notification_detail.is_reSched == True %}
+    NARESCHED NA IMO VOUNCELSING
+{% endif %}
+      <h3 style="font-size: 28px; padding: 2vh; color: #fff; ">Counselling Schedule</h3>
+      <div style="padding: 2vh;">
+        <h5 style="font-size: 23px; color: #fff; "> You have counselling session on  
+          <b>{{notification_detail.schedDay}}</b> will 
+          start at <b>{{notification_detail.schedStartTime}}</b> and end at <b>{{notification_detail.schedEndTime}}</b></h5>
       </div>
-    </form>
+
+    {% else %}
+    <h3 style="font-size: 23px; color: #fff; margin-left: 0.5vw; padding: 8vh;">Counselling Schedule on {{notification_detail.schedDay|date}} will start at {{notification_detail.schedStartTime}}
+      and end at {{notification_detail.schedEndTime}}</h3>
+      {% if notification_detail.is_approve_student == False or notification_detail.is_approve_student is None %}
+                 
+                 <div class="confirmation_buttons">
+                  <div>
+                    <a href="{% url 'counselor_accept_or_not' notification_id 'accept' 'student' %}">
+                      <button class="button_accept" style="font-weight: 800;  color: #fff;">
+                        <h4 style="font-weight: bold; margin: 0 auto;">ACCEPT</h4>
+                      </button>
+                    </a>
+                  </div>
+                  <div>
+                    <a href="{% url 'counselor_accept_or_not' notification_id 'decline' 'student' %}">
+                      <button class="button_decline" style="font-weight: 800;  color: #fff;">
+                        <h4 style="font-weight: bold; margin: 0 auto;">DECLINE</h4>
+                      </button>
+                    </a>
+                  </div>
+                  {% endif %}
+    {% endif %}
+   
     {% if call == True %}
     <div style="margin-top: 2vh">
-      <a class="call_style" href="{% url 'student_videocall' id %}">
+      <a class="call_style" href="{% url 'student_videocall' referral_id notification_id %}">
         <button class="btn login_btn">Join</button>
       </a>
     </div>
@@ -518,70 +597,5 @@ display: flex;
   </div>
 </div>
 
-<!-- <div class="parent_div"> {% for object in object_list %} {% if object.subject_referred %} {% if object.behavior_problem %}
-   <div class="card1">
-    <form action="#" class="cleanForm" method="POST">
-      <br>
-      <div>
-        <h3 style="text-align: justify; margin-left:8px; font-size: 24px;">
-          <i>Schedule of Appointment</i>
-        </h3>
-        <p class="rowText"> You have a scheduled appointment on <b>{{object.date}}</b> that will start at <b>{{object.start_time}}</b> and will end at <b>{{object.end_time}}</b>
-          <br>
-          <br>
-          <br>
-          <i>For Call, kindy tap the Call Button</i>
-          <br>
-          <i class='bx bx-calendar-check nav__icon'></i>
-        </p>
-      </div>
-    </form>
-    <div style="margin-top: 2vh;">
-      <a class="call_style" href="">
-        <button class="btn login_btn">Call</button>
-      </a>
-    </div>
-  </div> {% else %} <div class="card1">
-    <form action="#" class="cleanForm" method="POST">
-      <br>
-      <div>
-        <h3 style="text-align: justify; margin-left:8px; font-size: 24px;">
-          <i>Schedule of Appointment</i>
-        </h3>
-        <p class="rowText"> You have a scheduled appointment on <b>{{object.date}}</b> that will start at <b>{{object.start_time}}</b> and will end at <b>{{object.end_time}}</b>
-          <br>
-          <br>
-          <br>
-          <i>For Call, kindy tap the Call Button</i>
-        </p>
-      </div>
-    </form>
-    <div style="margin-top: 2vh;">
-      <a class="call_style" href="">
-        <button class="btn login_btn">Call</button>
-      </a>
-    </div>
-  </div> {% endif %} {% else %} <div class="card1">
-    <form action="#" class="cleanForm" method="POST">
-      <br>
-      <div>
-        <h3 style="text-align: justify; margin-left:8px; font-size: 24px;">
-          <i>Schedule of Appointment</i>
-        </h3>
-        <p class="rowText"> You have a scheduled appointment on <b>{{object.date}}</b> that will start at <b>{{object.start_time}}</b> and will end at <b>{{object.end_time}}</b>
-          <br>
-          <br>
-          <br>
-          <i>For Call, kindy tap the Call Button</i>
-        </p>
-      </div>
-    </form>
-    <div style="margin-top: 2vh;">
-      <a class="call_style" href="">
-        <button class="btn login_btn">Call</button>
-      </a>
-    </div>
-  </div>
-</div> {% endif %} {% endfor %} </div>  -->
 
 {% endblock %}

@@ -235,15 +235,15 @@
 
   .button {
     margin: 0 auto;
-    width: 145px;
-    height: 35px;
+    width: 12vw;
+    height: 5vh;
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
     font-weight: 500;
-    color: #000;
-    background-color: #d8c090;
+    color: #fff;
+    background-color: #0c2c0e;
     border: none;
     border-radius: 45px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -253,8 +253,8 @@
   }
 
   .button:hover {
-    background-color: #95B9C7;
-    box-shadow: 0px 15px 20px #C9C0BB;
+    background-color: #e0b44c;
+    /* box-shadow: 0px 15px 20px #C9C0BB; */
     color: #fff;
     transform: translateY(-7px);
   }
@@ -281,6 +281,79 @@
   .parent_form {
     column-gap: 10rem;
   }
+      /* //////////// NEW ALERT MESSAGE //////////// */
+.alert.success{
+  display: grid;
+ place-content: center;
+}
+.alert .inner {
+  display: block;
+  width: 15.5vw;
+  height: 6vh;
+  font-size: larger;
+  padding: 6px;
+  margin: 6px;
+  border-radius: 3px;
+  border: 1px solid rgb(180,180,180);
+  background-color: rgb(212,212,212);
+  
+}
+
+.alert .close {
+  float: right;
+  margin: 3px 12px 0px 0px;
+  cursor: pointer;
+}
+
+.alert .inner,.alert .close {
+  color: rgb(88,88,88);
+}
+
+.alert input {
+  display: none;
+}
+
+.alert input:checked ~ * {
+  animation-name: dismiss,hide;
+  animation-duration: 300ms;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: 0s,100ms;
+}
+
+.alert.success .inner {
+  border: 1px solid rgb(214,233,198);
+  background-color: rgb(223,240,216);
+}
+
+.alert.success .inner,.alert.success .close {
+  color: rgb(70,136,71);
+  
+}
+
+
+@keyframes dismiss {
+  0% {
+    opacity: 1;
+  }
+  90%, 100% {
+    opacity: 0;
+    font-size: 0.1px;
+    transform: scale(0);
+  }
+}
+
+@keyframes hide {
+  100% {
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+  }
+}
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -288,12 +361,17 @@
   </button>
 </div>
 <br>
-<br>
-<div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
-    <p>
-      <b>{{message}} !</b>
-    </p>
-  </button> {% endfor %} </div>
+<div class="alert success">
+  {% for message in messages %} 
+  <input type="checkbox" id="alert1"/>
+  <p class="inner">
+    <strong>{{message}}!</strong>
+    <label class="close" title="close" for="alert1">
+      <i class="icon-remove"></i>
+    </label>
+  </p>
+  {% endfor %} 
+</div>
 <div class="parent_form">
   <form action="#" class="cleanForm" method="POST"> {% csrf_token %} <div class="column">
       <div class="row">
@@ -377,24 +455,13 @@
         <p class="pText">
           <b class="bText">Contact Number: &nbsp;</b> {{info.father_contact_number}}
         </p>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+
       </div>
-      <center>
-        <button class="button" style="font-weight: bold; color: #454545;">Submit</button>
-      </center>
+      <div style="margin-top: 100vh;">
+        <button type="submit" class="button">
+<b>Save Changes</b>
+</button>
+</div>
       <br>
     </div>
   </form>

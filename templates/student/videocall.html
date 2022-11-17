@@ -201,7 +201,7 @@ padding: 0 2rem;
   </header>
 
   <div style="margin-top: 10.5vh; display: flex; justify-content: center; align-items: center;">
-    <a class="call_style" href="{% url 'counselor_not_attend' room_name %}">
+    <a class="call_style" href="{% url 're_create_schedule' room_name id 'student' %}">
       <button class="btn login_btn">Click here if counselor did not attend</button>
     </a>
   </div>

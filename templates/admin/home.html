@@ -11,6 +11,7 @@
     <style>
       /*========== GOOGLE FONTS ==========*/
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+      @import url(https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css);
 
       /*========== VARIABLES CSS ==========*/
       :root {
@@ -996,6 +997,10 @@
                 <a href="{% url 'set_active_year' %}" class="nav__link">
                 <i class='bx bx-check-shield nav__icon'></i>
                 <span class="nav__name">Activate Data</span>
+              </a>
+              <a href="{% url 'import_date_set' %}" class="nav__link">
+                <i class='bx bx-upload nav__icon'></i>
+                <span class="nav__name">ML Upload</span>
               </a>
               </div>
             </div>

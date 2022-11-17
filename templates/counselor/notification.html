@@ -160,6 +160,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 3vh;
   }
 
   .buttonF {
@@ -206,7 +207,6 @@
     outline: none;
   }
 </style>
-<br>
 <div class="fac">
   <button type="submit" class="buttonF">Notifications</button>
 </div>
@@ -229,19 +229,19 @@
     </tr>
   </a> {% else %} <tr> {% if notification.is_read_counselor == True %} <td>
       <a style="color: gray;" href="{% url 'counselor_notification_detail' notification.id %}">
-        <b style="color: gray;">You have Counseling Session on <strong>{{ notification.schedDay|date }}</strong>
+        <b style="color: gray;">You have Counseling Session on <strong>{{ notification.schedDay|date }} {{ notification.notification_type }} </strong>
         </b>
       </a>
     </td>
     <td>
-      <a style="color: gray;" href="{% url 'counselor_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago</a>
+      <a style="color: gray;" href="{% url 'counselor_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago </a>
     </td> {% else %} <td>
       <a style="color: black;" href="{% url 'counselor_notification_detail' notification.id %}">
-        <b style="color: black;">You have Counseling Session on <strong>{{ notification.schedDay|date }}</strong>
+        <b style="color: black;">You have Counseling Session on <strong>{{ notification.schedDay|date }} {{ notification.notification_type }}</strong>
         </b>
       </a>
     </td>
     <td>
-      <a style="color: black;" href="{% url 'counselor_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago</a>
+      <a style="color: black;" href="{% url 'counselor_notification_detail' notification.id %}">{{ notification.created_at|timesince }} ago </a>
     </td> {% endif %}
   </tr> {% endif %} {% endfor %} </table> {% endblock %}
