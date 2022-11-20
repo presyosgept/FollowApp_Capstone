@@ -203,12 +203,12 @@
           <th class="table_head">Date of Counseling</th>
           <th class="table_head">Time of Counseling</th>
         </tr>
-      </thead> {% for obj in object reversed %} {% for couns in counselor %} <tbody> {% if couns.employee_id == obj.counselor %} <tr>
-          <td style="font-size: 16px;" class="history_form">{{couns.lastname}}, &nbsp; {{couns.firstname}}</td>
+      </thead> {% for obj in object reversed %}  <tbody>  <tr>
+          <td style="font-size: 16px;" class="history_form">{{counselor.lastname}}, &nbsp; {{counselor.firstname}}</td>
           <td style="font-size: 16px;" class="history_form">{{obj.date}}</td>
           <td style="font-size: 16px;" class="history_form">{{obj.start_time}} - {{obj.end_time}}</td>
         </tr>
-      <tbody> {% endif %} {% endfor %} {% endfor %}
+      <tbody>  {% endfor %}
     </table>
     <div style="padding: 2px; font-size: 17px;"> {% if not object %} <center>
         <p>

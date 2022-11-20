@@ -1,5 +1,4 @@
-{% extends "student/home.html" %} {% block title %} Schedule {% endblock %} {% block content %} 
-<style>
+{% extends "student/home.html" %}  {% block title %} Schedule {% endblock %} {% block content %} <style>
 
   .fac {
     display: flex;
@@ -38,7 +37,7 @@
     width: 6vw;
     height: 3.8vh;
     font-family: 'Roboto', sans-serif;
-    font-size: 10.5px;
+    font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 500;
@@ -59,223 +58,6 @@
     transform: translateY(-2px);
   }
 
-  /* Table Styles */
-   div.table-title {
-    display: block;
-    margin: auto;
-    max-width: 600px;
-    padding: 5px;
-    width: 100%;
-  }
-
-  .table-title h3 {
-    color: #fafafa;
-    font-size: 30px;
-    font-weight: 400;
-    font-style: normal;
-    font-family: "Roboto", helvetica, arial, sans-serif;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-    text-transform: uppercase;
-  }
-
-  /*** Table Styles **/
-  .table-fill {
-    background: whitesmoke;
-    border-radius: 3px;
-    border-collapse: collapse;
-    height: 7vh;
-    margin: auto;
-    max-width: 1200px;
-
-    width: 80%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    animation: float 5s infinite;
-    border-radius: 10px;
-  }
-
-  th {
-  color: #fff;
-    background-color:#304434;
-    font-size: 22px;
-    font-weight: 100;
-    padding: 7px;
-    text-align: left;
-    text-shadow: 0 1px 1px rgba(50, 43, 43, 0.1);
-    vertical-align: middle;
-  }
-
-  th:first-child {
-    border-top-left-radius: 3px;
-  }
-
-  th:last-child {
-    border-top-right-radius: 3px;
-    border-right: none;
-  }
-
-  tr {
-    border-top: 1px solid #C1C3D1;
-    border-bottom: 1px solid #C1C3D1;
-    color: #666B85;
-    font-size: 16px;
-    font-weight: normal;
-    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-  }
-
-  /* tr:hover td {
-  background:#4E5066;
-  color:#FFFFFF;
-  border-top: 1px solid #22262e;
-} */
-  tr:first-child {
-    border-top: 1px solid #C1C3D1;
-  }
-
-  tr:last-child {
-    border-bottom: 1px solid #C1C3D1;
-  }
-
-  tr:nth-child(odd) td {
-    background: #EBEBEB;
-  }
-
-  /* tr:nth-child(odd):hover td {
-  background:#4E5066;
-} */
-  tr:last-child td:first-child {
-    border-bottom-left-radius: 3px;
-  }
-
-  tr:last-child td:last-child {
-    border-bottom-right-radius: 3px;
-  }
-
-  td {
-    background: #FFFFFF;
-    padding: 4px;
-    text-align: left;
-    vertical-align: middle;
-    font-weight: 300;
-    font-size: 16px;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid #C1C3D1;
-  }
-
-  td:last-child {
-    border-right: 0px;
-  }
-
-
-  th.text-left {
-    text-align: left;
-    color: #304434;
-  }
-
-  th.text-center {
-    text-align: center;
-    color: #fff;
-  }
-
-  th.text-right {
-    text-align: right;
-  }
-
-  td.text-left {
-    text-align: left;
-    color: #304434;
-  }
-
-  td.text-center {
-    text-align: center;
-    color: #304434;
-    font-size: 16px;
-  }
-
-  td.text-right {
-    text-align: right;
-  }
-
-  /* Responsive */
-  @media (max-width: 767px) {
-    .fl-table {
-      display: block;
-      width: 100%;
-    }
-
-    /* .table-wrapper:before {
-      content: "Scroll horizontally >";
-      display: block;
-      text-align: right;
-      font-size: 11px;
-      color: white;
-      padding: 0 0 10px;
-    } */
-
-    .fl-table thead,
-    .fl-table tbody,
-    .fl-table thead th {
-      display: block;
-    }
-
-    .fl-table thead th:last-child {
-      border-bottom: none;
-    }
-
-    .fl-table thead {
-      float: left;
-    }
-
-    .fl-table tbody {
-      width: auto;
-      position: relative;
-      overflow-x: auto;
-    }
-
-    .fl-table td,
-    .fl-table th {
-      padding: 20px .625em .625em .625em;
-      height: 60px;
-      vertical-align: middle;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      overflow-y: auto;
-      width: 120px;
-      font-size: 14px;
-      text-overflow: ellipsis;
-    }
-
-    .fl-table thead th {
-      text-align: left;
-      border-bottom: 1px solid #f7f7f9;
-    }
-
-    .fl-table tbody tr {
-      display: table-cell;
-    }
-
-    .fl-table tbody tr:nth-child(odd) {
-      background: none;
-    }
-
-    .fl-table tr:nth-child(even) {
-      background: transparent;
-    }
-
-    .fl-table tr td:nth-child(odd) {
-      background: #F8F8F8;
-      border-right: 1px solid #E6E4E4;
-    }
-
-    .fl-table tr td:nth-child(even) {
-      border-right: 1px solid #E6E4E4;
-    }
-
-    .fl-table tbody td {
-      display: block;
-      text-align: center;
-    }
-  }
-
   .center {
     text-align: center;
   }
@@ -285,56 +67,411 @@
     margin-right: 20px;
     font-size: 16px;
   }
+  /* /////////////////////  NEW CSS //////////////////////// */
+  :root {
+  --body-bg: #FDFDFD;
+  --thead-bg: #F7F9FB;
+  --thead-color: hsl(210, 5%, 40%);
+  --bd-color: #CECECE;
+  --time-color: hsl(210, 5%, 70%);
+  
+  --time-width: 16vw;
+  --sticky-height: 40px;
+}
+
+.sticky-header {
+  height: var(--sticky-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--body-bg);
+  z-index: 7;
+  position: sticky;
+  top: 0;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.sticky-header span {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: .4s;
+}
+
+.reveal .sticky-header span {
+  opacity: 1;
+  transform: none;
+}
+
+.table {
+  width: 60vw;
+  position: relative;
+  border: solid var(--bd-color);
+  border-width: 2px 2px 2px 2px;
+  overscroll-behavior: contain;
+}
+
+.headers {
+  top: var(--sticky-height);
+  position: -webkit-sticky;
+  position: sticky;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.04);
+}
+
+.tracks,
+.scroller {
+  display: flex;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroller {
+  overflow-x: hidden;
+  flex: 1;
+}
+
+.tracks {
+  overflow: auto;
+}
+
+.tracks::-webkit-scrollbar,
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.track {
+  flex: 1 0 22%;
+}
+
+.track + .track {
+  margin-left: -1px;
+}
+
+.time {
+  flex: 0 0 var(--time-width);
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  
+}
+
+.headers .time {
+  z-index: 5;
+}
+
+.tracks .time {
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.05);
+}
+
+time {
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: .03em;
+  
+}
+
+
+
+.heading {
+  font-size: 22px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  border-bottom: solid var(--bd-color);
+  border-width: 1px;
+  color: #304434;
+  z-index: 1;
+  background: var(--thead-bg);
+  font-weight: 700;
+}
+
+.entry {
+  border: 1px solid #ebebeb;
+  border-top: 0;
+  background: var(--body-bg);
+  height: 9em;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.entry:not(:last-of-type) {
+  border-bottom-style: dashed;
+}
+
+.track:last-of-type > div {
+  border-right: 0;
+}
+
+.time .entry,
+.time .heading {
+  position: relative;
+  border-color: transparent var(--bd-color) var(--bd-color) transparent;
+  border-color: transparent var(--bd-color) transparent transparent;
+}
+
+.time .entry:after,
+.time .heading:after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 50%;
+  height: 1px;
+  z-index: 3;
+  background: linear-gradient(to left, var(--bd-color), var(--body-bg));
+}
+
+.double {
+  height: 18em;
+}
+.treble {
+  height: 27em;
+}
+
+.details {
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.50);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EBECEE;
+  padding: 10px;
+  border-left: 5px solid var(--theme-bg);
+  height: 100%;
+}
+
+.details-notavail {
+  border-radius: 10px;
+  background: #E55451;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.50);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EBECEE;
+  padding: 10px;
+  border-left: 5px solid var(--theme-bg);
+  height: 100%;
+}
+.details-counseling{
+  border-radius: 10px;
+  background: #50C878;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.50);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EBECEE;
+  padding: 10px;
+  border-left: 5px solid var(--theme-bg);
+  height: 100%;
+}
+.details-class{
+  border-radius: 10px;
+  background: #659EC7;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.50);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EBECEE;
+  padding: 10px;
+  border-left: 5px solid var(--theme-bg);
+  height: 100%;
+}
+.details-counseled{
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.50);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #EBECEE;
+  padding: 10px;
+  border-left: 5px solid var(--theme-bg);
+  height: 100%;
+}
+h3 {
+  font-size: 12px;
+  background: var(--theme-bg);
+  padding: 2px 5px;
+  font-weight: 600;
+  line-height: 1.4;
+  border-radius: 2px;
+  color: var(--theme-color);
+  width: max-content;
+}
+
+.blue {
+  --theme-color: hsl(200, 50%, 30%);
+  --theme-bg: #659EC7;
+}
+
+.red {
+  --theme-color: hsl(235, 75%, 90%);
+  --theme-bg: #FF0000;
+}
+
+.green {
+  --theme-color: #2d4710;
+  --theme-bg: #50C878;
+}
+
+.gray {
+  --theme-color: var(--thead-bg);
+  --theme-bg: #BBBCBC;
+}
+
+p + p {
+  color: #858585;
+  margin-top: 5px;
+  font-weight: 400;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  z-index: 6;
+  height: 100%;
+  padding: 1px 0;
+  width: calc(100% - var(--time-width));
+}
+
+button {
+  border-radius: 0;
+  border: 0;
+  padding: 5px;
+  font: inherit;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  outline: none !important;
+  cursor: pointer;
+  background: var(--thead-bg);
+}
+
+button > svg {
+  line-height: 0;
+  width: 30px;
+  height: 30px;
+  fill: var(--thead-color);
+  pointer-events: none;
+}
+
+.btn-left {
+  transform: scaleX(-1);
+}
+
+
+#top-of-site-pixel-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  top: 15em;
+  left: 0;
+}
+
+@media (max-width: 767px) {
+  .track:not(.time) {
+    flex: 1 0 calc(50% + 7px);
+  }
+}
+.wrapper {
+ display: grid;
+ place-content: center;
+
+}
 </style>
 <br>
-<form method="POST" action="{% url 'another_student_view_schedule' %}"> {% csrf_token %} <div class="center_title">
-    <p>
-      <i>
-           <p style="font-size: 19px;"><b>To view a Schedule of Counseling, select the date below.</b></p>
-      </i>
-    </p>
-  </div>
-  <div class="center">
-    {{ offer.pickedDate }}
-    <button type="submit" class="button">Submit</button>
-  </div>
-</form> <br>
-<br>
+<!-- ////////// NEW TABLE ////////////// -->
 
-<table class="table-fill">
-    <thead>
-      <tr>
-        <th class="text-center">Schedule Time</th>
-        <th class="text-center">Activities and Details</th>
-      </tr>
-    </thead>
-    {% for obj in time %} 
-    <tbody class="table-hover">
-      <tr>
-        <td class="text-center" style="font-size: 16px;"><b>{{obj.time1}} - {{obj.time2}}</b></td>
+<svg style="position: absolute; width: 0; height: 0; display: none;">
+  <symbol id="icon-arrow" viewBox="0 0 96 96">
+    <title>Arrow</title>
+    <path d="M39.66,13.34A8,8,0,0,0,28.34,24.66L51.69,48,28.34,71.34A8,8,0,0,0,39.66,82.66l29-29a8,8,0,0,0,0-11.31Z"/>
+  </symbol>
+</svg>
+
+<form method="POST" action="{% url 'another_student_view_schedule' %}"> {% csrf_token %} <div class="center_title">
+  <p>
+    <i>
+         <p style="font-size: 19px;"><b>To view a Schedule of Counseling, select the date below.</b></p>
+    </i>
+  </p>
+</div>
+<div class="center">
+  {{ offer.pickedDate }}
+  <button type="submit" class="button">Submit</button>
+</div>
+</form>
+  <br>
+<div class="wrapper">
+  <div class="table">
+    <div class="headers">
+      <div class="buttons">
+        <button class="btn-left">
+          <svg><use xlink:href="#icon-arrow"></use></svg>
+        </button>
+        <button class="btn-right">
+          <svg><use xlink:href="#icon-arrow"></use></svg>
+        </button>
+      </div>
+      <div class="scroller syncscroll" name="myElements">
+        <div class="track time">
+          <div class="heading">Time</div>
+        </div>
+        <div class="track">
+          <div class="heading">Activities and Details</div>
+        </div>
+
+      </div>
+    </div>
+    {% for obj in time %}
+    <div class="tracks syncscroll" name="myElements">
+      <div class="track time">
+        <div class="entry">
+          <time>{{obj.time1}} - {{obj.time2}}</time>
+        </div>
+      </div>
+      <tbody>
         {% for object in schedForToday %} 
             {% if obj.time1|safe > object.start_time|safe or obj.time1|safe == object.start_time|safe  %} 
             {% if obj.time2|safe  < object.end_time|safe or obj.time2|safe  == object.end_time|safe  %}
               {% if object.choice|stringformat:"s" == "Counseling" %}
 
                 {% if object.status == 'done' %}
-              <td class="text-center">
-                <a href="{% url 'student_notification_detail' 'False' object.id %}" style="color: black; font-size: 16px;">
-                  <b>COUNSELED</b>
-                </a>
-              </td>
+           <td>
+            <div class="track gray">
+              <div class="entry">
+                <div class="details-counseled">
+                  <a href="{% url 'student_notification_detail' 'False' object.id %}"  style="color: #3D3C3A; font-size: 16px;">
+                    <h2 style="text-align: center;">COUNSELED</h2>
+                  </a>
+                </div>
+              </div>
+            </div>
+           </td>
               {% else %}
-                      <td class="text-center" style="background-color: #387C44;">
-                <a href="{% url 'student_notification_detail' 'False' object.id %}" style="color: #fff; font-size: 16px;">
-                  <b>COUNSELING</b>
-                </a>
+              <td>
+                <div class="track green">
+                  <div class="entry">
+                    <div class="details-counseling">
+                      <a href="{% url 'student_notification_detail' 'False' object.id %}" style="color: #fff; font-size: 16px;">
+                       <h2 style="text-align: center;">COUNSELING</h2>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </td>
-               {% endif %}
-                      {% endif %}
-      {% endif %} {% endif %} {% endfor %} {% endfor %}
-      </tr>
-    </tbody> 
-  </table>
+              {% endif %}
+              {% endif %}
+{% endif %} {% endif %} {% endfor %}
+      </tbody> 
+      
+      </div>
+      {% endfor %}
+  </div>
+
+</div>
+    <div id="top-of-site-pixel-anchor"></div>
 
 
 <br> {% endblock %}

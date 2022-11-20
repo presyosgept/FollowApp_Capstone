@@ -22,9 +22,6 @@ class Department(models.Model):
     class Meta:
         verbose_name_plural = "Department"
 
-    def __str__(self):
-        return self.school_code
-
 
 class Faculty(models.Model):
     faculty_id = models.CharField(max_length=15, primary_key=True)

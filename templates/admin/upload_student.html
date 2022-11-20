@@ -498,9 +498,6 @@
         <th  style="font-size: 15px;">Department Code</th>
         <th  style="font-size: 15px;">Program Code</th>
          <th  style="font-size: 15px;">Program Name</th>
-         <th  style="font-size: 15px;">Sem Id</th>
-        <th  style="font-size: 15px;">Academic Year</th>
-        <th  style="font-size: 15px;">Student Email</th>
       </tr>
     </thead> {% for obj in student %} <tbody>
       <tr>
@@ -528,15 +525,6 @@
         </td>
                <td  style="text-align: center; font-size: 14px;">
            <b>{{obj.program_name}}</b>
-        </td>
-        <td  style="text-align: center; font-size: 14px;">
-           <b>{{obj.sem_id}}</b>
-        </td>
-               <td  style="text-align: center; font-size: 14px;">
-           <b>{{obj.academic_year}}</b>
-        </td>
-               <td  style="text-align: left; font-size: 14px;">
-           <b>{{obj.student_email}}</b>
         </td>
       </tr>
     </tbody> {% endfor %}

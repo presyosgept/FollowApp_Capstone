@@ -270,6 +270,10 @@
 
 .pagination a:hover:not(.active) {
   background-color: #d8c090;}
+
+  td {
+    word-wrap: break-word;
+  }
 </style>
 
 
@@ -346,7 +350,7 @@
          <td  style="text-align: left; font-size: 15px;">
            <b>{{obj.department_code_id}}</b>
         </td>
-        <td  style="text-align: left; font-size: 15px;">
+        <td  class="td-dpname" style="text-align: left; font-size: 11px; word-break:break-all;">
            <b>{{obj.department_name}}</b>
         </td>
           <td  style="text-align: center; font-size: 15px;">

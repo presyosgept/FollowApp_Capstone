@@ -101,12 +101,12 @@ def register(request):
             qs_acc = AccountCreated.objects.all()
 
             if username == 'followapp':
-                account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                auth_token = '71af7a6561d9048e2c400a993cbb815a'
+                account_sid = 'ACa32212915e1368ddab1591868ddb3385'
+                auth_token = '763ac1b683644f23043769d4a56f8cb4'
                 client = Client(account_sid, auth_token)
                 body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                 message = client.messages.create(
-                    to=email, from_='+15166045607', body=body)
+                    to=email, from_='+14793912563', body=body)
                 print(message.sid)
                 value = AccountCreated(
                     id_number=username, email=email, password=code)
@@ -127,12 +127,12 @@ def register(request):
                     if username == user.faculty_id:
                         flag = 1
                 if flag == 1:
-                    account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-                    auth_token = '71af7a6561d9048e2c400a993cbb815a'
+                    account_sid = 'ACa32212915e1368ddab1591868ddb3385'
+                    auth_token = '763ac1b683644f23043769d4a56f8cb4'
                     client = Client(account_sid, auth_token)
                     body = 'This is your VERIFICATION CODE FOR FOLLOWAPP: ' + code
                     message = client.messages.create(
-                        to=email, from_='+15166045607', body=body)
+                        to=email, from_='+14793912563', body=body)
                     print(message.sid)
                     value = AccountCreated(
                         id_number=username, email=email, password=code)
@@ -319,8 +319,13 @@ import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score
+new_student_referred_list=[]
 @login_required(login_url='login')
 def import_date_set(request, *args, **kwargs):
+    global Active_Year
+    global Active_Sem    
+    global new_student_referred_list
+    student_referred_list = []
     if request.method == 'POST':
         model = []
         student_number_data = []
@@ -330,9 +335,9 @@ def import_date_set(request, *args, **kwargs):
         quiz_data = []
         status_data = []
         dataset = Dataset()
-        new_student_load = request.FILES['myfile']
+        students_data = request.FILES['myfile']
         imported_data = dataset.load(
-        new_student_load.read(), format='xlsx')
+        students_data.read(), format='xlsx')
         for data in imported_data:
             student_number_data.append(data[0])
             if data[1] >= 3 or data[2] >= 3 or data[3] >= 3:
@@ -350,10 +355,7 @@ def import_date_set(request, *args, **kwargs):
             model.append({'student_number': data[0],'has_tres_data':has_tres_data,'absences_data': data[4],
                             'content_data':content,'assignment_data': assignment,'quiz_data': quiz,
                             'status_data':data[11]})
-        print("model",model)
         df = pd.DataFrame(model)
-        print("df",df)
-        print("shape of you",df.shape)
         x = df[['has_tres_data','absences_data','content_data','assignment_data','quiz_data']]
         y = df['status_data']
         X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
@@ -371,14 +373,31 @@ def import_date_set(request, *args, **kwargs):
         rforest_acc = accuracy_score(rforest_pred, y)
         print("Test accuracy: {:.2f}%".format(rforest_acc*100))
         pred=pd.DataFrame({'Student Number':df['student_number'],'Actual':y, 'Predicted':rforest_pred})
-        # print("aaa",pred)
+        print("predicted data",pred)
         # for i, row in df.iterrows():
         #     print('index: ', i, row['student_number'])
+        
         for ind in pred.index:
             if pred['Predicted'][ind] == 1:
-                print("irefer ni sya", pred['Student Number'][ind])
+                print("Student to be reffer ", pred['Student Number'][ind])
                 user =pred['Student Number'][ind]
                 studentReferred = Student.objects.get(student_number=user)
+                student_referred_list.append(Student(student_number=studentReferred.student_number,
+                                   lastname=studentReferred.lastname, firstname=studentReferred.firstname,
+                                   school_name=studentReferred.school_name,
+                                   program_code=studentReferred.program_code,
+                                   program_name=studentReferred.program_name,
+                                   middlename=studentReferred.middlename,
+                                  ))
+                page = request.GET.get('page', 1)
+
+                # paginator = Paginator(student_referred_list, 20)
+                # try:
+                #     new_student_referred_list = paginator.page(page)
+                # except PageNotAnInteger:
+                #     new_student_referred_list = paginator.page(1)
+                # except EmptyPage:
+                #     new_student_referred_list = paginator.page(paginator.num_pages)
                 degree = DegreeProgram.objects.get(
                     program_code=studentReferred.program_code_id)
                 degree_program_student_referred = degree.program_code
@@ -893,10 +912,8 @@ def import_date_set(request, *args, **kwargs):
                                     referral_list.append(obj)
                                 check_if_exist.referral_id = referral_list
                                 check_if_exist.save()
-                            # messages.info(
-                            #     request, 'Successfully Set Schedule')
-    return render(request, "admin/import_date_set.html",)
-# print(pred['Student Number'][ind], pred['Actual'][ind])
+        messages.info(request, 'Successfully Reffered these Students')
+    return render(request, "admin/import_date_set.html",{"student":student_referred_list,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
 @login_required(login_url='login')
 def set_active_year(request, *args, **kwargs):
     global Active_Year
@@ -1363,6 +1380,7 @@ def upload_faculty(request):
     global Active_Year
     global Active_Sem
     global new_faculty_list
+    faculty=[]
     try:
         get_faculty = Faculty.objects.all()
         if request.method == 'POST':
@@ -1418,8 +1436,6 @@ def upload_faculty(request):
                         check.role = data[5]
                         check.department_code = depa
                         check.save()
-                        
-                        
                 messages.info(request, 'Successfully Added')
             else:
                 messages.info(request, 'Failed to Add the Data')
@@ -1445,6 +1461,7 @@ def upload_subject_offerings(request):
     global new_subject_offerings_list
     sem_choice = '1st'
     sem_year='2022'
+    subject_offerings=[]
     try:
         get_subject_offerings = SubjectOfferings.objects.all()
         check_sem = SetActiveForm(initial={'active_year': '2022'})
@@ -1453,11 +1470,6 @@ def upload_subject_offerings(request):
             if check_sem.is_valid():
                 sem_choice = check_sem['active_sem'].value()
                 sem_year = check_sem['active_year'].value()
-            # check_sem = CheckSemForm()
-            # if request.method == 'POST':
-            #     check_sem = CheckSemForm(request.POST)
-            #     if check_sem.is_valid():
-            #         sem_choice = check_sem['sem'].value()
             SubjectOfferingsResource()
             dataset = Dataset()
             new_sem = request.FILES['myfile']
@@ -1527,20 +1539,20 @@ def upload_subject_offerings(request):
                     if is_subject:
                         try:
                             get_subject_exist = Subject.objects.get(
-                                subject_code=data[1])
+                                subject_code=str(data[1]))
                             check_subjects = bool(get_subject_exist)
                         except Exception:
                             check_subjects = False
                         if check_subjects:
-                            get_subject_exist.subject_code = data[1]
-                            get_subject_exist.subject_title = data[2]
+                            get_subject_exist.subject_code = str(data[1])
+                            get_subject_exist.subject_title = str(data[2])
                         else:
                             subject = Subject(
-                                subject_code=data[1], subject_title=data[2])
+                                subject_code=str(data[1]), subject_title=str(data[2]))
                             subject.save()
                     else:
                         subject = Subject(
-                            subject_code=data[1], subject_title=data[2])
+                            subject_code=str(data[1]), subject_title=str(data[2]))
                         subject.save()
 
                 for data in imported_data:
@@ -1563,7 +1575,7 @@ def upload_subject_offerings(request):
                     if is_subjectOfferings:
                         try:
                             check_if_exist = SubjectOfferings.objects.get(
-                                offer_no=str(data[0]), sem_id=str(data[5]),academic_year = str(data[6]))
+                                offer_no=str(data[0]), sem_id=str(data[5]), academic_year = str(data[6]))
                             check_exist = bool(check_if_exist)
                         except Exception:
                             check_exist = False
@@ -1571,12 +1583,12 @@ def upload_subject_offerings(request):
                             if sem_choice == check_if_exist.sem_id and sem_year == check_if_exist.academic_year:
                                 check_if_exist.offer_no = str(data[0])
                                 check_if_exist.subject_code = get_subject_code
-                                check_if_exist.subject_title = data[2]
+                                check_if_exist.subject_title = str(data[2])
                                 check_if_exist.school_time = str(data[4])
                                 check_if_exist.sem_id = str(data[5])
                                 check_if_exist.academic_year = str(data[6])
-                                check_if_exist.department_code=get_department_code,
-                                check_if_exist.department_name=str(data[8]),
+                                check_if_exist.department_code=get_department_code
+                                check_if_exist.department_name=str(data[8])
                                 check_if_exist.faculty_id = get_faculty_id
                                 check_if_exist.save()
                         else:
@@ -1584,7 +1596,7 @@ def upload_subject_offerings(request):
                                 value = SubjectOfferings(
                                     offer_no=str(data[0]),
                                     subject_code=get_subject_code,
-                                    subject_title=data[2],
+                                    subject_title= str(data[2]),
                                     school_days=str(data[3]),
                                     school_time=str(data[4]),
                                     sem_id=str(data[5]),
@@ -1599,7 +1611,7 @@ def upload_subject_offerings(request):
                             value = SubjectOfferings(
                                 offer_no=str(data[0]),
                                 subject_code=get_subject_code,
-                                subject_title=data[2],
+                                subject_title= str(data[2]),
                                 school_days=str(data[3]),
                                 school_time=str(data[4]),
                                 sem_id=str(data[5]),
@@ -1623,6 +1635,7 @@ def upload_subject_offerings(request):
         except EmptyPage:
             subject_offerings = paginator.page(paginator.num_pages)
     except Exception as e:
+        print("subject",e)
         subject_offerings=[]
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_subject_offerings.html", {'sem_choice':sem_choice,'sem_year':sem_year,"subject_offerings": subject_offerings, 'check_sem': check_sem, 'Active_Year':Active_Year,'Active_Sem':Active_Sem})
@@ -1633,6 +1646,7 @@ def upload_student(request):
     global Active_Year
     global Active_Sem
     global new_student_list
+    student=[]
     try:
         get_student = Student.objects.all()
         if request.method == 'POST':
@@ -1661,6 +1675,7 @@ def upload_student(request):
                             program_code=str(data[6]))
                         check_degree = bool(check_if_exist_degree)
                     except Exception:
+                        check_degree = False
                         value = DegreeProgram(program_code=str(data[6]), program_name=str(data[7]), school_code = get_school)
                         value.save()
                     if check_degree:
@@ -1718,6 +1733,7 @@ def upload_student(request):
         except EmptyPage:
             student = paginator.page(paginator.num_pages)
     except Exception as e:
+        print("eeeee",e)
         student=[]
         messages.info(request, 'Please Choose File')
     return render(request, "admin/upload_student.html", {"student": student,'Active_Year':Active_Year,'Active_Sem':Active_Sem})
@@ -3852,22 +3868,27 @@ def student_notifications(request):
 
 
 @login_required
-def student_notification_detail(request, id, status):
+def student_notification_detail(request,status, id):
     user = request.session.get('username')
     student_name = Student.objects.get(student_number=user)
     notif = Notification.objects.filter(extra_id=user, is_read_student=False)
     studentNotif = len(notif)
     notification_detail = Notification.objects.get(id=id)
-    call = False
-    today = date.today()
-    date_only = notification_detail.schedDay.strftime("%Y-%m-%d")
-    if date_only == str(today):
-            if notification_detail.is_read_student == False:
-                if notification_detail.is_counseled == False:
-                    call = True
+    if status == 'False':
+        call = False
+        today = date.today()
+        date_only = notification_detail.schedDay.strftime("%Y-%m-%d")
+        if date_only == str(today):
+                if notification_detail.is_read_student == False:
+                    if notification_detail.is_counseled == False:
+                        call = True
+        else:
+                notification_detail.is_read_student = True
+                notification_detail.save()
     else:
-            notification_detail.is_read_student = True
-            notification_detail.save()
+        notification_detail.is_read_student = True
+        notification_detail.save()
+
     return render(request, 'student/student_notification_detail.html', {"studentNotif": studentNotif,'call':call, 'referral_id':id,'notification_id':id, "notification_detail":notification_detail, "form": student_name})
 
 @login_required(login_url='login')
@@ -3895,17 +3916,21 @@ def re_create_schedule(request,referral_id, notification_id,actor):
 
     old_get_referral = Referral.objects.get(id=referral_id)
     
-    print("contact_parents",contact_parents)
     if contact_parents == 2:
         get_student_details = StudentAdditionalInformation.objects.get(student_number=old_get_referral.student_number)
-        account_sid = 'AC47090e11c4e65aba8e1ce9f75e7522c5'
-        auth_token = '71af7a6561d9048e2c400a993cbb815a'
+        account_sid = 'ACa32212915e1368ddab1591868ddb3385'
+        auth_token = '763ac1b683644f23043769d4a56f8cb4'
         client = Client(account_sid, auth_token)
-        body = 'HOY IMONG ANAK WALAY TUNGA TUNGA SA COUNSELING NAMO NAUNSA NANA SYA'
+        body = 'Good day parents! I would like to inform you that your child did not attend 2 consecutive counselling sessions. Kindly inform your child to visit the office as soon as possible. Thank you!'
         message = client.messages.create(
-        to=get_student_details.mother_contact_number, from_='+15166045607', body=body)
+        to=get_student_details.mother_contact_number, from_='+14793912563', body=body)
         print(message.sid)
-        print("pang duha na")
+        message = client.messages.create(
+        to=get_student_details.father_contact_number, from_='+14793912563', body=body)
+        print(message.sid)
+        message = client.messages.create(
+        to=get_student_details.guardian_contact_number, from_='+14793912563', body=body)
+        print(message.sid)
         messages.info(request, 'Parents are already informed!')
         contact_parents=0
         get_notif.is_read_student = False
@@ -3999,16 +4024,8 @@ def re_create_schedule(request,referral_id, notification_id,actor):
                         else:
                             studentSchedule_list_byday_check = False
 
-                        for object in classes_student:
-                            print("piffa", object.offer_no)
-
-
                         classes_counselor_check = bool(classes_counselor)
                         classes_student_check = bool (classes_student)
-
-                        # if(classes_student_check == True):
-                        #     print('day', object.school_days)
-                        #     print("time", object.school_time)
 
                         notAvailableSched = SetScheduleCounselor.objects.filter(
                             date=tomorrow, faculty_id=old_get_referral.counselor_id)
@@ -4297,8 +4314,11 @@ def student_history(request):
     studentNotif = len(notif)
     student_record = Referral.objects.filter(
         student_number=user, status='done')
-    counselor = Faculty.objects.filter(role='Counselor')
-    return render(request, "student/view_history.html", {"studentNotif": studentNotif, "object": student_record, "counselor": counselor, "form": student_name})
+    if not student_record:
+        return render(request, "student/view_history.html", {"studentNotif": studentNotif, "object": student_record, "form": student_name})
+    else:
+        counselor = Faculty.objects.get(faculty_id=student_record[0].counselor_id)
+        return render(request, "student/view_history.html", {"studentNotif": studentNotif, "object": student_record, "counselor": counselor, "form": student_name})
 
 
 @login_required

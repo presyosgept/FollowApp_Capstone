@@ -31,7 +31,7 @@ class CheckSemForm(forms.Form):
 
 
 class CalendarForm(forms.ModelForm):
-    pickedDate=forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
+    pickedDate=forms.DateField(widget=forms.SelectDateWidget(attrs={'style': 'height: 4.5vh; width: 6.8vw; border-radius: 5px; font-size: 16px; font-weight: bold; ',}), initial = timezone.now)
     class Meta:
         model = Calendar
         fields = ['pickedDate']
@@ -188,7 +188,7 @@ class SetScheduleCounselorForm(forms.ModelForm):
         choices=TIME))
     end_time = forms.TimeField(widget=forms.Select(
         choices=TIME))
-    date = forms.DateField(widget=forms.SelectDateWidget(), initial = timezone.now)
+    date = forms.DateField(widget=forms.SelectDateWidget(attrs={'style': 'height: 4vh; width: 6vw; border-radius: 5px; font-size: 16px; font-weight: bold; ',}), initial = timezone.now)
     class Meta:
         model = SetScheduleCounselor
         fields = ['date', 'start_time', 'end_time']

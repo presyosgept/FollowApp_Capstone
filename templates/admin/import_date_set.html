@@ -108,8 +108,43 @@
     margin-left: auto;
     margin-right: auto;
   }
-      /* Table Styles */
-  .fl-table {
+ 
+      .no-data{
+    text-align: center;
+    margin-top: 3vh;
+    font-weight: bold;
+    font-size: 19px;
+  }
+    .pagination {
+   align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+}
+
+.pagination a.active {
+  background-color: #304434;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #d8c090;}
+
+  .display{
+      flex-direction: row;
+      margin-top: 2vh;
+  }
+          /* Table Styles */
+
+
+          .fl-table {
     margin-left: auto;
     margin-right: auto;
     margin-top: 5vh;
@@ -120,9 +155,9 @@
     font-weight: normal;
     border: none;
     border-collapse: collapse;
-     width: 90vw;
- 
-    background-color: white;
+    width: 85vw;
+    max-width: 100%;
+    white-space: nowrap;
     overflow-y: scroll;
   }
 
@@ -133,7 +168,7 @@
   }
 
   .fl-table td {
-    border-right: 1px solid #ffffff;
+    border-right: 1px solid #f8f8f8;
     font-size: 12px;
   }
 
@@ -150,14 +185,6 @@
   .fl-table tr:nth-child(even) {
     background: #F8F8F8;
   }
-    tr:hover {
-      background-color: #ddd;
-    }
-    th, td {
-  padding: 8px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
 
   /* Responsive */
   @media (max-width: 767px) {
@@ -239,78 +266,7 @@
       text-align: center;
     }
   }
-      .no-data{
-    text-align: center;
-    margin-top: 3vh;
-    font-weight: bold;
-    font-size: 19px;
-  }
-    .pagination {
-   align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.pagination a {
-  color: black;
-  float: left;
-  padding: 8px 16px;
-  text-decoration: none;
-  transition: background-color .3s;
-}
-
-.pagination a.active {
-  background-color: #304434;
-  color: white;
-}
-
-.pagination a:hover:not(.active) {
-  background-color: #d8c090;}
-
-  .display{
-      flex-direction: row;
-      margin-top: 2vh;
-  }
-  .eg-table{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5vh;
-    margin-bottom: 3vh;
-    /* box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2); */
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: normal;
-    border: none;
-    border-collapse: collapse;
-     width: 80vw;
-    background-color: white;
-    overflow-y: scroll;
-  }
-  .eg-table td,
-  .eg-table th {
-    text-align: center;
-    padding: 8px;
-  }
-
-  .eg-table td {
-    border-right: 1px solid #fff;
-    font-size: 12px;
-  }
-
-  .eg-table thead th {
-    color: #000;
-    background: #e0b44c;
-  }
-
-  .eg-table thead th:nth-child(odd) {
-    color: #000;
-    background: #e0b44c;
-  }
-
-  .eg-table tr:nth-child(even) {
-    background: #F8F8F8;
-  }
-    tr:hover {
+      tr:hover {
       background-color: #ddd;
     }
     th, td {
@@ -318,7 +274,79 @@
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
+    /* //////////// NEW ALERT MESSAGE //////////// */
+    .alert.success{
+  display: grid;
+ place-content: center;
+}
+.alert .inner {
+  display: block;
+  width: 30vw;
+  height: 5.5vh;
+  font-size: 16.5px;
+  padding: 6px;
+  margin: 0 auto;
+  border-radius: 3px;
+  border: 1px solid rgb(180,180,180);
+  background-color: rgb(212,212,212);
+  
+}
 
+.alert .close {
+  float: right;
+  margin: 3px 12px 0px 0px;
+  cursor: pointer;
+}
+
+.alert .inner,.alert .close {
+  color: rgb(88,88,88);
+}
+
+.alert input {
+  display: none;
+}
+
+.alert input:checked ~ * {
+  animation-name: dismiss,hide;
+  animation-duration: 300ms;
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  animation-delay: 0s,100ms;
+}
+
+.alert.success .inner {
+  border: 1px solid rgb(214,233,198);
+  background-color: rgb(223,240,216);
+}
+
+.alert.success .inner,.alert.success .close {
+  color: rgb(70,136,71);
+  
+}
+
+
+@keyframes dismiss {
+  0% {
+    opacity: 1;
+  }
+  90%, 100% {
+    opacity: 0;
+    font-size: 0.1px;
+    transform: scale(0);
+  }
+}
+
+@keyframes hide {
+  100% {
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+  }
+}
 </style>
 <div class="fac">
   <button type="submit" class="buttonF">
@@ -327,11 +355,17 @@
 </div>
 <br>
 
-<div style="text-align: center"> {% for message in messages %} <button type="submit" class="message">
-    <p>
-      <b>{{message}} !</b>
-    </p>
-  </button> {% endfor %} </div>
+<div class="alert success">
+  {% for message in messages %} 
+  <input type="checkbox" id="alert1"/>
+  <p class="inner">
+    <strong>{{message}}!</strong>
+    <label class="close" title="close" for="alert1">
+      <i class="icon-remove"></i>
+    </label>
+  </p>
+  {% endfor %} 
+</div>
 <br>
 
   <form method="post" enctype="multipart/form-data"> {% csrf_token %} 
@@ -345,5 +379,55 @@
       </div> 
   </form>
 
+  {% if not student %} 
+          <div class="no-data">
+    No Data Available
+  </div>
+{% else %}
+<div class="no-data">
+  List of Students that are referred automatically
+</div>
+  <table class="fl-table">
+    <thead>
+      <tr>
+        <th  style="font-size: 15px;">Student ID</th>
+        <th  style="font-size: 15px;">Lastname</th>
+        <th  style="font-size: 15px;">Firstname</th>
+        <th  style="font-size: 15px;">Middlename</th>
+        <th  style="font-size: 15px;">School Name</th>
+        <th  style="font-size: 15px;">Program Code</th>
+         <th  style="font-size: 15px;">Program Name</th>
+      </tr>
+    </thead> {% for obj in student %} <tbody>
+      <tr>
+        <td  style="text-align: center; font-size: 14px;">
+          <b>{{obj.student_number}}</b>
+        </td>
+        <td  style="text-align: left; font-size: 14px;">
+           <b>{{obj.lastname}}</b>
+        </td>
+        <td  style="text-align: left; font-size: 14px;">
+           <b>{{obj.firstname}}</b>
+        </td>
+       <td  style="text-align: left; font-size: 14px;">
+           <b>{{obj.middlename}}</b>
+        </td>
+               <td  style="text-align: center; font-size: 14px;">
+           <b>{{obj.school_name}}</b>
+        </td>
+              
+               <td  style="text-align: center; font-size: 14px;">
+           <b>{{obj.program_code_id}}</b>
+        </td>
+        </td>
+               <td  style="text-align: center; font-size: 14px;">
+           <b>{{obj.program_name}}</b>
+        </td>
+      </tr>
+    </tbody> {% endfor %}
+  </table>
+ {% endif %} 
+
+ 
 
  {% endblock %}
